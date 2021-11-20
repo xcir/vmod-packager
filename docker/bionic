@@ -1,0 +1,22 @@
+FROM ubuntu:bionic
+
+ARG VARNISH_VER
+ARG VARNISH_URL
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -yq lsb-release unzip curl apt-utils wget build-essential git devscripts debhelper automake autotools-dev libtool pkg-config dh-systemd && \
+    apt-get install -yq libpcre2-dev libjemalloc-dev python3-docutils python3-sphinx libncurses-dev libedit-dev
+
+RUN rm -rf /tmp/varnish && \
+    mkdir /tmp/varnish && \
+    cd /tmp/varnish && \
+    mkdir src && \
+    curl -sL ${VARNISH_URL} | tar zx -C src --strip-components 1 && \
+    cd src && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr && \
+    make -sj32 && \
+    make install
+
+WORKDIR /tmp/varnish/

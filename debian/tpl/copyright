@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: %VMOD%
+Source: https://github.com/xcir/
+
+Files: *
+Copyright: See original VMOD source copyright
+
+License: See original VMOD source license file.

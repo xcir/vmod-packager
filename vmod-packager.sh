@@ -1,9 +1,9 @@
 #!/bin/bash
 usage_exit() {
-        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-o Os] [-f] [-s] [-h] VmodName" 1>&2
+        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-f] [-s] [-h] VmodName" 1>&2
         echo "-v Varnish version (ex:7.0.0)" 1>&2
         echo "-e vmod vErsion (ex:0.1)" 1>&2
-        echo "-o Os" 1>&2
+        echo "-d Distribution" 1>&2
         echo "-f Fixed varnish version" 1>&2
         echo "-s run baSh" 1>&2
         echo "-h Help" 1>&2
@@ -11,12 +11,12 @@ usage_exit() {
         exit 1
 }
 
-while getopts :v:e:o:sfh OPT
+while getopts :v:e:d:sfh OPT
 do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
         e)  VMP_VMOD_VER=$OPTARG;;
-        o)  VMP_OS=$OPTARG;;
+        d)  VMP_DIST=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
         f)  VMP_FIXED_MODE=1;;
         h)  usage_exit;;
@@ -46,8 +46,8 @@ if [[ -z "${VMP_VARNISH_VER}" ]]; then
   VMP_VARNISH_VER=7.0.0
 fi
 
-if [[ -z "${VMP_OS}" ]]; then
-  VMP_OS=focal
+if [[ -z "${VMP_DIST}" ]]; then
+  VMP_DIST=focal
 fi
 
 if [[ -z "${VMP_FIXED_MODE}" ]]; then
@@ -118,17 +118,17 @@ fi
 
 VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
 docker build --rm \
-  -t vmods-packager/${VMP_OS}/${VMP_VARNISH_VER} \
+  -t vmods-packager/${VMP_DIST}/${VMP_VARNISH_VER} \
   --build-arg VARNISH_VER=${VMP_VARNISH_VER} \
   --build-arg VARNISH_URL=${VMP_VARNISH_URL} \
-  -f docker/${VMP_OS} \
+  -f docker/${VMP_DIST} \
   .
 
 docker run --rm \
  -e VMP_VARNISH_VER=${VMP_VARNISH_VER} \
  -e VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_NXT} \
  -e VMP_VARNISH_VRT=${VMP_VARNISH_VRT} \
- -e VMP_VARNISH_DIR=/tmp/varnish \
+ -e VMP_ROOT_DIR=/tmp/varnish \
  -e VMP_WORK_DIR=/tmp/varnish/work \
  -e VMP_VMOD_NAME=${VMP_VMOD} \
  -e VMP_VMOD_VER=${VMP_VMOD_VER} \
@@ -138,4 +138,4 @@ docker run --rm \
  -v `pwd`/rpm:/tmp/varnish/rpm \
  -v `pwd`/pkgs:/tmp/varnish/pkgs \
  -v `pwd`/src:/tmp/varnish/vmod/src \
- --name ${VMP_VMOD}-${VMP_VMOD_VER} -it vmods-packager/${VMP_OS}/${VMP_VARNISH_VER} ${VMP_DOCKER_EXEC}
+ --name ${VMP_VMOD}-${VMP_VMOD_VER} -it vmods-packager/${VMP_DIST}/${VMP_VARNISH_VER} ${VMP_DOCKER_EXEC}

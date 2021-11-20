@@ -14,9 +14,9 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
      > ${VMP_WORK_DIR}/src/debian/`basename ${i}`
 done
 if [ ${VMP_VARNISH_VRT} -eq 999 ]; then
-    cp ${VMP_VARNISH_DIR}/work/src/debian/control.trunk ${VMP_WORK_DIR}/src/debian/control
+    cp ${VMP_ROOT_DIR}/work/src/debian/control.trunk ${VMP_WORK_DIR}/src/debian/control
 elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
-    cp ${VMP_VARNISH_DIR}/work/src/debian/control.fixed ${VMP_WORK_DIR}/src/debian/control
+    cp ${VMP_ROOT_DIR}/work/src/debian/control.fixed ${VMP_WORK_DIR}/src/debian/control
 fi
 #CN   = CodeName
 #VRT  = Varnish VRT Version

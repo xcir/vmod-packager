@@ -118,7 +118,7 @@ fi
 
 VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
 docker build --rm \
-  -t vmods-packager/${VMP_DIST}/${VMP_VARNISH_VER} \
+  -t vmod-packager/${VMP_DIST}/${VMP_VARNISH_VER} \
   --build-arg VARNISH_VER=${VMP_VARNISH_VER} \
   --build-arg VARNISH_URL=${VMP_VARNISH_URL} \
   -f docker/${VMP_DIST} \
@@ -138,4 +138,4 @@ docker run --rm \
  -v `pwd`/rpm:/tmp/varnish/rpm \
  -v `pwd`/pkgs:/tmp/varnish/pkgs \
  -v `pwd`/src:/tmp/varnish/vmod/src \
- --name ${VMP_VMOD}-${VMP_VMOD_VER} -it vmods-packager/${VMP_DIST}/${VMP_VARNISH_VER} ${VMP_DOCKER_EXEC}
+ --name ${VMP_VMOD}-${VMP_VMOD_VER} -it vmod-packager/${VMP_DIST}/${VMP_VARNISH_VER} ${VMP_DOCKER_EXEC}

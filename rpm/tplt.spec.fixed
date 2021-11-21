@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
-Summary:	%VMOD%
-Name:		%VMOD%
+Summary:	%PFX%%VMOD%
+Name:		%PFX%%VMOD%
 Version:	%VER%
 Release:	1%{?dist}
 License:	See original VMOD source license file.
@@ -34,5 +34,5 @@ make check
 %{_datadir}/*
 
 %changelog
-* Tue Feb 23 2021 %VMOD% <example@localhost> - %VER%
+* Tue Feb 23 2021 %PFX%%VMOD% <example@localhost> - %VER%
 - Packaged by vmod-packager

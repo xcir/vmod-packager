@@ -8,6 +8,7 @@ elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
 fi
 cat ${SCRIPT_DIR}/tplt.spec${SFX} \
     | sed -r "s/%VRT%/${VMP_VARNISH_VRT}/g" \
+    | sed -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
     | sed -r "s/%VMOD%/${VMP_VMOD_NAME}/g" \
     | sed -r "s/%VER%/${VMP_VMOD_VER}/g" \
     | sed -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \

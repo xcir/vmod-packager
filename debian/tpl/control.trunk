@@ -1,13 +1,13 @@
-Source: %VMOD%
+Source: %PFX%%VMOD%
 Section: web
 Priority: optional
-Maintainer: %VMOD% <example@localhost>
+Maintainer: %PFX%%VMOD% <example@localhost>
 Build-Depends: debhelper (>=9)
 Standards-Version: 3.9.6
 Homepage: https://github.com/xcir/
 
-Package: %VMOD%
+Package: %PFX%%VMOD%
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, varnish
-Replaces: %VMOD% (<< 999)
+Replaces: %PFX%%VMOD% (<< 999)
 Description: packed by vmod-packager

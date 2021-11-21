@@ -1,5 +1,5 @@
-%VMOD% (%VRT%.%VER%~%CN%-1) %CN%; urgency=medium
+%PFX%%VMOD% (%VRT%.%VER%~%CN%-1) %CN%; urgency=medium
 
   * Packaged by vmod-packager
 
- -- %VMOD% <example@localhost>  Tue, 23 Feb 2021 12:21:02 +0000
+ -- %PFX%%VMOD% <example@localhost>  Tue, 23 Feb 2021 12:21:02 +0000

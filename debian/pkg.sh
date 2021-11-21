@@ -7,6 +7,7 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
     cat ${i} \
      | sed -r "s/%CN%/${CN}/g" \
      | sed -r "s/%VRT%/${VMP_VARNISH_VRT}/g" \
+     | sed -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
      | sed -r "s/%VMOD%/${VMP_VMOD_NAME}/g" \
      | sed -r "s/%VER%/${VMP_VMOD_VER}/g" \
      | sed -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \

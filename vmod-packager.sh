@@ -1,9 +1,10 @@
 #!/bin/bash
 usage_exit() {
-        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-f] [-s] [-h] VmodName" 1>&2
+        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-f] [-s] [-h] VmodName" 1>&2
         echo "-v Varnish version (ex:7.0.0)" 1>&2
         echo "-e vmod vErsion (ex:0.1)" 1>&2
         echo "-d Distribution" 1>&2
+        echo "-p vmod name Prefix" 1>&2
         echo "-f Fixed varnish version" 1>&2
         echo "-s run baSh" 1>&2
         echo "-h Help" 1>&2
@@ -11,12 +12,13 @@ usage_exit() {
         exit 1
 }
 
-while getopts :v:e:d:sfh OPT
+while getopts :v:e:d:p:sfh OPT
 do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
         e)  VMP_VMOD_VER=$OPTARG;;
         d)  VMP_DIST=$OPTARG;;
+        p)  VMP_VMOD_PFX=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
         f)  VMP_FIXED_MODE=1;;
         h)  usage_exit;;
@@ -132,6 +134,7 @@ docker run --rm \
  -e VMP_WORK_DIR=/tmp/varnish/work \
  -e VMP_VMOD_NAME=${VMP_VMOD} \
  -e VMP_VMOD_VER=${VMP_VMOD_VER} \
+ -e VMP_VMOD_PFX=${VMP_VMOD_PFX} \
  -e VMP_FIXED_MODE=${VMP_FIXED_MODE} \
  -v `pwd`/script:/tmp/varnish/script \
  -v `pwd`/debian:/tmp/varnish/debian \

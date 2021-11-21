@@ -39,10 +39,11 @@ varnish-modules-0.19-1.el8.src.rpm  varnish-modules-0.19-1.el8.x86_64.rpm
 
 ```
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -h
-Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-f] [-s] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-f] [-s] [-h] VmodName
 -v Varnish version (ex:7.0.0)
 -e vmod vErsion (ex:0.1)
 -d distribution
+-p vmod name Prefix
 -f Fixed varnish version
 -s run baSh
 -h Help
@@ -53,6 +54,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 |-|:-|:-|:-|
 | -v [Varnish version]      | Target varnish version    | 7.0.0 | -v 7.0.0 |
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
+| -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |
 | -d [Distribution name]    | Target distribution       | focal | -d focal |
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |
@@ -107,6 +109,7 @@ A sample is available at sample-src/
 | VMP_VARNISH_VER_NXT| Version of Varnish with incrementing miner | 7.1.0 |
 | VMP_ROOT_DIR       | root dir(fixed) | /tmp/varnish |
 | VMP_WORK_DIR       | work dir(fixed) | /tmp/varnish/work |
+| VMP_VMOD_PFX       | Vmod name prefix | test- |
 | VMP_VMOD_NAME      | Vmod name | libvdp-pesi |
 | VMP_VMOD_VER       | Vmod version | 0.1 |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |

@@ -26,7 +26,7 @@ rm -rf %{buildroot}
 %make_install
 
 %check
-make check
+%TEST%
 
 %files
 %{_libdir}/varnish/vmods/*

@@ -3,6 +3,12 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 CN=`lsb_release -cs`
 rm -rf ${VMP_WORK_DIR}/src/debian
 mkdir ${VMP_WORK_DIR}/src/debian
+if [ ${VMP_SKIP_TEST} -eq 1 ]; then
+    TMP_TEST="override_dh_auto_test:"
+else
+    TMP_TEST=""
+fi
+
 for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
     cat ${i} \
      | sed -r "s/%CN%/${CN}/g" \
@@ -13,7 +19,9 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
      | sed -r "s/%REQ%/${VMP_REQUIRE_DEB}/g" \
      | sed -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
      | sed -r "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
+     | sed -r "s/%TEST%/${TMP_TEST}/g" \
      > ${VMP_WORK_DIR}/src/debian/`basename ${i}`
+
 done
 if [ ${VMP_VARNISH_VRT} -eq 999 ]; then
     cp ${VMP_ROOT_DIR}/work/src/debian/control.trunk ${VMP_WORK_DIR}/src/debian/control

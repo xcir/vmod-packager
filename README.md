@@ -81,7 +81,7 @@ varnish-modules_999.0.19~focal-1_amd64.changes
 
 ```
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -h
-Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-h] VmodName
 -v Varnish version (ex:7.0.0 or trunk)
 -e vmod vErsion (ex:0.1)
 -d distribution
@@ -89,6 +89,7 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distributio
 -c Commit hash
 -f Fixed varnish version
 -s run baSh
+-t skip Test
 -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 ```
@@ -102,6 +103,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -c [Commit hash]          | Target hash(github)       |  | -c d497ec0998f3670af1942cb60a9f4316fc2f3cba |
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |
+| -t                        | Skip test                 | disabled | -t |
 
 # Support Distribution
 
@@ -177,6 +179,7 @@ A sample is available at sample-src/
 | VMP_REQUIRE_DEB    | Add depends packages(DEB) | foo, bar |
 | VMP_REQUIRE_RPM    | Add depends packages(RPM) | foo, bar |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
+| VMP_SKIP_TEST      | Skip test mode | 0 |
 
 # path in a container
 |path|explanation|

@@ -1,6 +1,6 @@
 #!/bin/bash
 usage_exit() {
-        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-h] VmodName" 1>&2
+        echo "Usage: $0 [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-h] VmodName" 1>&2
         echo "-v Varnish version (ex:7.0.0 or trunk)" 1>&2
         echo "-e vmod vErsion (ex:0.1)" 1>&2
         echo "-d Distribution" 1>&2
@@ -8,6 +8,7 @@ usage_exit() {
         echo "-c Commit hash" 1>&2
         echo "-f Fixed varnish version" 1>&2
         echo "-s run baSh" 1>&2
+        echo "-t skip Test" 1>&2
         echo "-h Help" 1>&2
         echo "Example: $0 -v 7.0.0 -e 1.0 -o focal libvmod-xcounter" 1>&2
         exit 1
@@ -36,6 +37,7 @@ vmod_build() {
   -e VMP_VMOD_VER=${VMP_VMOD_VER} \
   -e VMP_VMOD_PFX=${VMP_VMOD_PFX} \
   -e VMP_FIXED_MODE=${VMP_FIXED_MODE} \
+  -e VMP_SKIP_TEST=${VMP_SKIP_TEST} \
   -v `pwd`/script:/tmp/varnish/script \
   -v `pwd`/debian:/tmp/varnish/debian \
   -v `pwd`/rpm:/tmp/varnish/rpm \
@@ -56,6 +58,9 @@ vmod_build() {
   if [ ${VMP_FIXED_MODE} -eq 1 ]; then
     printf "%20s\n" "Enable fixed mode"
   fi
+  if [ ${VMP_SKIP_TEST} -eq 1 ]; then
+    printf "%20s\n" "Enable skip test"
+  fi
   echo
 
 }
@@ -69,7 +74,7 @@ if [ $? -ne 0 ]; then
 fi
 
 
-while getopts :v:e:d:p:c:sfh OPT
+while getopts :v:e:d:p:c:stfh OPT
 do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
@@ -78,6 +83,7 @@ do
         p)  VMP_VMOD_PFX=$OPTARG;;
         c)  VMP_HASH=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
+        t)  VMP_SKIP_TEST=1;;
         f)  VMP_FIXED_MODE=1;;
         h)  usage_exit;;
         \?) usage_exit;;
@@ -99,6 +105,10 @@ fi
 
   if [[ -z "${VMP_FIXED_MODE}" ]]; then
     VMP_FIXED_MODE=0
+  fi
+
+  if [[ -z "${VMP_SKIP_TEST}" ]]; then
+    VMP_SKIP_TEST=0
   fi
 
   if [[ -z "${VMP_EXEC_MODE}" ]]; then

@@ -72,6 +72,17 @@ Just before make.
 ./configure
 ```
 
+## src/[vmod name]_env.sh
+
+This is used to set the VMP_REQUIRE_(DEB|RPM) environment variable
+
+```bash
+#!/bin/sh
+
+export VMP_REQUIRE_DEB=libmhash2
+export VMP_REQUIRE_RPM=mhash
+```
+
 ## src/[vmod name]_init.sh
 
 This is used when a package needs to be added to the build.
@@ -112,6 +123,8 @@ A sample is available at sample-src/
 | VMP_VMOD_PFX       | Vmod name prefix | test- |
 | VMP_VMOD_NAME      | Vmod name | libvdp-pesi |
 | VMP_VMOD_VER       | Vmod version | 0.1 |
+| VMP_REQUIRE_DEB    | Add depends packages(DEB) | foo, bar |
+| VMP_REQUIRE_RPM    | Add depends packages(RPM) | foo, bar |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
 
 # path in a container

@@ -11,6 +11,7 @@ cat ${SCRIPT_DIR}/tplt.spec${SFX} \
     | sed -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
     | sed -r "s/%VMOD%/${VMP_VMOD_NAME}/g" \
     | sed -r "s/%VER%/${VMP_VMOD_VER}/g" \
+    | sed -r "s/%REQ%/${VMP_REQUIRE_RPM}/g" \
     | sed -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
     | sed -r "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
     > ${VMP_WORK_DIR}/__vmod-package.spec

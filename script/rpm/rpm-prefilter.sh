@@ -12,5 +12,4 @@ else
     cp ${VMP_ROOT_DIR}/script/default/default_config.sh  ${VMP_WORK_DIR}/src/__vmod-package_config.sh
 fi
 ${VMP_ROOT_DIR}/rpm/pkg.sh
-#cd ${VMP_WORK_DIR}/src/
 

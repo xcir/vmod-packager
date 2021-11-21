@@ -8,7 +8,7 @@ License:	See original VMOD source license file.
 
 Source:	    vmod.tar.gz
 
-Requires: varnish >= %VARNISH_VER%, varnish < %VARNISH_VER_NXT%
+Requires: varnish >= %VARNISH_VER%, varnish < %VARNISH_VER_NXT%%REQ%
 
 %description
 Packed by vmod-packager

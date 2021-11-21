@@ -56,6 +56,7 @@ vmod_build() {
   if [ ${VMP_FIXED_MODE} -eq 1 ]; then
     printf "%20s\n" "Enable fixed mode"
   fi
+  echo
 
 }
 

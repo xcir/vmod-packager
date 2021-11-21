@@ -36,7 +36,7 @@ varnish-modules_140.0.19~focal-1_amd64.buildinfo  varnish-modules_140.0.19~focal
 # [Distribution]=CentOS8 [Varnish Version]=7.0.0 [VMOD Version]=0.19
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19 varnish-modules
 xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
-varnish-modules-0.19-1.el8.src.rpm  varnish-modules-0.19-1.el8.x86_64.rpm
+varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
 ```
 
 # Options

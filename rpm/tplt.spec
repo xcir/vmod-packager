@@ -2,7 +2,7 @@
 
 Summary:	%PFX%%VMOD%
 Name:		%PFX%%VMOD%
-Version:	%VER%
+Version:	%VRT%.%VER%
 Release:	1%{?dist}
 License:	See original VMOD source license file.
 
@@ -34,5 +34,5 @@ make check
 %{_datadir}/*
 
 %changelog
-* Tue Feb 23 2021 %PFX%%VMOD% <example@localhost> - %VER%
+* Tue Feb 23 2021 %PFX%%VMOD% <example@localhost> - %VRT%.%VER%
 - Packaged by vmod-packager

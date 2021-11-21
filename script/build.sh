@@ -1,6 +1,5 @@
 #!/bin/bash
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-which dpkg 2>/dev/null
 
 if [ -e ${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh ]; then
     source ${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
@@ -12,6 +11,7 @@ if [ -e ${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh ]; then
     fi
 fi
 
+which dpkg 2>/dev/null
 if [ $? -eq 0 ]; then
     export VMP_PKGTYPE=deb
     ${SCRIPT_DIR}/deb/deb-build.sh

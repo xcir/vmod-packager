@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "prefilter"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 rm -rf ${VMP_WORK_DIR}

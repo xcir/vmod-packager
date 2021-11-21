@@ -1,6 +1,6 @@
 #!/bin/sh
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-which dpkg
+which dpkg 2>/dev/null
 if [ $? -eq 0 ]; then
     export VMP_PKGTYPE=deb
     ${SCRIPT_DIR}/deb/deb-build.sh

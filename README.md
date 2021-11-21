@@ -18,6 +18,8 @@ The created package is intended to be used in your own environment.
 # Require
 
 - docker
+- curl
+- jq
 
 # Quick tutorial
 
@@ -42,11 +44,12 @@ varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rp
 
 ```
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -h
-Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-f] [-s] [-h] VmodName
--v Varnish version (ex:7.0.0)
+Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-h] VmodName
+-v Varnish version (ex:7.0.0 or trunk)
 -e vmod vErsion (ex:0.1)
 -d distribution
 -p vmod name Prefix
+-c Commit hash
 -f Fixed varnish version
 -s run baSh
 -h Help
@@ -59,6 +62,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
 | -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |
 | -d [Distribution name]    | Target distribution       | focal | -d focal |
+| -c [Commit hash]          | Target hash(github)       |  | -c d497ec0998f3670af1942cb60a9f4316fc2f3cba |
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |
 

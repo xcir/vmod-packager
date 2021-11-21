@@ -2,6 +2,10 @@
 
 # vmod-packager
 
+This tool can be used to easily package VMODs that are not provided as packages.
+
+The created package is intended to be used in your own environment.
+
 ## VMOD package builder
 
 | | |

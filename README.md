@@ -67,18 +67,17 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 
 See ./docker/ path.
 
-# Default VMOD build pattern
+# VMOD custom build
 
-Just before make.
-```
-# see script/default/default_config.sh
-./autogen.sh # or ./bootstrap
-./configure
-```
+Many VMODs use `autogen.sh` `bootstrap` and `configure`.
+In this case, you can build without any special configuration.
+If you need additional packages or other steps to build, you can use the following script to customize it.
 
 ## src/[vmod name]_env.sh
 
-This is used to set the VMP_REQUIRE_(DEB|RPM) environment variable
+This is used to configure VMP_REQUIRE_(DEB|RPM) to specify additional dependent packages.
+
+ENV are available.
 
 ```bash
 #!/bin/sh
@@ -89,7 +88,7 @@ export VMP_REQUIRE_RPM=mhash
 
 ## src/[vmod name]_init.sh
 
-This is used when a package needs to be added to the build.
+Set this option if the build requires additional packages or additional steps.
 
 ENV are available.
 
@@ -102,9 +101,17 @@ else
 fi
 ```
 
+```bash
+#!/bin/sh
+
+cp -rp ${VMP_ROOT_DIR}/src/m4 ${VMP_WORK_DIR}/src/m4
+```
+
 ## src/[vmod name]_config.sh
 
 This is used when you need options for configure.
+
+ENV is not available.
 
 ```bash
 #!/bin/sh
@@ -142,7 +149,14 @@ A sample is available at sample-src/
 |${VMP_ROOT_DIR}/vmod/src   | vmod source path |
 |${VMP_ROOT_DIR}/work \|\${VMP_WORK_DIR}   | vmod build work space |
 
-# About the output VMOD version
+# Output VMOD Name
+
+[specified VMOD name prefix][specified VMOD name]
+
+- VMOD Name=varnish-modules Prefix=test-
+  - test-varnish-modules
+
+# Output VMOD version
 
 [VRT Version].[specified VMOD version]
 

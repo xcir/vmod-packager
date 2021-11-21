@@ -3,7 +3,6 @@
 # vmod-packager
 
 This tool can be used to easily package VMODs that are not provided as packages.
-
 The created package is intended to be used in your own environment.
 
 ## VMOD package builder
@@ -111,7 +110,7 @@ cp -rp ${VMP_ROOT_DIR}/src/m4 ${VMP_WORK_DIR}/src/m4
 
 This is used when you need options for configure.
 
-ENV is not available.
+ENV is `not` available.
 
 ```bash
 #!/bin/sh

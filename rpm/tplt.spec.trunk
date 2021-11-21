@@ -25,6 +25,8 @@ rm -rf %{buildroot}
 %install
 %make_install
 
+%check
+make check
 
 %files
 %{_libdir}/*

@@ -58,7 +58,7 @@ xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
 varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
 
 # [Distribution]=Ubuntu focal [Varnish Version]=trunk [VMOD Version]=0.19
-xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 varnish-modules
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v trunk -e 0.19 varnish-modules
 ...
 ##################################################
         docker image: vmod-packager/focal:trunk-d497ec0998f3670af1942cb60a9f4316fc2f3cba

@@ -208,4 +208,6 @@ A sample is available at sample-src/
 
 # Convenient usage
 
-> ./vmod-packager.sh -e `date +%Y%m%d` `find src/  -mindepth 1 -maxdepth 1 -type d`
+```bash
+./vmod-packager.sh -e `date +%Y%m%d` `find src/  -mindepth 1 -maxdepth 1 -type d`
+```

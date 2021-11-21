@@ -30,15 +30,52 @@ xcir@build01:~/git/vmod-packager/src$ cd ..
 
 # [Distribution]=Ubuntu focal [Varnish Version]=7.0.0 [VMOD Version]=0.19
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 varnish-modules
+...
+##################################################
+        docker image: vmod-packager/focal:7.0.0-1
+                Dist: focal
+     Varnish Version: 7.0.0
+         Varnish VRT: 140
+           VMOD name: varnish-modules
+        VMOD Version: 140.0.19
+
 xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
 varnish-modules_140.0.19~focal-1_amd64.build      varnish-modules_140.0.19~focal-1_amd64.changes  varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
 varnish-modules_140.0.19~focal-1_amd64.buildinfo  varnish-modules_140.0.19~focal-1_amd64.deb
 
 # [Distribution]=CentOS8 [Varnish Version]=7.0.0 [VMOD Version]=0.19
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19 varnish-modules
+...
+##################################################
+        docker image: vmod-packager/centos8:7.0.0-1
+                Dist: centos8
+     Varnish Version: 7.0.0
+         Varnish VRT: 140
+           VMOD name: varnish-modules
+        VMOD Version: 140.0.19
+
 xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
 varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
+
+# [Distribution]=Ubuntu focal [Varnish Version]=trunk [VMOD Version]=0.19
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 varnish-modules
+...
+##################################################
+        docker image: vmod-packager/focal:trunk-d497ec0998f3670af1942cb60a9f4316fc2f3cba
+                Dist: focal
+     Varnish Version: trunk
+ Varnish commit hash: d497ec0998f3670af1942cb60a9f4316fc2f3cba
+         Varnish VRT: 999
+           VMOD name: varnish-modules
+        VMOD Version: 999.0.19
+
+xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
+varnish-modules_999.0.19~focal-1_amd64.build      varnish-modules_999.0.19~focal-1_amd64.deb
+varnish-modules_999.0.19~focal-1_amd64.buildinfo  varnish-modules-dbgsym_999.0.19~focal-1_amd64.ddeb
+varnish-modules_999.0.19~focal-1_amd64.changes
+
 ```
+
 
 # Options
 

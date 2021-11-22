@@ -38,6 +38,7 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 v
          Varnish VRT: 140
            VMOD name: varnish-modules
         VMOD Version: 140.0.19
+              Status: SUCCESS
 
 xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
 varnish-modules_140.0.19~focal-1_amd64.build      varnish-modules_140.0.19~focal-1_amd64.changes  varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
@@ -53,6 +54,7 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19
          Varnish VRT: 140
            VMOD name: varnish-modules
         VMOD Version: 140.0.19
+              Status: SUCCESS
 
 xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
 varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
@@ -68,6 +70,7 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v trunk -e 0.19 v
          Varnish VRT: 999
            VMOD name: varnish-modules
         VMOD Version: 999.0.19
+              Status: SUCCESS
 
 xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
 varnish-modules_999.0.19~focal-1_amd64.build      varnish-modules_999.0.19~focal-1_amd64.deb

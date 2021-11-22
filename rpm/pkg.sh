@@ -11,8 +11,8 @@ elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
 fi
 
 if [ "${VMP_RPM_ONLY_INC_VMOD}" = "1" ]; then
-    TMP_MAN=" "
-    TMP_DATADIR=" "
+    TMP_MAN=""
+    TMP_DATADIR=""
 else
     TMP_MAN="%{_mandir}\/*"
     TMP_DATADIR="%{_datadir}\/*"

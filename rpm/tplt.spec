@@ -30,7 +30,7 @@ rm -rf %{buildroot}
 %TEST%
 
 %files
-%{_libdir}/varnish/vmods/*
+%{_libdir}/varnish/vmods/*.so
 %FILES_DATADIR%
 %FILES_MAN%
 

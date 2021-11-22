@@ -59,23 +59,23 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19
 xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
 varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
 
-# [Distribution]=Ubuntu focal [Varnish Version]=trunk [VMOD Version]=0.19
-xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v trunk -e 0.19 varnish-modules
+# [Distribution]=Ubuntu focal [Varnish Version]=trunk [VMOD Version]=0.19 [VMOD name prefix]=trunk-
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -v trunk -e 0.19 -p trunk- varnish-modules
 ...
 ##################################################
-        docker image: vmod-packager/focal:trunk-d497ec0998f3670af1942cb60a9f4316fc2f3cba
-                Dist: focal
+        docker image: vmod-packager/centos8:trunk-d497ec0998f3670af1942cb60a9f4316fc2f3cba
+                Dist: centos8
      Varnish Version: trunk
  Varnish commit hash: d497ec0998f3670af1942cb60a9f4316fc2f3cba
-         Varnish VRT: 999
+         Varnish VRT: 140
            VMOD name: varnish-modules
-        VMOD Version: 999.0.19
+        VMOD Version: 140.0.19
               Status: SUCCESS
 
 xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
-varnish-modules_999.0.19~focal-1_amd64.build      varnish-modules_999.0.19~focal-1_amd64.deb
-varnish-modules_999.0.19~focal-1_amd64.buildinfo  varnish-modules-dbgsym_999.0.19~focal-1_amd64.ddeb
-varnish-modules_999.0.19~focal-1_amd64.changes
+trunk-varnish-modules_140.0.19~focal-1_amd64.build      trunk-varnish-modules_140.0.19~focal-1_amd64.changes  trunk-varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
+trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_140.0.19~focal-1_amd64.deb
+
 
 ```
 

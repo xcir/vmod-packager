@@ -29,7 +29,7 @@ find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
 find %{buildroot}/%{_libdir}/ -name '*.a' -exec rm -f {} ';'
 
 %check
-make check
+%TEST%
 
 %files
 %{_libdir}/varnish/vmods/*.so

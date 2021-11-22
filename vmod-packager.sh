@@ -150,12 +150,10 @@ fi
 
   if [[ -n "${VMP_HASH}" ]]; then
     VMP_VARNISH_VER=trunk
-    VMP_VARNISH_VRT=999
     VMP_VARNISH_VER_NXT=trunk
     VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
 
   elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    VMP_VARNISH_VRT=999
     VMP_VARNISH_VER_NXT=trunk
     VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq '.commit.sha' | tr -d '"'`
 

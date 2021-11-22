@@ -4,7 +4,7 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-if [ ${VMP_VARNISH_VRT} -eq 999 ]; then
+if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
     SFX=.trunk
 elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
     SFX=.fixed

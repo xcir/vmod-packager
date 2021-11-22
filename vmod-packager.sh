@@ -19,14 +19,9 @@ vmod_build() {
 
   ########################################
   SCRIPT_DIR=$(cd $(dirname $0); pwd)
-  if [ -z "${VMP_DBG_CACHE}" ]; then
-    VMP_DBG_CACHE="--rm"
-  else
-    VMP_DBG_CACHE="--rm=false"
-  fi
 
   VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
-  docker build ${VMP_DBG_CACHE} \
+  docker build --rm \
     -t ${VMP_DOCKER_IMG} \
     --build-arg VARNISH_VER=${VMP_VARNISH_VER} \
     --build-arg VARNISH_URL=${VMP_VARNISH_URL} \

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#https://github.com/xcir/libvmod-awsrest
+#https://github.com/varnish/libvmod-digest
 
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
     apt-get -yq install libmhash-dev

@@ -1,3 +1,4 @@
 pkgs/debs/*
 pkgs/rpms/*
+tmp/*
 src/*

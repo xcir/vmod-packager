@@ -10,18 +10,18 @@ elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
     SFX=.fixed
 fi
 
-if [ ${VMP_RPM_ONLY_INC_VMOD} -eq 1 ]; then
-    TMP_MAN=""
-    TMP_DATADIR=""
+if [ "${VMP_RPM_ONLY_INC_VMOD}" = "1" ]; then
+    TMP_MAN=" "
+    TMP_DATADIR=" "
 else
-    TMP_MAN="%{_mandir}/*"
-    TMP_DATADIR="%{_datadir}/*"
+    TMP_MAN="%{_mandir}\/*"
+    TMP_DATADIR="%{_datadir}\/*"
 fi
 
-if [ ${VMP_RPM_DISABLE_UNPACKAGED_TRACK} -eq 1 ]; then
+if [ "${VMP_RPM_DISABLE_UNPACKAGED_TRACK}" = "1" ]; then
     TMP_UNPAC="%define _unpackaged_files_terminate_build 0"
 else
-    TMP_UNPAC=""
+    TMP_UNPAC=" "
 fi
 
 if [ ${VMP_SKIP_TEST} -eq 1 ]; then

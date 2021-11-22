@@ -129,6 +129,9 @@ ENV are available.
 
 export VMP_REQUIRE_DEB=libmhash2
 export VMP_REQUIRE_RPM=mhash
+export VMP_RPM_ONLY_INC_VMOD=1
+export VMP_RPM_DISABLE_UNPACKAGED_TRACK=1
+
 ```
 
 ## src/[vmod name]_init.sh
@@ -179,10 +182,17 @@ A sample is available at sample-src/
 | VMP_VMOD_PFX       | Vmod name prefix | test- |
 | VMP_VMOD_NAME      | Vmod name | libvdp-pesi |
 | VMP_VMOD_VER       | Vmod version | 0.1 |
-| VMP_REQUIRE_DEB    | Add depends packages(DEB) | foo, bar |
-| VMP_REQUIRE_RPM    | Add depends packages(RPM) | foo, bar |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
 | VMP_SKIP_TEST      | Skip test mode | 0 |
+
+The following is what you specify in src/[vmod name]_env.sh
+
+| name | explanation | example |
+|-|:-|:-|
+| VMP_REQUIRE_DEB    | Add depends packages(DEB) | foo, bar |
+| VMP_REQUIRE_RPM    | Add depends packages(RPM) | foo, bar |
+| VMP_RPM_ONLY_INC_VMOD                 | Limit the files to be included in the package to VMOD | 1 |
+| VMP_RPM_DISABLE_UNPACKAGED_TRACK      | Specify `_unpackaged_files_terminate_build 0` for spec | 1 |
 
 # path in a container
 |path|explanation|

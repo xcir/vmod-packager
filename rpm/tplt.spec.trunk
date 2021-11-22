@@ -1,4 +1,5 @@
 %global debug_package %{nil}
+%UNPACKAGED_TRACK%
 
 Summary:	%PFX%%VMOD%
 Name:		%PFX%%VMOD%
@@ -8,7 +9,7 @@ License:	See original VMOD source license file.
 
 Source:	    vmod.tar.gz
 
-Requires: varnish%REQ%
+Requires: varnish%REQUIRE%
 
 %description
 Packed by vmod-packager
@@ -29,9 +30,9 @@ rm -rf %{buildroot}
 make check
 
 %files
-%{_libdir}/*
-%{_mandir}/*
-%{_datadir}/*
+%{_libdir}/varnish/vmods/*
+%FILES_DATADIR%
+%FILES_MAN%
 
 %changelog
 * Tue Feb 23 2021 %PFX%%VMOD% <example@localhost> - %VRT%.%VER%

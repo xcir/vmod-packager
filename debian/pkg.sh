@@ -1,4 +1,6 @@
 #!/bin/sh
+echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 CN=`lsb_release -cs`
 rm -rf ${VMP_WORK_DIR}/src/debian

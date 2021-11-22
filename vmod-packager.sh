@@ -26,7 +26,10 @@ vmod_build() {
     --build-arg VARNISH_URL=${VMP_VARNISH_URL} \
     -f docker/${VMP_DIST} \
     .
-
+  if [ $? -ne 0 ]; then
+      echo "Error: docker build"
+      exit 1
+  fi
   docker run --rm \
   -e VMP_VARNISH_VER=${VMP_VARNISH_VER} \
   -e VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_NXT} \
@@ -44,6 +47,11 @@ vmod_build() {
   -v `pwd`/pkgs:/tmp/varnish/pkgs \
   -v `pwd`/src:/tmp/varnish/vmod/src \
   --name ${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
+  if [ $? -ne 0 ]; then
+      DRSTATUS=FAIL
+  else
+      DRSTATUS=SUCCESS
+  fi
 
   echo "##################################################"
   printf "%20s: %s\n" "docker image" "${VMP_DOCKER_IMG}"
@@ -61,7 +69,13 @@ vmod_build() {
   if [ ${VMP_SKIP_TEST} -eq 1 ]; then
     printf "%20s\n" "Enable skip test"
   fi
+  if [ "${VMP_EXEC_MODE}" = "build" ]; then
+    printf "%20s: %s\n" "Status" "${DRSTATUS}"
+  fi
   echo
+  if [ "${DRSTATUS}" = "FAIL" ]; then
+    exit 1
+  fi
 
 }
 

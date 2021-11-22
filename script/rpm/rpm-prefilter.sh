@@ -1,6 +1,8 @@
 #!/bin/sh
 
-echo "build ${VMP_VMOD_NAME}"
+echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
+
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 rm -rf ${VMP_WORK_DIR}
 mkdir -p ${VMP_WORK_DIR}/SOURCES

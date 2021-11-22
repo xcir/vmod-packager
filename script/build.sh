@@ -1,8 +1,15 @@
 #!/bin/bash
+echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [ -e ${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh ]; then
+    echo "VMP>>>${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
     source ${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
+    if [ $? -ne 0 ]; then
+        echo "Error"
+        exit 1
+    fi
     if [ -n "${VMP_REQUIRE_DEB}" ]; then
         export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
     fi

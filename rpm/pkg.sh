@@ -1,4 +1,7 @@
 #!/bin/sh
+echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
+
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [ ${VMP_VARNISH_VRT} -eq 999 ]; then

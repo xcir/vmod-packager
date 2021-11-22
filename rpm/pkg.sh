@@ -24,12 +24,14 @@ else
     TMP_UNPAC=""
 fi
 
-
 if [ ${VMP_SKIP_TEST} -eq 1 ]; then
     TMP_TEST="echo"
 else
     TMP_TEST="make check"
 fi
+
+TMP_TIME=`date +"%a %b %d %Y"`
+
 cat ${SCRIPT_DIR}/tplt.spec${SFX} \
     | sed -r "s/%VRT%/${VMP_VARNISH_VRT}/g" \
     | sed -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
@@ -42,5 +44,6 @@ cat ${SCRIPT_DIR}/tplt.spec${SFX} \
     | sed -r "s/%FILES_MAN%/${TMP_MAN}/g" \
     | sed -r "s/%FILES_DATADIR%/${TMP_DATADIR}/g" \
     | sed -r "s/%UNPACKAGED_TRACK%/${TMP_UNPAC}/g" \
+    | sed -r "s/%TIME%/${TMP_TIME}/g" \
     > ${VMP_WORK_DIR}/__vmod-package.spec
 

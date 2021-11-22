@@ -35,5 +35,5 @@ rm -rf %{buildroot}
 %FILES_MAN%
 
 %changelog
-* Tue Feb 23 2021 %PFX%%VMOD% <example@localhost> - %VRT%.%VER%
+* %TIME% %PFX%%VMOD% <example@localhost> - %VRT%.%VER%
 - Packaged by vmod-packager

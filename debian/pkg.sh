@@ -10,6 +10,7 @@ if [ ${VMP_SKIP_TEST} -eq 1 ]; then
 else
     TMP_TEST=""
 fi
+TMP_TIME=`date +"%a, %d %b %Y %H:%M:%S %z"`
 
 for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
     cat ${i} \
@@ -22,6 +23,7 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
      | sed -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
      | sed -r "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
      | sed -r "s/%TEST%/${TMP_TEST}/g" \
+     | sed -r "s/%TIME%/${TMP_TIME}/g" \
      > ${VMP_WORK_DIR}/src/debian/`basename ${i}`
 
 done

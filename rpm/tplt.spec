@@ -25,6 +25,8 @@ rm -rf %{buildroot}
 
 %install
 %make_install
+find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
+find %{buildroot}/%{_libdir}/ -name '*.a' -exec rm -f {} ';'
 
 %check
 %TEST%

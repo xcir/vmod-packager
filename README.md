@@ -204,6 +204,7 @@ The following is what you specify in src/[vmod name]_env.sh
 |${VMP_ROOT_DIR}/script | Script |
 |${VMP_ROOT_DIR}/vmod/src   | vmod source path |
 |${VMP_ROOT_DIR}/work \|\${VMP_WORK_DIR}   | vmod build work space |
+|${VMP_ROOT_DIR}/tmp   | vmod build temp space |
 
 # Output VMOD Name
 

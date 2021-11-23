@@ -1,0 +1,9 @@
+FROM centos:8
+
+RUN dnf -y update && \
+    dnf -y install epel-release dnf-plugin-config-manager && \
+    dnf -y config-manager --set-enabled powertools && \
+    dnf -y group install "Development Tools" && \
+    dnf -y install unzip wget curl git
+
+RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel

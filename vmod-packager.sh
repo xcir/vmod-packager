@@ -20,6 +20,16 @@ vmod_build() {
   ########################################
   SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
+  VMP_DOCKER_IMG=vmod-packager/base:${VMP_DIST}
+  docker build --rm \
+    -t ${VMP_DOCKER_IMG} \
+    -f docker/init/${VMP_DIST} \
+    .
+  if [ $? -ne 0 ]; then
+      echo "Error: docker base image build"
+      exit 1
+  fi
+
   VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
   docker build --rm \
     -t ${VMP_DOCKER_IMG} \

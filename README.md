@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | not yet release |
-| Version:                  | not yet release |
+| Date:                     | 2021/11/24 |
+| Version:                  | 0.1 |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 

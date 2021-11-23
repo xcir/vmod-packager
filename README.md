@@ -1,5 +1,3 @@
-# WIP
-
 # vmod-packager
 
 This tool can be used to easily package VMODs that are not provided as packages.
@@ -225,3 +223,24 @@ The following is what you specify in src/[vmod name]_env.sh
 ```bash
 ./vmod-packager.sh -e `date +%Y%m%d` `find src/  -mindepth 1 -maxdepth 1 -type d`
 ```
+
+# Script exec order
+
+The following is for deb, but it is roughly the same for rpm.(script path is a little different.)
+
+```
+./vmod-packager.sh
+  + [container]
+    +${VMP_ROOT_DIR}/script/build.sh
+      +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
+      +${VMP_ROOT_DIR}/script/deb/deb-build.sh
+        +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
+        +${VMP_ROOT_DIR}/debian/pkg.sh
+        +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
+        +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
+          +(in debuild)/work/src/__vmod-package_config.sh
+```
+
+`__vmod-package_config.sh` will be copied from `${VMP_VMOD_NAME}_config.sh` or `script/default/default_config.sh`.
+
+If you want to start and build in shell mode(-s), please run `script/build.sh` in container.

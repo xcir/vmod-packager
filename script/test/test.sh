@@ -21,14 +21,30 @@ curl -sL https://gitlab.com/uplex/varnish/libvdp-pesi/-/archive/7.0/libvdp-pesi-
 
 cd ${VRD}
 export VMP_DBG_CACHE=1
-./vmod-packager.sh -t -d bionic -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bionic-1_amd64.deb
-if [ $? -eq 1 ]; then exit 1; fi
-./vmod-packager.sh -t -d bionic -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bionic-1_amd64.deb
-if [ $? -eq 1 ]; then exit 1; fi
+
+#ubuntu
 ./vmod-packager.sh -t -d focal -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~focal-1_amd64.deb
 if [ $? -eq 1 ]; then exit 1; fi
 ./vmod-packager.sh -t -d focal -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~focal-1_amd64.deb
 if [ $? -eq 1 ]; then exit 1; fi
+
+./vmod-packager.sh -t -d bionic -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bionic-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+./vmod-packager.sh -t -d bionic -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bionic-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+
+#debian
+./vmod-packager.sh -t -d buster -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~buster-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+./vmod-packager.sh -t -d buster -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~buster-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+
+./vmod-packager.sh -t -d bullseye -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bullseye-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+./vmod-packager.sh -t -d bullseye -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bullseye-1_amd64.deb
+if [ $? -eq 1 ]; then exit 1; fi
+
+#centos
 ./vmod-packager.sh -t -d centos8 -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/rpms/test-varnish-modules60/test-varnish-modules60-71.0.1-1.el8.x86_64.rpm
 if [ $? -eq 1 ]; then exit 1; fi
 ./vmod-packager.sh -t -d centos8 -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-varnish-modules70/test-varnish-modules70-140.0.1-1.el8.x86_64.rpm

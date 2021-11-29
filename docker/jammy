@@ -1,0 +1,17 @@
+FROM vmod-packager/base:jammy
+
+ARG VARNISH_VER
+ARG VARNISH_URL
+
+RUN rm -rf /tmp/varnish && \
+    mkdir /tmp/varnish && \
+    cd /tmp/varnish && \
+    mkdir src && \
+    curl -sL ${VARNISH_URL} | tar zx -C src --strip-components 1 && \
+    cd src && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr && \
+    make -sj32 && \
+    make install
+
+WORKDIR /tmp/varnish/

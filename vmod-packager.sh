@@ -112,7 +112,7 @@ do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
         e)  VMP_VMOD_VER=$OPTARG;;
-        d)  VMP_DIST=$OPTARG;;
+        d)  VMP_DIST=`basename $OPTARG`;;
         p)  VMP_VMOD_PFX=$OPTARG;;
         c)  VMP_HASH=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;

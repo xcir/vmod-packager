@@ -51,6 +51,7 @@ vmod_build() {
   -e VMP_VMOD_PFX=${VMP_VMOD_PFX} \
   -e VMP_FIXED_MODE=${VMP_FIXED_MODE} \
   -e VMP_SKIP_TEST=${VMP_SKIP_TEST} \
+  -e VMP_HASH=${VMP_HASH} \
   -v ${SCRIPT_DIR}/script:/tmp/varnish/script \
   -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian \
   -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm \

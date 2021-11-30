@@ -182,6 +182,7 @@ A sample is available at sample-src/
 | VMP_VMOD_VER       | Vmod version | 0.1 |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
 | VMP_SKIP_TEST      | Skip test mode | 0 |
+| VMP_HASH           | Varnish commit hash (trunk only) | f65fcaeae09ff3fc7a32412c59cd8f27a9b7f244 |
 
 The following is what you specify in src/[vmod name]_env.sh
 

@@ -232,9 +232,9 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
 ```
 ./vmod-packager.sh
   + [container]
-    +${VMP_ROOT_DIR}/script/build.sh
+    +${VMP_ROOT_DIR}/script/vmod-%REQUIRE%
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
-      +${VMP_ROOT_DIR}/script/deb/deb-build.sh
+      +${VMP_ROOT_DIR}/script/deb/deb-%REQUIRE%
         +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
         +${VMP_ROOT_DIR}/debian/pkg.sh
         +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
@@ -244,4 +244,4 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
 
 `__vmod-package_config.sh` will be copied from `${VMP_VMOD_NAME}_config.sh` or `script/default/default_config.sh`.
 
-If you want to start and build in shell mode(-s), please run `script/build.sh` in container.
+If you want to start and build in shell mode(-s), please run `script/vmod-%REQUIRE%` in container.

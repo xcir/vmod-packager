@@ -154,7 +154,7 @@ fi
   fi
 
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
-    VMP_DOCKER_EXEC=/tmp/varnish/script/build.sh
+    VMP_DOCKER_EXEC=/tmp/varnish/script/vmod-build.sh
   else
     VMP_DOCKER_EXEC=/bin/bash
   fi

@@ -8,7 +8,7 @@ tar cfz ${VMP_WORK_DIR}/SOURCES/vmod.tar.gz src
 rpmbuild --define "_topdir ${VMP_WORK_DIR}" -ba __vmod-package.spec 
 
 if [ $? -ne 0 ]; then
-    echo "Error"
+    echo "Error" 1>&2
     exit 1
 fi
 mkdir ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}  2>/dev/null

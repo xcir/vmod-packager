@@ -4,8 +4,6 @@ echo "VMP>>>$0 : varnish"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/redhat/* ${VMP_ROOT_DIR}/src/
-#cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/redhat ${VMP_ROOT_DIR}/src/
-#cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/src/
 
 FILES=`find ${VMP_ROOT_DIR}/src/ -maxdepth 1 -type l | awk -F/ '{print $NF}'`
 for FILE in $FILES; do

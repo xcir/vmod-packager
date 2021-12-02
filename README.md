@@ -74,6 +74,22 @@ xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
 trunk-varnish-modules_140.0.19~focal-1_amd64.build      trunk-varnish-modules_140.0.19~focal-1_amd64.changes  trunk-varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
 trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_140.0.19~focal-1_amd64.deb
 
+# Using patched varnish by myself to VMOD build(-r). And build the varnish package(-k).
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -r varnish/varnish-cache/ -k varnish-modules
+...
+##################################################
+        docker image: vmod-packager/focal:trunk-
+                Dist: focal
+     Varnish Version: trunk
+        Varnish hash: 6409bcd629b5088c96f7c6ab55db9a7a979540af
+         Varnish VRT: 140
+           VMOD name: varnish-modules
+        VMOD Version: 140.0.1
+              Status: SUCCESS
+
+xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish
+varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.build      varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.changes  varnish-dev_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
+varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.buildinfo  varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
 
 ```
 
@@ -81,23 +97,25 @@ trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_14
 # Options
 
 ```
-xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -h
-Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
 -v Varnish version (ex:7.0.0 or trunk)
+-r vaRnish source
 -e vmod vErsion (ex:0.1)
--d distribution
+-d Distribution
 -p vmod name Prefix
 -c Commit hash
 -f Fixed varnish version
 -s run baSh
 -t skip Test
+-k varnish pacKage build
 -h Help
-Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
+Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -o focal libvmod-xcounter
 ```
 
 | option | explanation | default | example |
 |-|:-|:-|:-|
 | -v [Varnish version]      | Target varnish version    | 7.0.0 | -v 7.0.0 |
+| -r [varnish source]       | The name of the Varnish source in varnish/    | varnish-cache | -r varnish-cache |
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
 | -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |
 | -d [Distribution name]    | Target distribution       | focal | -d focal |
@@ -105,6 +123,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
+| -k                        | Varnish package build     | disabled | -k |
 
 # Support Distribution
 
@@ -238,12 +257,14 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
   + [container]
     +${VMP_ROOT_DIR}/script/build.sh
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
-      +${VMP_ROOT_DIR}/script/deb/deb-%REQUIRE%
+      +${VMP_ROOT_DIR}/script/deb/deb-build.sh
         +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
         +${VMP_ROOT_DIR}/debian/pkg.sh
         +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
         +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
           +(in debuild)/work/src/__vmod-package_config.sh
+      +${VMP_ROOT_DIR}/script/tool/varnish-build.sh (If you set the option to build Varnish)
+        +${VMP_ROOT_DIR}/script/deb/deb-varnish-build.sh
 ```
 
 `__vmod-package_config.sh` will be copied from `${VMP_VMOD_NAME}_config.sh` or `script/default/default_config.sh`.

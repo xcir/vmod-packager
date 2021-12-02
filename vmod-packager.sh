@@ -110,7 +110,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 cd $SCRIPT_DIR
 ###################################
 #check commands
-which docker && which curl && which jq
+which docker > /dev/null && which curl > /dev/null && which jq > /dev/null
 if [ $? -ne 0 ]; then
   echo "$0 requires docker, curl, jq commands" 1>&2
   exit 1

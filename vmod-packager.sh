@@ -14,15 +14,10 @@ usage_exit() {
         exit 1
 }
 
-vmod_build() {
+docker_build() {
 
-
-  ########################################
-  SCRIPT_DIR=$(cd $(dirname $0); pwd)
-
-  VMP_DOCKER_IMG=vmod-packager/base:${VMP_DIST}
   docker build --rm \
-    -t ${VMP_DOCKER_IMG} \
+    -t ${VMP_DOCKER_BASE_IMG} \
     -f docker/init/${VMP_DIST} \
     .
   if [ $? -ne 0 ]; then
@@ -30,7 +25,6 @@ vmod_build() {
       exit 1
   fi
 
-  VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
   docker build --rm \
     -t ${VMP_DOCKER_IMG} \
     --build-arg VARNISH_VER=${VMP_VARNISH_VER} \
@@ -41,6 +35,12 @@ vmod_build() {
       echo "Error: docker build"
       exit 1
   fi
+}
+
+vmod_build() {
+
+  SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
   docker run --rm \
   -e VMP_VARNISH_VER=${VMP_VARNISH_VER} \
   -e VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_NXT} \
@@ -129,29 +129,12 @@ if [[ -z "$1" ]]; then
   usage_exit
 fi
 
-  if [[ -z "${VMP_VARNISH_VER}" ]]; then
-    VMP_VARNISH_VER=7.0.0
-  fi
-
-  if [[ -z "${VMP_DIST}" ]]; then
-    VMP_DIST=focal
-  fi
-
-  if [[ -z "${VMP_FIXED_MODE}" ]]; then
-    VMP_FIXED_MODE=0
-  fi
-
-  if [[ -z "${VMP_SKIP_TEST}" ]]; then
-    VMP_SKIP_TEST=0
-  fi
-
-  if [[ -z "${VMP_EXEC_MODE}" ]]; then
-    VMP_EXEC_MODE=build
-  fi
-
-  if [[ -z "${VMP_VMOD_VER}" ]]; then
-    VMP_VMOD_VER=0.1
-  fi
+  if [[ -z "${VMP_VARNISH_VER}" ]]; then VMP_VARNISH_VER=7.0.0; fi
+  if [[ -z "${VMP_DIST}" ]];        then VMP_DIST=focal; fi
+  if [[ -z "${VMP_FIXED_MODE}" ]];  then VMP_FIXED_MODE=0; fi
+  if [[ -z "${VMP_SKIP_TEST}" ]];   then VMP_SKIP_TEST=0; fi
+  if [[ -z "${VMP_EXEC_MODE}" ]];   then VMP_EXEC_MODE=build; fi
+  if [[ -z "${VMP_VMOD_VER}" ]];    then VMP_VMOD_VER=0.1; fi
 
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_DOCKER_EXEC=/tmp/varnish/script/vmod-build.sh
@@ -185,6 +168,11 @@ fi
 
   fi
 
+# docker build
+VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
+VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
+docker_build
+
 while [ -n "$1" ]
 do
   VMP_VMOD=`basename $1`
@@ -193,6 +181,5 @@ do
     usage_exit
   fi
   vmod_build
-
   shift $((1))
 done

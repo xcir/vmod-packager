@@ -10,6 +10,9 @@ fi
 #https://github.com/varnishcache/varnish-cache/wiki/Release-procedure
 
 cd ${VMP_ROOT_DIR}/src
+if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
+    mkdir -p ${VMP_ROOT_DIR}/src/doc/html
+fi
 make dist
 make clean
 

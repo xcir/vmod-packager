@@ -7,11 +7,10 @@ if [ ! -d "${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache" ]; then
     exit 1
 fi
 
-if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
-    mkdir -p ${VMP_ROOT_DIR}/src/doc/html
-fi
+#https://github.com/varnishcache/varnish-cache/wiki/Release-procedure
 
 cd ${VMP_ROOT_DIR}/src
+make dist
 make clean
 
 rm -rf ${VMP_ROOT_DIR}/systemd

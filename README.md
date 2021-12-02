@@ -176,13 +176,17 @@ A sample is available at sample-src/
 | VMP_VARNISH_VER    | Varnish Version | 7.0.0 |
 | VMP_VARNISH_VER_NXT| Version of Varnish with incrementing miner | 7.1.0 |
 | VMP_ROOT_DIR       | root dir(fixed) | /tmp/varnish |
+| VMP_VMOD_ORG_SRC_DIR       | vmod original source dir(fixed) | /tmp/varnish/org/vmod |
+| VMP_VARNISH_ORG_DIR       | varnish original source dir(fixed) | /tmp/varnish/org/varnish |
 | VMP_WORK_DIR       | work dir(fixed) | /tmp/varnish/work |
 | VMP_VMOD_PFX       | Vmod name prefix | test- |
 | VMP_VMOD_NAME      | Vmod name | libvdp-pesi |
 | VMP_VMOD_VER       | Vmod version | 0.1 |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
 | VMP_SKIP_TEST      | Skip test mode | 0 |
-| VMP_HASH           | Varnish commit hash (trunk only) | f65fcaeae09ff3fc7a32412c59cd8f27a9b7f244 |
+| VMP_VARNISH_PKG_MODE | Varnish package build | 0 |
+| VMP_HASH           | Varnish hash (trunk only) | f65fcaeae09ff3fc7a32412c59cd8f27a9b7f244 |
+| VMP_VARNISH_SRC    | Varnish source dir (from source only) | varnish-cache |
 
 The following is what you specify in src/[vmod name]_env.sh
 
@@ -232,7 +236,7 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
 ```
 ./vmod-packager.sh
   + [container]
-    +${VMP_ROOT_DIR}/script/vmod-%REQUIRE%
+    +${VMP_ROOT_DIR}/script/build.sh
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
       +${VMP_ROOT_DIR}/script/deb/deb-%REQUIRE%
         +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
@@ -244,4 +248,5 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
 
 `__vmod-package_config.sh` will be copied from `${VMP_VMOD_NAME}_config.sh` or `script/default/default_config.sh`.
 
-If you want to start and build in shell mode(-s), please run `script/vmod-%REQUIRE%` in container.
+If you want to start and build in shell mode(-s), please run `script/build.sh` in container.
+

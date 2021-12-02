@@ -40,15 +40,6 @@ if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
 fi
 
 
-
-if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
-    ${SCRIPT_DIR}/tool/varnish-build.sh
-    if [ $? -ne 0 ]; then
-        echo "Error" 1>&2
-        exit 1
-    fi
-fi
-
 which dpkg 2>/dev/null
 if [ $? -eq 0 ]; then
     export VMP_PKGTYPE=deb
@@ -57,4 +48,15 @@ else
     export VMP_PKGTYPE=rpm
     ${SCRIPT_DIR}/rpm/rpm-build.sh
 fi
+if [ $? -ne 0 ]; then
+    echo "Error" 1>&2
+    exit 1
+fi
 
+if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
+    ${SCRIPT_DIR}/tool/varnish-build.sh
+    if [ $? -ne 0 ]; then
+        echo "Error" 1>&2
+        exit 1
+    fi
+fi

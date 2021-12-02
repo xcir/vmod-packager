@@ -216,7 +216,7 @@ cd $SCRIPT_DIR
 while [ -n "$1" ]
 do
   VMP_VMOD=`basename $1`
-  if [ ! -e "./src/${VMP_VMOD}" ]; then
+  if [ ! -e "${SCRIPT_DIR}/src/${VMP_VMOD}" ]; then
     echo "./src/${VMP_VMOD} is not found" 1>&2
     usage_exit
   fi

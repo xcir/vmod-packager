@@ -11,6 +11,9 @@ if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
     mkdir -p ${VMP_ROOT_DIR}/src/doc/html
 fi
 
+cd ${VMP_ROOT_DIR}/src
+make clean
+
 rm -rf ${VMP_ROOT_DIR}/systemd
 cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/
 

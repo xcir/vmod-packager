@@ -186,6 +186,12 @@ ENV is `not` available.
 
 A sample is available at sample-src/
 
+# Varnish package build (-k option)
+
+You can create a varnish package by placing [pkg-varnish-cache](https://github.com/varnishcache/pkg-varnish-cache) in the `./varnish/pkg-varnish-cache`
+And, used in conjunction with the -r option, it is possible to create a Varnish package with modifications.
+
+
 # Environment variables
 
 | name | explanation | example |

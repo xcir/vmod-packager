@@ -99,7 +99,7 @@ varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.buildinfo  varnish_20211202.64
 ```
 Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
 -v Varnish version (ex:7.0.0 or trunk)
--r vaRnish source
+-r build VaRnish from local source
 -e vmod vErsion (ex:0.1)
 -d Distribution
 -p vmod name Prefix

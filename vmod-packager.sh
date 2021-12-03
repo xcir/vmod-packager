@@ -12,7 +12,7 @@ usage_exit() {
   echo "-t skip Test" 1>&2
   echo "-k varnish pacKage build" 1>&2
   echo "-h Help" 1>&2
-  echo "Example: $0 -v 7.0.0 -e 1.0 -o focal libvmod-xcounter" 1>&2
+  echo "Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter" 1>&2
   exit 1
 }
 

@@ -8,7 +8,7 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | TBD |
+| Date:                     | 2021/12/03 |
 | Version:                  | 0.2 |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
@@ -109,7 +109,7 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
 -t skip Test
 -k varnish pacKage build
 -h Help
-Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -o focal libvmod-xcounter
+Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 ```
 
 | option | explanation | default | example |

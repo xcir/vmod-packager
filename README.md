@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | 2021/11/24 |
-| Version:                  | 0.1 |
+| Date:                     | 2021/12/03 |
+| Version:                  | 0.2 |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 
@@ -74,6 +74,22 @@ xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
 trunk-varnish-modules_140.0.19~focal-1_amd64.build      trunk-varnish-modules_140.0.19~focal-1_amd64.changes  trunk-varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
 trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_140.0.19~focal-1_amd64.deb
 
+# Using patched varnish by myself to VMOD build(-r). And build the varnish package(-k).
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -r varnish/varnish-cache/ -k varnish-modules
+...
+##################################################
+        docker image: vmod-packager/focal:trunk-
+                Dist: focal
+     Varnish Version: trunk
+        Varnish hash: 6409bcd629b5088c96f7c6ab55db9a7a979540af
+         Varnish VRT: 140
+           VMOD name: varnish-modules
+        VMOD Version: 140.0.1
+              Status: SUCCESS
+
+xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish
+varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.build      varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.changes  varnish-dev_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
+varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.buildinfo  varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
 
 ```
 
@@ -81,16 +97,17 @@ trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_14
 # Options
 
 ```
-xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -h
-Usage: ./vmod-packager.sh [-v Varnish version] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
 -v Varnish version (ex:7.0.0 or trunk)
+-r build VaRnish from local source
 -e vmod vErsion (ex:0.1)
--d distribution
+-d Distribution
 -p vmod name Prefix
 -c Commit hash
 -f Fixed varnish version
 -s run baSh
 -t skip Test
+-k varnish pacKage build
 -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 ```
@@ -98,6 +115,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | option | explanation | default | example |
 |-|:-|:-|:-|
 | -v [Varnish version]      | Target varnish version    | 7.0.0 | -v 7.0.0 |
+| -r [varnish source]       | The name of the Varnish source in varnish/    | varnish-cache | -r varnish-cache |
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
 | -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |
 | -d [Distribution name]    | Target distribution       | focal | -d focal |
@@ -105,6 +123,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
+| -k                        | Varnish package build     | disabled | -k |
 
 # Support Distribution
 
@@ -167,6 +186,12 @@ ENV is `not` available.
 
 A sample is available at sample-src/
 
+# Varnish package build (-k option)
+
+You can create a varnish package by placing [pkg-varnish-cache](https://github.com/varnishcache/pkg-varnish-cache) in the `./varnish/pkg-varnish-cache`
+And, used in conjunction with the -r option, it is possible to create a Varnish package with modifications.
+
+
 # Environment variables
 
 | name | explanation | example |
@@ -176,12 +201,17 @@ A sample is available at sample-src/
 | VMP_VARNISH_VER    | Varnish Version | 7.0.0 |
 | VMP_VARNISH_VER_NXT| Version of Varnish with incrementing miner | 7.1.0 |
 | VMP_ROOT_DIR       | root dir(fixed) | /tmp/varnish |
+| VMP_VMOD_ORG_SRC_DIR       | vmod original source dir(fixed) | /tmp/varnish/org/vmod |
+| VMP_VARNISH_ORG_DIR       | varnish original source dir(fixed) | /tmp/varnish/org/varnish |
 | VMP_WORK_DIR       | work dir(fixed) | /tmp/varnish/work |
 | VMP_VMOD_PFX       | Vmod name prefix | test- |
 | VMP_VMOD_NAME      | Vmod name | libvdp-pesi |
 | VMP_VMOD_VER       | Vmod version | 0.1 |
 | VMP_FIXED_MODE     | Version fixed mode | 0 |
 | VMP_SKIP_TEST      | Skip test mode | 0 |
+| VMP_VARNISH_PKG_MODE | Varnish package build | 0 |
+| VMP_HASH           | Varnish hash (trunk only) | f65fcaeae09ff3fc7a32412c59cd8f27a9b7f244 |
+| VMP_VARNISH_SRC    | Varnish source dir (from source only) | varnish-cache |
 
 The following is what you specify in src/[vmod name]_env.sh
 
@@ -239,8 +269,11 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
         +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
         +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
           +(in debuild)/work/src/__vmod-package_config.sh
+      +${VMP_ROOT_DIR}/script/tool/varnish-build.sh (If you set the option to build Varnish)
+        +${VMP_ROOT_DIR}/script/deb/deb-varnish-build.sh
 ```
 
 `__vmod-package_config.sh` will be copied from `${VMP_VMOD_NAME}_config.sh` or `script/default/default_config.sh`.
 
 If you want to start and build in shell mode(-s), please run `script/build.sh` in container.
+

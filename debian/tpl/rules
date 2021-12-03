@@ -30,7 +30,7 @@ override_dh_auto_install:
 	dh_auto_install -a
 
 	find $(CURDIR)/debian/ -name \*.la -delete
-	find $(CURDIR)/debian/ -name \*.a -delete
+	find $(CURDIR)/debian/ -name \*.a  -delete
 
 %TEST%
 

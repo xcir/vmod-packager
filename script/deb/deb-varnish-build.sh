@@ -31,6 +31,7 @@ FULL_VERSION="${VERSION}-1${DEBVERSION}~${CN}"
 sed -i -e "s|@VERSION@|${FULL_VERSION}|"  "${VMP_ROOT_DIR}/src/debian/changelog"
 
 cd ${VMP_ROOT_DIR}/src
+
 debuild -us -uc -b
 if [ $? -ne 0 ]; then
     echo "error" 1>&2

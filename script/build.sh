@@ -3,6 +3,7 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
+# build varnish, if from local path
 if [ -n "${VMP_VARNISH_SRC}" ]; then
     cp -rp ${VMP_VARNISH_ORG_DIR}/${VMP_VARNISH_SRC} ${VMP_ROOT_DIR}/src
     cd ${VMP_ROOT_DIR}/src
@@ -15,6 +16,8 @@ if [ -n "${VMP_VARNISH_SRC}" ]; then
         exit 1
     fi
 fi
+
+# extract VRT
 # ref https://github.com/varnishcache/pkg-varnish-cache/blob/master/debian/rules
 export VMP_VARNISH_VRT=`printf '#include "/tmp/varnish/src/include/vdef.h"\n#include "/tmp/varnish/src/include/vrt.h"\n%s.%s\' VRT_MAJOR_VERSION VRT_MINOR_VERSION|  cpp - -Iinclude|tail -1|tr -c -d '[0-9]'`
 echo ${VMP_VARNISH_VRT} > ${VMP_ROOT_DIR}/tmp/vrt
@@ -53,6 +56,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+# varnish pkg build
 if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
     ${SCRIPT_DIR}/tool/varnish-build.sh
     if [ $? -ne 0 ]; then

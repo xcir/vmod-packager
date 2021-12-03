@@ -32,13 +32,13 @@ else
 fi
 
 rpmbuild \
-		--define "_topdir ${VMP_WORK_DIR}" \
-		--define "_smp_mflags -j10" \
-		--define "versiontag ${VERSION}" \
-		--define "releasetag 1${DEBVERSION}" \
-		--define "srcname src" \
-		--define "nocheck 1" \
- -ba ${VMP_ROOT_DIR}/src/varnish.spec
+    --define "_topdir ${VMP_WORK_DIR}" \
+    --define "_smp_mflags -j10" \
+    --define "versiontag ${VERSION}" \
+    --define "releasetag 1${DEBVERSION}" \
+    --define "srcname src" \
+    --define "nocheck 1" \
+    -ba ${VMP_ROOT_DIR}/src/varnish.spec
 
 if [ $? -ne 0 ]; then
     echo "error" 1>&2
@@ -47,5 +47,5 @@ fi
 
 mkdir ${VMP_ROOT_DIR}/pkgs/rpms/varnish 2>/dev/null
 
-find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm|xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
-find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm|xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
+find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
+find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/

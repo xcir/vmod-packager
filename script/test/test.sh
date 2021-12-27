@@ -2,7 +2,7 @@
 
 set -e
 
-VRD=$(cd $(dirname $0)/../../; pwd)
+VRD=$(realpath "$(dirname $0)/../../")
 cd ${VRD}
 
 sudo rm -rf src/test-varnish-modules60* src/test-varnish-modules70* src/test-libvmod-digest70*

@@ -30,10 +30,11 @@ docker_build() {
 
   docker build --rm \
     -t ${VMP_DOCKER_IMG} \
+    --build-arg VMP_DOCKER_BASE_IMG=${VMP_DOCKER_BASE_IMG} \
     --build-arg VARNISH_VER=${VMP_VARNISH_VER} \
     --build-arg VARNISH_URL=${VMP_VARNISH_URL} \
     --build-arg VARNISH_NOBUILD=${VMP_VARNISH_FROMSRC} \
-    -f docker/${VMP_DIST} \
+    -f docker/Dockerfile \
     .
 
   if [ $? -ne 0 ]; then

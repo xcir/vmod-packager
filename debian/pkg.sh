@@ -13,17 +13,19 @@ fi
 TMP_TIME=`date +"%a, %d %b %Y %H:%M:%S %z"`
 
 for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
-    sed \
-     -r "s/%CN%/${CN}/g" \
-     -r "s/%VRT%/${VMP_VARNISH_VRT}/g" \
-     -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
-     -r "s/%VMOD%/${VMP_VMOD_NAME}/g" \
-     -r "s/%VER%/${VMP_VMOD_VER}/g" \
-     -r "s/%REQUIRE%/${VMP_REQUIRE_DEB}/g" \
-     -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
-     -r "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
-     -r "s/%TEST%/${TMP_TEST}/g" \
-     -r "s/%TIME%/${TMP_TIME}/g" \
+    sed -r \
+     "
+        s/%CN%/${CN}/g;
+        s/%VRT%/${VMP_VARNISH_VRT}/g;
+        s/%PFX%/${VMP_VMOD_PFX}/g;
+        s/%VMOD%/${VMP_VMOD_NAME}/g;
+        s/%VER%/${VMP_VMOD_VER}/g;
+        s/%REQUIRE%/${VMP_REQUIRE_DEB}/g;
+        s/%VARNISH_VER%/${VMP_VARNISH_VER}/g;
+        s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g;
+        s/%TEST%/${TMP_TEST}/g;
+        s/%TIME%/${TMP_TIME}/g;
+     " $i \
      > ${VMP_WORK_DIR}/src/debian/`basename ${i}`
 
 done

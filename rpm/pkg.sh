@@ -30,19 +30,20 @@ else
 fi
 
 TMP_TIME=`date +"%a %b %d %Y"`
-
-sed ${SCRIPT_DIR}/tplt.spec${SFX} \
-    -r "s/%VRT%/${VMP_VARNISH_VRT}/g" \
-    -r "s/%PFX%/${VMP_VMOD_PFX}/g" \
-    -r "s/%VMOD%/${VMP_VMOD_NAME}/g" \
-    -r "s/%VER%/${VMP_VMOD_VER}/g" \
-    -r "s/%REQUIRE%/${VMP_REQUIRE_RPM}/g" \
-    -r "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
-    -r "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
-    -r "s/%TEST%/${TMP_TEST}/g" \
-    -r "s/%FILES_MAN%/${TMP_MAN}/g" \
-    -r "s/%FILES_DATADIR%/${TMP_DATADIR}/g" \
-    -r "s/%UNPACKAGED_TRACK%/${TMP_UNPAC}/g" \
-    -r "s/%TIME%/${TMP_TIME}/g" \
+    sed -r \
+    "
+        s/%VRT%/${VMP_VARNISH_VRT}/g;
+        s/%PFX%/${VMP_VMOD_PFX}/g";
+        s/%VMOD%/${VMP_VMOD_NAME}/g";
+        s/%VER%/${VMP_VMOD_VER}/g";
+        s/%REQUIRE%/${VMP_REQUIRE_RPM}/g;
+        s/%VARNISH_VER%/${VMP_VARNISH_VER}/g;
+        s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g;
+        s/%TEST%/${TMP_TEST}/g;
+        s/%FILES_MAN%/${TMP_MAN}/g;
+        s/%FILES_DATADIR%/${TMP_DATADIR}/g;
+        s/%UNPACKAGED_TRACK%/${TMP_UNPAC}/g;
+        s/%TIME%/${TMP_TIME}/g;
+    " ${SCRIPT_DIR}/tplt.spec${SFX} \
     > ${VMP_WORK_DIR}/__vmod-package.spec
 

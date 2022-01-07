@@ -33,9 +33,9 @@ TMP_TIME=`date +"%a %b %d %Y"`
     sed -r \
     "
         s/%VRT%/${VMP_VARNISH_VRT}/g;
-        s/%PFX%/${VMP_VMOD_PFX}/g";
-        s/%VMOD%/${VMP_VMOD_NAME}/g";
-        s/%VER%/${VMP_VMOD_VER}/g";
+        s/%PFX%/${VMP_VMOD_PFX}/g;
+        s/%VMOD%/${VMP_VMOD_NAME}/g;
+        s/%VER%/${VMP_VMOD_VER}/g;
         s/%REQUIRE%/${VMP_REQUIRE_RPM}/g;
         s/%VARNISH_VER%/${VMP_VARNISH_VER}/g;
         s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g;

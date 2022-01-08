@@ -62,14 +62,14 @@ vmod_build() {
     -e VMP_HASH=${VMP_HASH} \
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
-    -v ${SCRIPT_DIR}/script:/tmp/varnish/script \
-    -v ${SCRIPT_DIR}/arch:/tmp/varnish/arch \
-    -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian \
-    -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm \
+    -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
+    -v ${SCRIPT_DIR}/arch:/tmp/varnish/arch:ro \
+    -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian:ro \
+    -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
     -v ${SCRIPT_DIR}/tmp:/tmp/varnish/tmp \
-    -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod \
-    -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish \
+    -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod:ro \
+    -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish:ro \
     --name ${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
 
   if [ $? -ne 0 ]; then

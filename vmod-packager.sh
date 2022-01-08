@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 usage_exit() {
   echo "Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName" 1>&2
   echo "-v Varnish version (ex:7.0.0 or trunk)" 1>&2

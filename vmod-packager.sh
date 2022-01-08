@@ -2,19 +2,21 @@
 set -e
 
 usage_exit() {
-  echo "Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName" 1>&2
-  echo "-v Varnish version (ex:7.0.0 or trunk)" 1>&2
-  echo "-r build VaRnish from local source" 1>&2
-  echo "-e vmod vErsion (ex:0.1)" 1>&2
-  echo "-d Distribution" 1>&2
-  echo "-p vmod name Prefix" 1>&2
-  echo "-c Commit hash" 1>&2
-  echo "-f Fixed varnish version" 1>&2
-  echo "-s run baSh" 1>&2
-  echo "-t skip Test" 1>&2
-  echo "-k varnish pacKage build" 1>&2
-  echo "-h Help" 1>&2
-  echo "Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter" 1>&2
+  cat << EOF 1>&2
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
+    -v Varnish version (ex:7.0.0 or trunk)
+    -r build VaRnish from local source
+    -e vmod vErsion (ex:0.1)
+    -d Distribution
+    -p vmod name Prefix
+    -c Commit hash
+    -f Fixed varnish version
+    -s run baSh
+    -t skip Test
+    -k varnish pacKage build
+    -h Help
+Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
+EOF
   exit 1
 }
 

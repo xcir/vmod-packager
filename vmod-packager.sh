@@ -27,11 +27,6 @@ docker_build() {
     -f docker/init/${VMP_DIST} \
     .
 
-  if [ $? -ne 0 ]; then
-      echo "Error: docker base image build" 1>&2
-      exit 1
-  fi
-
   docker build --rm \
     -t ${VMP_DOCKER_IMG} \
     --build-arg VMP_DOCKER_BASE_IMG=${VMP_DOCKER_BASE_IMG} \
@@ -40,11 +35,6 @@ docker_build() {
     --build-arg VARNISH_NOBUILD=${VMP_VARNISH_FROMSRC} \
     -f docker/Dockerfile \
     .
-
-  if [ $? -ne 0 ]; then
-      echo "Error: docker build" 1>&2
-      exit 1
-  fi
 }
 
 vmod_build() {
@@ -82,7 +72,6 @@ vmod_build() {
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_VARNISH_VRT=`cat ${SCRIPT_DIR}/tmp/vrt`
   fi
-  
 
                                                 echo "##################################################"
                                                 printf "%20s: %s\n" "docker image" "${VMP_DOCKER_IMG}"

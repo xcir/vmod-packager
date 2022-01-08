@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
@@ -9,12 +11,8 @@ if [ -n "${VMP_VARNISH_SRC}" ]; then
     cd ${VMP_ROOT_DIR}/src
     ./autogen.sh && \
     ./configure --prefix=/usr && \
-    make -sj32 && \
-    make install
-    if [ $? -ne 0 ]; then
-        echo "Varnish build error" 1>&2
-        exit 1
-    fi
+    make -sj`nproc` && \
+    make -j`nproc` install
 fi
 
 # extract VRT
@@ -30,10 +28,6 @@ fi
 if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
     echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
     source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
-    if [ $? -ne 0 ]; then
-        echo "Error" 1>&2
-        exit 1
-    fi
     if [ -n "${VMP_REQUIRE_DEB}" ]; then
         export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
     fi
@@ -44,7 +38,6 @@ if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
         export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
     fi
 fi
-
 
 if which dpkg &>/dev/null; then
     export VMP_PKGTYPE=deb
@@ -57,18 +50,14 @@ else
     exit 1
 fi
 
-${SCRIPT_DIR}/${VMP_PKGTYPE}/${VMP_PKGTYPE}-build.sh
-
-if [ $? -ne 0 ]; then
-    echo "Error" 1>&2
-    exit 1
+${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
+if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
+    echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
+    ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
 fi
+${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
 
 # varnish pkg build
 if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
     ${SCRIPT_DIR}/tool/varnish-build.sh
-    if [ $? -ne 0 ]; then
-        echo "Error" 1>&2
-        exit 1
-    fi
 fi

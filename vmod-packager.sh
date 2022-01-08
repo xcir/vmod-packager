@@ -174,7 +174,7 @@ elif [[ -n "${VMP_HASH}" ]]; then
 
 elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
   VMP_VARNISH_VER_NXT=trunk
-  VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq '.commit.sha' | tr -d '"'`
+  VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
   VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
 
 else

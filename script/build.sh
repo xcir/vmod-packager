@@ -40,17 +40,25 @@ if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
     if [ -n "${VMP_REQUIRE_RPM}" ]; then
         export VMP_REQUIRE_RPM=", ${VMP_REQUIRE_RPM}"
     fi
+    if [ -n "${VMP_REQUIRE_ARCH}" ]; then
+        export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
+    fi
 fi
 
 
-which dpkg 2>/dev/null
-if [ $? -eq 0 ]; then
+if which dpkg &>/dev/null; then
     export VMP_PKGTYPE=deb
-    ${SCRIPT_DIR}/deb/deb-build.sh
-else
+elif which rpm &> /dev/null; then
     export VMP_PKGTYPE=rpm
-    ${SCRIPT_DIR}/rpm/rpm-build.sh
+elif which pacman &> /dev/null; then
+    export VMP_PKGTYPE=arch
+else
+    echo "Error: couldn't identify distribution type (no dpkg, rpm or pacman)"
+    exit 1
 fi
+
+${SCRIPT_DIR}/${VMP_PKGTYPE}/${VMP_PKGTYPE}-build.sh
+
 if [ $? -ne 0 ]; then
     echo "Error" 1>&2
     exit 1

@@ -50,10 +50,13 @@ export VMP_DBG_CACHE=1
 ./vmod-packager.sh -t -d centos8 -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/rpms/test-varnish-modules60/test-varnish-modules60-71.0.1-1.el8.x86_64.rpm
 ./vmod-packager.sh -t -d centos8 -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-varnish-modules70/test-varnish-modules70-140.0.1-1.el8.x86_64.rpm
 
+# arch
+./vmod-packager.sh -t -d arch -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/arch/test-varnish-modules70/test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
+
 #https://github.com/varnishcache/varnish-cache/commit/454733b82a3279a1603516b4f0a07f8bad4bcd55
 ./vmod-packager.sh -t -d focal -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/trunk-test-varnish-modules70_140.0.1~focal-1_amd64.deb
 ./vmod-packager.sh -t -d centos8 -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1.el8.x86_64.rpm 
-
+./vmod-packager.sh -t -d arch -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/arch/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
 
 # libvmod-digest
 ./vmod-packager.sh -t -d focal -v 7.0.0 src/test-libvmod-digest70 && ls ${VRD}/pkgs/debs/test-libvmod-digest70/test-libvmod-digest70_140.0.1~focal-1_amd64.deb

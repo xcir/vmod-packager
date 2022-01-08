@@ -4,3 +4,4 @@
 
 export VMP_REQUIRE_DEB=libmhash2
 export VMP_REQUIRE_RPM=mhash
+export VMP_REQUIRE_ARCH=mhash

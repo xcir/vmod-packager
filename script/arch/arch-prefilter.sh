@@ -18,5 +18,5 @@ if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_config.sh ]; then
 else
     cp ${VMP_ROOT_DIR}/script/default/default_config.sh  ${VMP_WORK_DIR}/__vmod-package_config.sh
 fi
-ls ${VMP_ROOT_DIR}
+
 ${VMP_ROOT_DIR}/arch/pkg.sh

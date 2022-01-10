@@ -4,6 +4,8 @@
 
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
     apt-get -yq install libmhash-dev
-else
+elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install libmhash-devel
+elif [ "${VMP_PKGTYPE}" = "arch" ]; then
+    pacman -Sy --noconfirm mhash
 fi

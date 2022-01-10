@@ -1,0 +1,42 @@
+# Maintainer: Guillaume Quintard <guillaume.quintard@gmail.com>
+
+pfx=%PFX%
+name=%VMOD%
+pkgname=$pfx$name
+pkgver=%VRT%.%VER%
+pkgrel=1
+pkgdesc=%PFX%%VMOD%
+depends=('varnish=%VARNISH_VER%' %REQUIRE%)
+makedepends=()
+arch=('x86_64')
+source=("src.tgz")
+license=('BSD')
+
+build() {
+    cd $name
+    if [ -e ./bootstrap -a -x ./bootstrap ]; then
+        ./bootstrap
+    else
+        ./autogen.sh
+    fi
+    ./configure \
+        --build="$CBUILD" \
+        --host="$CHOST" \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --mandir=/usr/share/man \
+        --infodir=/usr/share/info \
+        --localstatedir=/var/lib
+    make
+}
+
+check() {
+    cd $name
+    make check -k VERBOSE=1
+}
+
+package() {
+    cd $name
+    make DESTDIR="$pkgdir" install
+    install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

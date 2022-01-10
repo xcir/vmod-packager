@@ -1,5 +1,6 @@
 pkgs/debs/*
 pkgs/rpms/*
+pkgs/arch/*
 tmp/*
 src/*
 varnish/*

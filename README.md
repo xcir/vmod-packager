@@ -137,7 +137,7 @@ If you need additional packages or other steps to build, you can use the followi
 
 ## src/[vmod name]_env.sh
 
-This is used to configure VMP_REQUIRE_(DEB|RPM) to specify additional dependent packages.
+This is used to configure VMP_REQUIRE_(DEB|RPM|ARCH) to specify additional dependent packages.
 
 ENV are available.
 
@@ -146,6 +146,7 @@ ENV are available.
 
 export VMP_REQUIRE_DEB=libmhash2
 export VMP_REQUIRE_RPM=mhash
+export VMP_REQUIRE_ARCH=mhash
 export VMP_RPM_ONLY_INC_VMOD=1
 export VMP_RPM_DISABLE_UNPACKAGED_TRACK=1
 
@@ -161,8 +162,10 @@ ENV are available.
 #!/bin/sh
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
     apt-get -yq install libmhash-dev
-else
+elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install libmhash-devel
+elif [ "${VMP_PKGTYPE}" = "arch" ]; then
+    pacman --noconfirm -Sy mhash
 fi
 ```
 
@@ -196,7 +199,7 @@ And, used in conjunction with the -r option, it is possible to create a Varnish 
 
 | name | explanation | example |
 |-|:-|:-|
-| VMP_PKGTYPE        | deb or rpm | deb |
+| VMP_PKGTYPE        | deb or rpm or arch | deb |
 | VMP_VARNISH_VRT    | VRT version of Varnish(140=14.0) | 140 |
 | VMP_VARNISH_VER    | Varnish Version | 7.0.0 |
 | VMP_VARNISH_VER_NXT| Version of Varnish with incrementing miner | 7.1.0 |
@@ -219,6 +222,7 @@ The following is what you specify in src/[vmod name]_env.sh
 |-|:-|:-|
 | VMP_REQUIRE_DEB    | Add depends packages(DEB) | foo, bar |
 | VMP_REQUIRE_RPM    | Add depends packages(RPM) | foo, bar |
+| VMP_REQUIRE_ARCH   | Add depends packages(ARCH)| foo, bar |
 | VMP_RPM_ONLY_INC_VMOD                 | Limit the files to be included in the package to VMOD | 1 |
 | VMP_RPM_DISABLE_UNPACKAGED_TRACK      | Specify `_unpackaged_files_terminate_build 0` for spec | 1 |
 
@@ -226,9 +230,10 @@ The following is what you specify in src/[vmod name]_env.sh
 |path|explanation|
 |-|:-|
 |${VMP_ROOT_DIR}/src    | Varnish source code with built |
-|${VMP_ROOT_DIR}/debian | DEB template |
-|${VMP_ROOT_DIR}/rpm    | RPM template |
-|${VMP_ROOT_DIR}/pkgs/(debs\|rpms) | Output |
+|${VMP_ROOT_DIR}/debian | DEB template  |
+|${VMP_ROOT_DIR}/rpm    | RPM template  |
+|${VMP_ROOT_DIR}/arch   | ARCH template |
+|${VMP_ROOT_DIR}/pkgs/(debs\|rpms\|arch) | Output |
 |${VMP_ROOT_DIR}/script | Script |
 |${VMP_ROOT_DIR}/vmod/src   | vmod source path |
 |${VMP_ROOT_DIR}/work \|\${VMP_WORK_DIR}   | vmod build work space |

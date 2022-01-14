@@ -1,18 +1,22 @@
 #!/bin/bash
+set -e
+
 usage_exit() {
-  echo "Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName" 1>&2
-  echo "-v Varnish version (ex:7.0.0 or trunk)" 1>&2
-  echo "-r build VaRnish from local source" 1>&2
-  echo "-e vmod vErsion (ex:0.1)" 1>&2
-  echo "-d Distribution" 1>&2
-  echo "-p vmod name Prefix" 1>&2
-  echo "-c Commit hash" 1>&2
-  echo "-f Fixed varnish version" 1>&2
-  echo "-s run baSh" 1>&2
-  echo "-t skip Test" 1>&2
-  echo "-k varnish pacKage build" 1>&2
-  echo "-h Help" 1>&2
-  echo "Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter" 1>&2
+  cat << EOF 1>&2
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
+    -v Varnish version (ex:7.0.0 or trunk)
+    -r build VaRnish from local source
+    -e vmod vErsion (ex:0.1)
+    -d Distribution
+    -p vmod name Prefix
+    -c Commit hash
+    -f Fixed varnish version
+    -s run baSh
+    -t skip Test
+    -k varnish pacKage build
+    -h Help
+Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
+EOF
   exit 1
 }
 
@@ -23,11 +27,6 @@ docker_build() {
     -f docker/init/${VMP_DIST} \
     .
 
-  if [ $? -ne 0 ]; then
-      echo "Error: docker base image build" 1>&2
-      exit 1
-  fi
-
   docker build --rm \
     -t ${VMP_DOCKER_IMG} \
     --build-arg VMP_DOCKER_BASE_IMG=${VMP_DOCKER_BASE_IMG} \
@@ -36,11 +35,6 @@ docker_build() {
     --build-arg VARNISH_NOBUILD=${VMP_VARNISH_FROMSRC} \
     -f docker/Dockerfile \
     .
-
-  if [ $? -ne 0 ]; then
-      echo "Error: docker build" 1>&2
-      exit 1
-  fi
 }
 
 vmod_build() {
@@ -60,14 +54,14 @@ vmod_build() {
     -e VMP_HASH=${VMP_HASH} \
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
-    -v ${SCRIPT_DIR}/script:/tmp/varnish/script \
-    -v ${SCRIPT_DIR}/arch:/tmp/varnish/arch \
-    -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian \
-    -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm \
+    -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
+    -v ${SCRIPT_DIR}/arch:/tmp/varnish/arch:ro \
+    -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian:ro \
+    -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
     -v ${SCRIPT_DIR}/tmp:/tmp/varnish/tmp \
-    -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod \
-    -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish \
+    -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod:ro \
+    -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish:ro \
     --name ${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
 
   if [ $? -ne 0 ]; then
@@ -78,7 +72,6 @@ vmod_build() {
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_VARNISH_VRT=`cat ${SCRIPT_DIR}/tmp/vrt`
   fi
-  
 
                                                 echo "##################################################"
                                                 printf "%20s: %s\n" "docker image" "${VMP_DOCKER_IMG}"
@@ -104,8 +97,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 cd $SCRIPT_DIR
 
 #check commands
-which docker > /dev/null && which curl > /dev/null && which jq > /dev/null
-if [ $? -ne 0 ]; then
+if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null); then
   echo "$0 requires docker, curl, jq commands" 1>&2
   exit 1
 fi
@@ -174,7 +166,7 @@ elif [[ -n "${VMP_HASH}" ]]; then
 
 elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
   VMP_VARNISH_VER_NXT=trunk
-  VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq '.commit.sha' | tr -d '"'`
+  VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
   VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
 
 else

@@ -5,11 +5,8 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/redhat/* ${VMP_ROOT_DIR}/src/
 
-FILES=`find ${VMP_ROOT_DIR}/src/ -maxdepth 1 -type l | awk -F/ '{print $NF}'`
-for FILE in $FILES; do
-    rm ${VMP_ROOT_DIR}/src/${FILE}
-    cp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd/${FILE} ${VMP_ROOT_DIR}/src/${FILE}
-done
+# resolve all the symlinks
+sed -i '' src/*
 
 mkdir -p ${VMP_WORK_DIR}/SOURCES
 cd ${VMP_ROOT_DIR}

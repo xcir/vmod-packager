@@ -3,4 +3,4 @@
 #https://gitlab.com/uplex/varnish/libvdp-pesi
 
 ./autogen.sh
-./configure VARNISHSRC=/tmp/varnish/src
+./configure VARNISHSRC=/tmp/varnish/src $@

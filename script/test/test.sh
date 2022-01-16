@@ -83,8 +83,8 @@ export VMP_DBG_CACHE=1
 ./vmod-packager.sh -t -d arch -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/arch/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1-x86_64.pkg.tar.zst; ls ${VRD}/pkgs/arch/varnish/varnish-7.0.0-1-x86_64.pkg.tar.zst
 
 # varnish-modules
-./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_`date +%Y%m%d`.*-1vmp+fromsrc~focal_amd64.deb
-./vmod-packager.sh -t -d centos8 -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm; ls ${VRD}/pkgs/rpms/varnish/varnish-`date +%Y%m%d`.*-1vmp+fromsrc.el8.x86_64.rpm
-./vmod-packager.sh -t -d arch -k -r varnish-cache src/test-varnish-modules70/; ls pkgs/arch/varnish/varnish-`date +%Y%m%d`.*-1-x86_64.pkg.tar.zst
+./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_`date -u +%Y%m%d`*.*-1vmp+fromsrc~focal_amd64.deb
+./vmod-packager.sh -t -d centos8 -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm; ls ${VRD}/pkgs/rpms/varnish/varnish-`date -u +%Y%m%d`*.*-1vmp+fromsrc.el8.x86_64.rpm
+./vmod-packager.sh -t -d arch -k -r varnish-cache src/test-varnish-modules70/; ls pkgs/arch/varnish/varnish-`date -u +%Y%m%d`*.*-1-x86_64.pkg.tar.zst
 
 echo "pass basic test"

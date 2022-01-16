@@ -1,0 +1,11 @@
+--- src/tests/test02.vtc.old	2022-01-15 19:16:12.259872621 -0800
++++ src/tests/test02.vtc	2022-01-15 19:16:16.096539208 -0800
+@@ -2,7 +2,7 @@
+ 
+ server s1 { } -start
+ 
+-varnish v1 -arg "-p workspace_client=9k" -vcl+backend {
++varnish v1 -vcl+backend {
+ 	import digest from "${vmod_topbuild}/src/.libs/libvmod_digest.so";
+ 	import vtc;
+ 

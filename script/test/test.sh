@@ -24,6 +24,17 @@ curl -sL https://github.com/varnish/varnish-modules/archive/refs/heads/7.0.tar.g
 curl -sL https://github.com/varnish/libvmod-digest/archive/1793bea9e9b7c7dce4d8df82397d22ab9fa296f0.tar.gz | tar zx -C test-libvmod-digest70 --strip-components 1
 curl -sL https://gitlab.com/uplex/varnish/libvdp-pesi/-/archive/7.0/libvdp-pesi-7.0.tar.gz | tar zx -C test-libvdp-pesi70 --strip-components 1
 
+# need patch pesi
+(
+    cd test-libvdp-pesi70
+    patch < ../../script/test/pesi.patch
+)
+# and digest (https://github.com/varnish/libvmod-digest/pull/45)
+(
+    cd test-libvmod-digest70
+    patch -p0 < ../../script/test/digest.patch
+)
+
 # copy custom script
 cp ${VRD}/sample-src/libvmod-digest_init.sh ${VRD}/src/test-libvmod-digest70_init.sh
 cp ${VRD}/sample-src/libvmod-digest_env.sh  ${VRD}/src/test-libvmod-digest70_env.sh
@@ -69,6 +80,7 @@ export VMP_DBG_CACHE=1
 ./vmod-packager.sh -t -d focal -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~focal_amd64.deb
 ./vmod-packager.sh -t -d buster -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~buster-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~buster_amd64.deb
 ./vmod-packager.sh -t -d centos8 -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm; ls ${VRD}/pkgs/rpms/varnish/varnish-7.0.0-1vmp.el8.x86_64.rpm
+./vmod-packager.sh -t -d arch -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/arch/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1-x86_64.pkg.tar.zst; ls ${VRD}/pkgs/arch/varnish/varnish-7.0.0-1-x86_64.pkg.tar.zst
 
 # varnish-modules
 ./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_`date +%Y%m%d`.*-1vmp+fromsrc~focal_amd64.deb

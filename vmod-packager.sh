@@ -158,6 +158,7 @@ if [[ -n "${VMP_VARNISH_SRC}" ]]; then
     echo "./varnish/${VMP_VARNISH_SRC} is not found" 1>&2
     usage_exit
   fi
+  VMP_HASH=src
 
 elif [[ -n "${VMP_HASH}" ]]; then
   VMP_VARNISH_VER=trunk

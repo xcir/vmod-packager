@@ -15,4 +15,4 @@ chown builder -R .
 su builder -c "makepkg --force --noconfirm --nodeps --skipinteg $TMP_TEST"
 
 mkdir -p ${VMP_ROOT_DIR}/pkgs/arch/${VMP_VMOD_NAME}
-find ${VMP_WORK_DIR} -type f -name *.tar.zst | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/arch/${VMP_VMOD_NAME}/
+cp *.tar.zst ${VMP_ROOT_DIR}/pkgs/arch/${VMP_VMOD_NAME}/

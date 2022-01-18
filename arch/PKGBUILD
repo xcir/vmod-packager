@@ -14,12 +14,7 @@ license=('BSD')
 
 build() {
     cd $name
-    if [ -e ./bootstrap -a -x ./bootstrap ]; then
-        ./bootstrap
-    else
-        ./autogen.sh
-    fi
-    ./configure \
+    $startdir/__vmod-package_config.sh \
         --build="$CBUILD" \
         --host="$CHOST" \
         --prefix=/usr \

@@ -7,7 +7,7 @@ if [ ! -d "${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache" ]; then
 fi
 
 # https://github.com/varnishcache/varnish-cache/wiki/Release-procedure
-# `make dist`` required to build doc
+# `make dist` required to build doc
 cd ${VMP_ROOT_DIR}/src
 if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
     mkdir -p ${VMP_ROOT_DIR}/src/doc/html
@@ -22,8 +22,10 @@ if which dpkg &>/dev/null; then
     export VMP_PKGTYPE=deb
 elif which rpm &> /dev/null; then
     export VMP_PKGTYPE=rpm
+elif which pacman &> /dev/null; then
+    export VMP_PKGTYPE=arch
 else
-    echo "Error: varnish builds aren't supported for other packages than deb and rpm"
+    echo "Error: varnish builds aren't supported for other packages than deb, rpm and arch"
     exit 1
 fi
 

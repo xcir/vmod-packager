@@ -4,4 +4,4 @@ if [ -e ./autogen.sh ]; then
 else
     ./bootstrap
 fi
-./configure
+./configure $@

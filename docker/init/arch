@@ -1,6 +1,7 @@
 FROM archlinux:base-devel
 
 RUN \
-	pacman -Suvvy --noconfirm gcc libnsl pcre2 python-docutils python-sphinx git && \
+	pacman -Suvvy --noconfirm autoconf-archive gcc libnsl pcre2 python-docutils python-sphinx git && \
 	useradd builder && \
-	echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers
+	echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
+	echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf

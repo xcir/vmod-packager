@@ -10,5 +10,5 @@ sed ${SCRIPT_DIR}/PKGBUILD \
     -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
     -e "s/%VER%/${VMP_VMOD_VER}/g" \
     -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
-    -e "s/%REQUIRE%/${VMP_REQUIRE_RPM}/g" \
+    -e "s/%REQUIRE%/${VMP_REQUIRE_ARCH}/g" \
     > ${VMP_WORK_DIR}/PKGBUILD

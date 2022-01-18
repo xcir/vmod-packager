@@ -15,12 +15,25 @@ mkdir -p src/test-varnish-modules60
 mkdir -p src/test-varnish-modules70
 mkdir -p src/test-libvmod-digest70
 mkdir -p src/test-libvdp-pesi70
+mkdir -p varnish/varnish-cache
+curl -sL https://varnish-cache.org/_downloads/varnish-7.0.1.tgz | tar zx -C varnish/varnish-cache --strip-components 1
 
 cd ${VRD}/src
 curl -sL https://github.com/varnish/varnish-modules/archive/refs/heads/6.0-lts.tar.gz   | tar zx -C test-varnish-modules60 --strip-components 1
 curl -sL https://github.com/varnish/varnish-modules/archive/refs/heads/7.0.tar.gz       | tar zx -C test-varnish-modules70 --strip-components 1
 curl -sL https://github.com/varnish/libvmod-digest/archive/1793bea9e9b7c7dce4d8df82397d22ab9fa296f0.tar.gz | tar zx -C test-libvmod-digest70 --strip-components 1
 curl -sL https://gitlab.com/uplex/varnish/libvdp-pesi/-/archive/7.0/libvdp-pesi-7.0.tar.gz | tar zx -C test-libvdp-pesi70 --strip-components 1
+
+# need patch pesi
+(
+    cd test-libvdp-pesi70
+    patch < ../../script/test/pesi.patch
+)
+# and digest (https://github.com/varnish/libvmod-digest/pull/45)
+(
+    cd test-libvmod-digest70
+    patch -p0 < ../../script/test/digest.patch
+)
 
 # copy custom script
 cp ${VRD}/sample-src/libvmod-digest_init.sh ${VRD}/src/test-libvmod-digest70_init.sh
@@ -33,42 +46,45 @@ cd ${VRD}
 export VMP_DBG_CACHE=1
 
 #ubuntu
-./vmod-packager.sh -t -d focal -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~focal-1_amd64.deb
-./vmod-packager.sh -t -d focal -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~focal-1_amd64.deb
+./vmod-packager.sh -t -d focal -v 6.0.8 test-varnish-modules60; ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~focal-1_amd64.deb
+./vmod-packager.sh -t -d focal -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~focal-1_amd64.deb
 
-./vmod-packager.sh -t -d bionic -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bionic-1_amd64.deb
-./vmod-packager.sh -t -d bionic -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bionic-1_amd64.deb
+./vmod-packager.sh -t -d bionic -v 6.0.8 test-varnish-modules60; ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bionic-1_amd64.deb
+./vmod-packager.sh -t -d bionic -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bionic-1_amd64.deb
 
 #debian
-./vmod-packager.sh -t -d buster -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~buster-1_amd64.deb
-./vmod-packager.sh -t -d buster -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~buster-1_amd64.deb
+./vmod-packager.sh -t -d buster -v 6.0.8 test-varnish-modules60; ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~buster-1_amd64.deb
+./vmod-packager.sh -t -d buster -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~buster-1_amd64.deb
 
-./vmod-packager.sh -t -d bullseye -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bullseye-1_amd64.deb
-./vmod-packager.sh -t -d bullseye -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bullseye-1_amd64.deb
+./vmod-packager.sh -t -d bullseye -v 6.0.8 test-varnish-modules60; ls ${VRD}/pkgs/debs/test-varnish-modules60/test-varnish-modules60_71.0.1~bullseye-1_amd64.deb
+./vmod-packager.sh -t -d bullseye -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/debs/test-varnish-modules70/test-varnish-modules70_140.0.1~bullseye-1_amd64.deb
 
 #centos
-./vmod-packager.sh -t -d centos8 -v 6.0.8 test-varnish-modules60 && ls ${VRD}/pkgs/rpms/test-varnish-modules60/test-varnish-modules60-71.0.1-1.el8.x86_64.rpm
-./vmod-packager.sh -t -d centos8 -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-varnish-modules70/test-varnish-modules70-140.0.1-1.el8.x86_64.rpm
+./vmod-packager.sh -t -d centos8 -v 6.0.8 test-varnish-modules60; ls ${VRD}/pkgs/rpms/test-varnish-modules60/test-varnish-modules60-71.0.1-1.el8.x86_64.rpm
+./vmod-packager.sh -t -d centos8 -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/rpms/test-varnish-modules70/test-varnish-modules70-140.0.1-1.el8.x86_64.rpm
 
 # arch
-./vmod-packager.sh -t -d arch -v 7.0.0 test-varnish-modules70 && ls ${VRD}/pkgs/arch/test-varnish-modules70/test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
+./vmod-packager.sh -t -d arch -v 7.0.0 test-varnish-modules70; ls ${VRD}/pkgs/arch/test-varnish-modules70/test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
 
 #https://github.com/varnishcache/varnish-cache/commit/454733b82a3279a1603516b4f0a07f8bad4bcd55
-./vmod-packager.sh -t -d focal -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-varnish-modules70/trunk-test-varnish-modules70_140.0.1~focal-1_amd64.deb
-./vmod-packager.sh -t -d centos8 -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1.el8.x86_64.rpm 
-./vmod-packager.sh -t -d arch -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70 && ls ${VRD}/pkgs/arch/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
+./vmod-packager.sh -t -d focal -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70; ls ${VRD}/pkgs/debs/test-varnish-modules70/trunk-test-varnish-modules70_140.0.1~focal-1_amd64.deb
+./vmod-packager.sh -t -d centos8 -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70; ls ${VRD}/pkgs/rpms/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1.el8.x86_64.rpm 
+./vmod-packager.sh -t -d arch -c 454733b82a3279a1603516b4f0a07f8bad4bcd55 -p trunk- test-varnish-modules70; ls ${VRD}/pkgs/arch/test-varnish-modules70/trunk-test-varnish-modules70-140.0.1-1-x86_64.pkg.tar.zst
 
 # libvmod-digest
-./vmod-packager.sh -t -d focal -v 7.0.0 src/test-libvmod-digest70 && ls ${VRD}/pkgs/debs/test-libvmod-digest70/test-libvmod-digest70_140.0.1~focal-1_amd64.deb
-./vmod-packager.sh -t -d centos8 -v 7.0.0 src/test-libvmod-digest70 && ls ${VRD}/pkgs/rpms/test-libvmod-digest70/test-libvmod-digest70-140.0.1-1.el8.x86_64.rpm
+./vmod-packager.sh -t -d focal -v 7.0.0 src/test-libvmod-digest70; ls ${VRD}/pkgs/debs/test-libvmod-digest70/test-libvmod-digest70_140.0.1~focal-1_amd64.deb
+./vmod-packager.sh -t -d centos8 -v 7.0.0 src/test-libvmod-digest70; ls ${VRD}/pkgs/rpms/test-libvmod-digest70/test-libvmod-digest70-140.0.1-1.el8.x86_64.rpm
+./vmod-packager.sh -t -d arch -v 7.0.0 src/test-libvmod-digest70; ls ${VRD}/pkgs/arch/test-libvmod-digest70/test-libvmod-digest70-140.0.1-1-x86_64.pkg.tar.zst
 
 # libvdp-pesi
-./vmod-packager.sh -t -d focal -k -v 7.0.0 src/test-libvdp-pesi70 && ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb && ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~focal_amd64.deb
-./vmod-packager.sh -t -d buster -k -v 7.0.0 src/test-libvdp-pesi70 && ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~buster-1_amd64.deb && ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~buster_amd64.deb
-./vmod-packager.sh -t -d centos8 -k -v 7.0.0 src/test-libvdp-pesi70 && ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm && ls ${VRD}/pkgs/rpms/varnish/varnish-7.0.0-1vmp.el8.x86_64.rpm
+./vmod-packager.sh -t -d focal -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~focal_amd64.deb
+./vmod-packager.sh -t -d buster -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~buster-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_7.0.0-1vmp~buster_amd64.deb
+./vmod-packager.sh -t -d centos8 -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm; ls ${VRD}/pkgs/rpms/varnish/varnish-7.0.0-1vmp.el8.x86_64.rpm
+./vmod-packager.sh -t -d arch -k -v 7.0.0 src/test-libvdp-pesi70; ls ${VRD}/pkgs/arch/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1-x86_64.pkg.tar.zst; ls ${VRD}/pkgs/arch/varnish/varnish-7.0.0-1-x86_64.pkg.tar.zst
 
 # varnish-modules
-./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70 && ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb && ls ${VRD}/pkgs/debs/varnish/varnish_`date +%Y%m%d`.*-1vmp+fromsrc~focal_amd64.deb
-./vmod-packager.sh -t -d centos8 -k -r varnish-cache src/test-varnish-modules70 && ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm && ls ${VRD}/pkgs/rpms/varnish/varnish-`date +%Y%m%d`.*-1vmp+fromsrc.el8.x86_64.rpm
+./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/debs/test-libvdp-pesi70/test-libvdp-pesi70_140.0.1~focal-1_amd64.deb; ls ${VRD}/pkgs/debs/varnish/varnish_`date -u +%Y%m%d`*.*-1vmp+fromsrc~focal_amd64.deb
+./vmod-packager.sh -t -d centos8 -k -r varnish-cache src/test-varnish-modules70; ls ${VRD}/pkgs/rpms/test-libvdp-pesi70/test-libvdp-pesi70-140.0.1-1.el8.x86_64.rpm; ls ${VRD}/pkgs/rpms/varnish/varnish-`date -u +%Y%m%d`*.*-1vmp+fromsrc.el8.x86_64.rpm
+./vmod-packager.sh -t -d arch -k -r varnish-cache src/test-varnish-modules70/; ls pkgs/arch/varnish/varnish-`date -u +%Y%m%d`*.*-1-x86_64.pkg.tar.zst
 
 echo "pass basic test"

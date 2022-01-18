@@ -26,7 +26,13 @@ sed -i \
     "${VMP_ROOT_DIR}/pkg/PKGBUILD"
 cd ${VMP_ROOT_DIR}/pkg
 
-su builder -c "makepkg -rsf --noconfirm --skipinteg"
+if [ ${VMP_SKIP_TEST} -eq 1 ]; then
+    TMP_TEST="--nocheck"
+else
+    TMP_TEST=""
+fi
+
+su builder -c "makepkg -rsf --noconfirm --skipinteg ${TMP_TEST}"
 
 mkdir -p ${VMP_ROOT_DIR}/pkgs/arch/varnish
 

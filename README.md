@@ -268,12 +268,11 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
   + [container]
     +${VMP_ROOT_DIR}/script/build.sh
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
-      +${VMP_ROOT_DIR}/script/deb/deb-build.sh
-        +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
-        +${VMP_ROOT_DIR}/debian/pkg.sh
-        +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
-        +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
-          +(in debuild)/work/src/__vmod-package_config.sh
+      +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
+      +${VMP_ROOT_DIR}/debian/pkg.sh
+      +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
+      +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
+        +(in debuild)/work/src/__vmod-package_config.sh
       +${VMP_ROOT_DIR}/script/tool/varnish-build.sh (If you set the option to build Varnish)
         +${VMP_ROOT_DIR}/script/deb/deb-varnish-build.sh
 ```

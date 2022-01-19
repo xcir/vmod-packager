@@ -62,7 +62,7 @@ vmod_build() {
     -v ${SCRIPT_DIR}/tmp:/tmp/varnish/tmp \
     -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod:ro \
     -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish:ro \
-    --name ${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
+    --name ${VMP_VARNISH_VER}-${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
 
   if [ $? -ne 0 ]; then
       DRSTATUS=FAIL
@@ -120,11 +120,6 @@ do
         \?) usage_exit;;
     esac
 done
-shift $((OPTIND - 1))
-
-if [[ -z "$1" ]]; then
-  usage_exit
-fi
 
 if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.0.0; fi
 if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=focal; fi
@@ -185,6 +180,19 @@ else
 
 fi
 
+shift $((OPTIND - 1))
+
+if [[ -z "$1" ]]; then
+  if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
+    VMP_VARNISH_PKG_ONLY=1
+  else
+    usage_exit
+  fi
+else
+  VMP_VARNISH_PKG_ONLY=0
+fi
+
+
 # docker build
 VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
 VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
@@ -197,14 +205,19 @@ if [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
 fi
 
 cd $SCRIPT_DIR
-while [ -n "$1" ]
-do
-  VMP_VMOD=`basename $1`
-  if [ ! -e "${SCRIPT_DIR}/src/${VMP_VMOD}" ]; then
-    echo "./src/${VMP_VMOD} is not found" 1>&2
-    usage_exit
-  fi
+if [ ${VMP_VARNISH_PKG_ONLY} -eq 1 ]; then
+  VMP_VMOD=""
   vmod_build
-  VMP_VARNISH_PKG_MODE_A=0
-  shift $((1))
-done
+else
+  while [ -n "$1" ]
+  do
+    VMP_VMOD=`basename $1`
+    if [ ! -e "${SCRIPT_DIR}/src/${VMP_VMOD}" ]; then
+      echo "./src/${VMP_VMOD} is not found" 1>&2
+      usage_exit
+    fi
+    vmod_build
+    VMP_VARNISH_PKG_MODE_A=0
+    shift $((1))
+  done
+fi

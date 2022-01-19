@@ -194,6 +194,16 @@ A sample is available at sample-src/
 You can create a varnish package by placing [pkg-varnish-cache](https://github.com/varnishcache/pkg-varnish-cache) in the `./varnish/pkg-varnish-cache`
 And, used in conjunction with the -r option, it is possible to create a Varnish package with modifications.
 
+if you don't specify VMOD, only Varnish packages will be created.
+
+```
+# [Distribution]=Ubuntu focal [Varnish Version]=7.0.1
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -k -d focal -v 7.0.1
+
+# [Distribution]=Ubuntu focal [Varnish commit hash]=454733b82a3279a1603516b4f0a07f8bad4bcd55
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -k -d focal -c 454733b82a3279a1603516b4f0a07f8bad4bcd55
+```
+
 
 # Environment variables
 

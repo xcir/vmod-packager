@@ -24,21 +24,6 @@ if [ ${VMP_VARNISH_VRT} -lt 10 ]; then
     exit 1
 fi
 
-
-if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
-    echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
-    source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
-    if [ -n "${VMP_REQUIRE_DEB}" ]; then
-        export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
-    fi
-    if [ -n "${VMP_REQUIRE_RPM}" ]; then
-        export VMP_REQUIRE_RPM=", ${VMP_REQUIRE_RPM}"
-    fi
-    if [ -n "${VMP_REQUIRE_ARCH}" ]; then
-        export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
-    fi
-fi
-
 if which dpkg &>/dev/null; then
     export VMP_PKGTYPE=deb
 elif which rpm &> /dev/null; then
@@ -50,12 +35,31 @@ else
     exit 1
 fi
 
-${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
-if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
-    echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
-    ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+# vmod pkg build
+if [ -n "${VMP_VMOD_NAME}" ]; then
+    if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
+        echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
+        source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
+        if [ -n "${VMP_REQUIRE_DEB}" ]; then
+            export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
+        fi
+        if [ -n "${VMP_REQUIRE_RPM}" ]; then
+            export VMP_REQUIRE_RPM=", ${VMP_REQUIRE_RPM}"
+        fi
+        if [ -n "${VMP_REQUIRE_ARCH}" ]; then
+            export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
+        fi
+    fi
+
+
+
+    ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
+    if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
+        echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
+        ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+    fi
+    ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
 fi
-${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
 
 # varnish pkg build
 if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then

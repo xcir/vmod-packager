@@ -180,35 +180,32 @@ else
 
 fi
 
-shift $((OPTIND - 1))
-
-if [[ -z "$1" ]]; then
-  if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then
-    VMP_VARNISH_PKG_ONLY=1
-  else
-    usage_exit
-  fi
-else
-  VMP_VARNISH_PKG_ONLY=0
-fi
-
-
-# docker build
-VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
-VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
-docker_build
-
 if [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
   cd $SCRIPT_DIR/varnish/${VMP_VARNISH_SRC}
   VMP_HASH=($(find . -type f  -not -iwholename '*.git/*'|xargs sha1sum |sort|sha1sum ))
   VMP_HASH="${VMP_HASH}"
 fi
 
+VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
+VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
+
+
+
+shift $((OPTIND - 1))
+
 cd $SCRIPT_DIR
-if [ ${VMP_VARNISH_PKG_ONLY} -eq 1 ]; then
+
+if [[ -z "$1" ]]; then
+  if [ ${VMP_VARNISH_PKG_MODE} -eq 0 ]; then
+    usage_exit
+  fi
+  # only varnish pkg build
+  docker_build
   VMP_VMOD=""
   vmod_build
 else
+  # vmod build
+  docker_build
   while [ -n "$1" ]
   do
     VMP_VMOD=`basename $1`

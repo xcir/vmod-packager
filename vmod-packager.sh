@@ -201,7 +201,8 @@ fi
 VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
 VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
 
-
+rm -f ${SCRIPT_DIR}/tmp/vmp_vmod.log
+rm -f ${SCRIPT_DIR}/tmp/vmp_varnish.log
 
 shift $((OPTIND - 1))
 

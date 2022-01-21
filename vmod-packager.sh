@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+##
 usage_exit() {
   cat << EOF 1>&2
 Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
@@ -20,6 +21,7 @@ EOF
   exit 1
 }
 
+##
 docker_build() {
 
   docker build --rm \
@@ -37,6 +39,7 @@ docker_build() {
     .
 }
 
+##
 vmod_build() {
 
   docker run --rm \
@@ -69,10 +72,13 @@ vmod_build() {
   else
       DRSTATUS=SUCCESS
   fi
+
+  #Get VRT used for the build.
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_VARNISH_VRT=`cat ${SCRIPT_DIR}/tmp/vrt`
   fi
 
+  #output result
                                                                     echo "##################################################"
                                                                     printf "%20s: %s\n" "docker image" "${VMP_DOCKER_IMG}"
                                                                     printf "%20s: %s\n" "Dist" "${VMP_DIST}"
@@ -94,14 +100,11 @@ vmod_build() {
                                                                     printf "%s\n" "Varnish output:"
                                                                     cat ${SCRIPT_DIR}/tmp/vmp_varnish.log
   fi
-
-
   echo
 
   if [ "${DRSTATUS}" = "FAIL" ]; then exit 1; fi
 }
 
-###################################
 ###################################
 ###################################
 
@@ -114,7 +117,7 @@ if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null
   exit 1
 fi
 
-
+#parse option
 while getopts :v:r:e:d:p:c:stfkh OPT
 do
     case $OPT in
@@ -147,17 +150,17 @@ else
 fi
 if [[ -z "${VMP_VARNISH_PKG_MODE}" ]]; then
   VMP_VARNISH_PKG_MODE=0;
-else
-  if [ ! -e "./varnish/pkg-varnish-cache" ]; then
+elif [ ! -e "./varnish/pkg-varnish-cache" ]; then
     echo "./varnish/pkg-varnish-cache is not found" 1>&2
     echo "Varnish requires pkg-varnish-cache( https://github.com/varnishcache/pkg-varnish-cache ) to build" 1>&2
     usage_exit
-  fi
 fi
 VMP_VARNISH_PKG_MODE_A=${VMP_VARNISH_PKG_MODE}
 VMP_VARNISH_FROMSRC=0
 
+#gen varnish version, download-url and more..
 if [[ -n "${VMP_VARNISH_SRC}" ]]; then
+  #from source-path(./varnish/[src])
   VMP_VARNISH_VER=trunk
   VMP_VARNISH_VER_NXT=trunk
   VMP_VARNISH_FROMSRC=1
@@ -168,16 +171,19 @@ if [[ -n "${VMP_VARNISH_SRC}" ]]; then
   VMP_HASH=src
 
 elif [[ -n "${VMP_HASH}" ]]; then
+  #from git-commit-hash
   VMP_VARNISH_VER=trunk
   VMP_VARNISH_VER_NXT=trunk
   VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
 
 elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
+  #from trunk
   VMP_VARNISH_VER_NXT=trunk
   VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
   VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
 
 else
+  #from v-c.o version.tgz
   #7.6.5
   VMP_VARNISH_REL=${VMP_VARNISH_VER%.*}        #7.6
   VMP_VARNISH_VER_MAJOR=${VMP_VARNISH_VER%%.*} #7
@@ -192,22 +198,25 @@ else
 
 fi
 
+#gen source hash(VMP-HASH)
 if [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
   cd $SCRIPT_DIR/varnish/${VMP_VARNISH_SRC}
   VMP_HASH=($(find . -type f  -not -iwholename '*.git/*'|xargs sha1sum |sort|sha1sum ))
   VMP_HASH="${VMP_HASH}"
 fi
 
+#specify the docker image to use
 VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
 VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
 
+#clear build log
 rm -f ${SCRIPT_DIR}/tmp/vmp_vmod.log
 rm -f ${SCRIPT_DIR}/tmp/vmp_varnish.log
 
+
+#build vmod/varnish pkg
 shift $((OPTIND - 1))
-
 cd $SCRIPT_DIR
-
 if [[ -z "$1" ]]; then
   if [ ${VMP_VARNISH_PKG_MODE} -eq 0 ]; then
     usage_exit

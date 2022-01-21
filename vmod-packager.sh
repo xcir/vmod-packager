@@ -81,9 +81,9 @@ vmod_build() {
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Varnish VRT" "${VMP_VARNISH_VRT}"; fi
   if [ -n "${VMP_VMOD}" ]; then                                     printf "%20s: %s\n" "VMOD name" "${VMP_VMOD_PFX}${VMP_VMOD}"; fi
   if [ "${VMP_EXEC_MODE}" = "build" -a -n "${VMP_VMOD}" ]; then     printf "%20s: %s\n" "VMOD Version" "${VMP_VARNISH_VRT}.${VMP_VMOD_VER}"; fi
-  if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Enable Varnish package build"; fi
-  if [ ${VMP_FIXED_MODE} -eq 1 ]; then                              printf "%20s\n" "Enable fixed mode"; fi
-  if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Enable skip test"; fi
+  if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Varnish pkg build"; fi
+  if [ ${VMP_FIXED_MODE} -eq 1 ]; then                              printf "%20s\n" "Fixed mode"; fi
+  if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Skip test"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Status" "${DRSTATUS}"; fi
                                                                     echo "##################################################"
   if [ -e "${SCRIPT_DIR}/tmp/vmp_vmod.log" ];then

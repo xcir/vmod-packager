@@ -18,15 +18,6 @@ make clean
 rm -rf ${VMP_ROOT_DIR}/systemd
 cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/
 
-if which dpkg &>/dev/null; then
-    export VMP_PKGTYPE=deb
-elif which rpm &> /dev/null; then
-    export VMP_PKGTYPE=rpm
-elif which pacman &> /dev/null; then
-    export VMP_PKGTYPE=arch
-else
-    echo "Error: varnish builds aren't supported for other packages than deb, rpm and arch"
-    exit 1
-fi
+
 
 ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-varnish-build.sh

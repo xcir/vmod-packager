@@ -107,6 +107,25 @@ pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.buildinfo
 pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.changes
 pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.deb
 
+
+# Build only Varnish packages.
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -v 7.0.1 -k
+...
+##################################################
+        docker image: vmod-packager/focal:7.0.1-1
+                Dist: focal
+     Varnish Version: 7.0.1
+         Varnish VRT: 140
+   Varnish pkg build
+              Status: SUCCESS
+##################################################
+Varnish output:
+pkgs/debs/varnish/varnish-dev_7.0.1-1vmp~focal_amd64.deb
+pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.build
+pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.buildinfo
+pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.changes
+pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
+
 ```
 
 

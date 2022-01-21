@@ -326,3 +326,10 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
 
 If you want to start and build in shell mode(-s), please run `script/build.sh` in container.
 
+# Clean docker image
+
+If you want to delete the image for some reason, use the following command.
+
+```
+docker rmi -f $(docker image ls vmod-packager/* -q)
+```

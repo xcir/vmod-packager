@@ -64,7 +64,7 @@ VMOD output:
 pkgs/rpms/varnish-modules/varnish-modules-140.0.19-1.el8.x86_64.rpm
 pkgs/rpms/varnish-modules/varnish-modules-140.0.19-1.el8.src.rpm
 
-# [Distribution]=archlinux [Varnish Version]=trunk [VMOD Version]=0.19 [VMOD name prefix]=trunk-
+# [Distribution]=Arch Linux [Varnish Version]=trunk [VMOD Version]=0.19 [VMOD name prefix]=trunk-
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d arch -v trunk -e 0.19 -p trunk- varnish-modules
 ...
 ##################################################

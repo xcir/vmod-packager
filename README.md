@@ -22,9 +22,12 @@ The created package is intended to be used in your own environment.
 # Quick tutorial
 
 ```bash
+#create env
 xcir@build01:~/git/vmod-packager$ cd src
 xcir@build01:~/git/vmod-packager/src$ git clone https://github.com/varnish/varnish-modules.git
-xcir@build01:~/git/vmod-packager/src$ cd ..
+xcir@build01:~/git/vmod-packager/src$ cd ../varnish
+xcir@build01:~/git/vmod-packager/varnish$ git clone https://github.com/varnishcache/pkg-varnish-cache.git
+xcir@build01:~/git/vmod-packager/varnish$ cd ..
 
 # [Distribution]=Ubuntu focal [Varnish Version]=7.0.0 [VMOD Version]=0.19
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 varnish-modules
@@ -37,10 +40,13 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d focal -v 7.0.0 -e 0.19 v
            VMOD name: varnish-modules
         VMOD Version: 140.0.19
               Status: SUCCESS
-
-xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
-varnish-modules_140.0.19~focal-1_amd64.build      varnish-modules_140.0.19~focal-1_amd64.changes  varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
-varnish-modules_140.0.19~focal-1_amd64.buildinfo  varnish-modules_140.0.19~focal-1_amd64.deb
+##################################################
+VMOD output:
+pkgs/debs/varnish-modules/varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
+pkgs/debs/varnish-modules/varnish-modules_140.0.19~focal-1_amd64.build
+pkgs/debs/varnish-modules/varnish-modules_140.0.19~focal-1_amd64.buildinfo
+pkgs/debs/varnish-modules/varnish-modules_140.0.19~focal-1_amd64.changes
+pkgs/debs/varnish-modules/varnish-modules_140.0.19~focal-1_amd64.deb
 
 # [Distribution]=CentOS8 [Varnish Version]=7.0.0 [VMOD Version]=0.19
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19 varnish-modules
@@ -53,43 +59,53 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d centos8 -v 7.0.0 -e 0.19
            VMOD name: varnish-modules
         VMOD Version: 140.0.19
               Status: SUCCESS
+##################################################
+VMOD output:
+pkgs/rpms/varnish-modules/varnish-modules-140.0.19-1.el8.x86_64.rpm
+pkgs/rpms/varnish-modules/varnish-modules-140.0.19-1.el8.src.rpm
 
-xcir@build01:~/git/vmod-packager$ ls pkgs/rpms/varnish-modules/
-varnish-modules-140.0.19-1.el8.src.rpm  varnish-modules-140.0.19-1.el8.x86_64.rpm
-
-# [Distribution]=Ubuntu focal [Varnish Version]=trunk [VMOD Version]=0.19 [VMOD name prefix]=trunk-
-xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -v trunk -e 0.19 -p trunk- varnish-modules
+# [Distribution]=archlinux [Varnish Version]=trunk [VMOD Version]=0.19 [VMOD name prefix]=trunk-
+xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -d arch -v trunk -e 0.19 -p trunk- varnish-modules
 ...
 ##################################################
-        docker image: vmod-packager/centos8:trunk-d497ec0998f3670af1942cb60a9f4316fc2f3cba
-                Dist: centos8
+        docker image: vmod-packager/arch:trunk-5598410656eaa2149d31af8fd421faea5a6f45f8
+                Dist: arch
      Varnish Version: trunk
- Varnish commit hash: d497ec0998f3670af1942cb60a9f4316fc2f3cba
+        Varnish hash: 5598410656eaa2149d31af8fd421faea5a6f45f8
          Varnish VRT: 140
-           VMOD name: varnish-modules
+           VMOD name: trunk-varnish-modules
         VMOD Version: 140.0.19
               Status: SUCCESS
-
-xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish-modules/
-trunk-varnish-modules_140.0.19~focal-1_amd64.build      trunk-varnish-modules_140.0.19~focal-1_amd64.changes  trunk-varnish-modules-dbgsym_140.0.19~focal-1_amd64.ddeb
-trunk-varnish-modules_140.0.19~focal-1_amd64.buildinfo  trunk-varnish-modules_140.0.19~focal-1_amd64.deb
+##################################################
+VMOD output:
+pkgs/arch/varnish-modules/trunk-varnish-modules-140.0.19-1-x86_64.pkg.tar.zst
 
 # Using patched varnish by myself to VMOD build(-r). And build the varnish package(-k).
 xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -r varnish/varnish-cache/ -k varnish-modules
 ...
 ##################################################
-        docker image: vmod-packager/focal:trunk-
+        docker image: vmod-packager/focal:trunk-761160cefb72acc0317ece435e4448970a68fda3
                 Dist: focal
      Varnish Version: trunk
-        Varnish hash: 6409bcd629b5088c96f7c6ab55db9a7a979540af
+        Varnish hash: 761160cefb72acc0317ece435e4448970a68fda3
          Varnish VRT: 140
            VMOD name: varnish-modules
         VMOD Version: 140.0.1
+   Varnish pkg build
               Status: SUCCESS
-
-xcir@build01:~/git/vmod-packager$ ls pkgs/debs/varnish
-varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.build      varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.changes  varnish-dev_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
-varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.buildinfo  varnish_20211202.6409bcd-1vmp+fromsrc~focal_amd64.deb
+##################################################
+VMOD output:
+pkgs/debs/varnish-modules/varnish-modules-dbgsym_140.0.1~focal-1_amd64.ddeb
+pkgs/debs/varnish-modules/varnish-modules_140.0.1~focal-1_amd64.build
+pkgs/debs/varnish-modules/varnish-modules_140.0.1~focal-1_amd64.buildinfo
+pkgs/debs/varnish-modules/varnish-modules_140.0.1~focal-1_amd64.changes
+pkgs/debs/varnish-modules/varnish-modules_140.0.1~focal-1_amd64.deb
+Varnish output:
+pkgs/debs/varnish/varnish-dev_20220121.761160c-1vmp+fromsrc~focal_amd64.deb
+pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.build
+pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.buildinfo
+pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.changes
+pkgs/debs/varnish/varnish_20220121.761160c-1vmp+fromsrc~focal_amd64.deb
 
 ```
 

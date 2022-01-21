@@ -63,6 +63,11 @@ export VMP_DBG_CACHE=1
 ./vmod-packager.sh -t -d centos8 -v 6.0.8 test-varnish-modules60; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 2
 ./vmod-packager.sh -t -d centos8 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 2
 
+#centos-stream
+./vmod-packager.sh -t -d centos-stream8 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 2
+#https://bugzilla.redhat.com/show_bug.cgi?id=2034311
+#./vmod-packager.sh -t -d centos-stream9 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 2
+
 # arch
 ./vmod-packager.sh -t -d arch -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 1
 
@@ -86,5 +91,8 @@ export VMP_DBG_CACHE=1
 ./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70;      test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 3
 ./vmod-packager.sh -t -d centos8 -k -r varnish-cache src/test-varnish-modules70;    test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 5
 ./vmod-packager.sh -t -d arch -k -r varnish-cache src/test-varnish-modules70/;      test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 2
+
+# multi vmod with varnish
+./vmod-packager.sh -t -k -d focal src/test-varnish-modules70 src/test-libvdp-pesi70;   test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 4
 
 echo "pass basic test"

@@ -16,3 +16,4 @@ su builder -c "makepkg --force --noconfirm --nodeps --skipinteg $TMP_TEST"
 
 mkdir -p ${VMP_ROOT_DIR}/pkgs/arch/${VMP_VMOD_NAME}
 cp *.tar.zst ${VMP_ROOT_DIR}/pkgs/arch/${VMP_VMOD_NAME}/
+ls *.tar.zst | awk -F/ "{print \"pkgs/arch/${VMP_VMOD_NAME}/\" \$NF}" >> ${VMP_ROOT_DIR}/tmp/vmp_vmod.log

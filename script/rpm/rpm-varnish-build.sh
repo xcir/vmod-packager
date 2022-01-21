@@ -48,3 +48,6 @@ mkdir ${VMP_ROOT_DIR}/pkgs/rpms/varnish 2>/dev/null
 
 find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
 find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
+
+find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | awk -F/ '{print "pkgs/rpms/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | awk -F/ '{print "pkgs/rpms/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log

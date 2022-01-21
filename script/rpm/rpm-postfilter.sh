@@ -15,3 +15,5 @@ if [ $? -ne 0 ]; then
 fi
 mkdir ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}  2>/dev/null
 find ${VMP_WORK_DIR} -type f -name *.rpm | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}/
+
+find ${VMP_WORK_DIR} -type f -name *.rpm | awk -F/ "{print \"pkgs/rpms/${VMP_VMOD_NAME}/\" \$NF}" >> ${VMP_ROOT_DIR}/tmp/vmp_vmod.log

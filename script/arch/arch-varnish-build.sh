@@ -37,3 +37,4 @@ su builder -c "makepkg -rsf --noconfirm --skipinteg ${TMP_TEST}"
 mkdir -p ${VMP_ROOT_DIR}/pkgs/arch/varnish
 
 cp ${VMP_ROOT_DIR}/pkg/varnish*.zst ${VMP_ROOT_DIR}/pkgs/arch/varnish/
+ls ${VMP_ROOT_DIR}/pkg/varnish*.zst | awk -F/ '{print "pkgs/arch/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log

@@ -3,6 +3,9 @@ set -e
 
 echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 
+rm -f ${VMP_ROOT_DIR}/tmp/vmp_vmod.log
+rm -f ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 # build varnish, if from local path

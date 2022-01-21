@@ -39,3 +39,4 @@ fi
 mkdir ${VMP_ROOT_DIR}/pkgs/debs/varnish 2>/dev/null
 
 cp ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* ${VMP_ROOT_DIR}/pkgs/debs/varnish/
+ls ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* | awk -F/ '{print "pkgs/debs/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log

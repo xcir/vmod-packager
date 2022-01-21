@@ -46,6 +46,8 @@ cd ${VRD}
 export VMP_DBG_CACHE=1
 
 #ubuntu
+./vmod-packager.sh -t -d jammy -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 1
+
 ./vmod-packager.sh -t -d focal -v 6.0.8 test-varnish-modules60; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 1
 ./vmod-packager.sh -t -d focal -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*log|wc -l) -eq 1
 

@@ -162,7 +162,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 
 # Support Distribution
 
-See ./docker/ path.
+See ./docker/init/ path.
 
 # VMOD custom build
 

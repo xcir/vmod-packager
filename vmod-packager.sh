@@ -239,6 +239,10 @@ else
   while [ -n "$1" ]
   do
     VMP_VMOD=`basename $1`
+    if [[ "${VMP_VMOD}" == *_* ]]; then
+      printf "Packages containing '_' cannot be built, please change it to '%s'.\n" $(echo "${VMP_VMOD}" | sed -e "s/_/-/g")
+      usage_exit
+    fi
     if [ ! -e "${SCRIPT_DIR}/src/${VMP_VMOD}" ]; then
       echo "./src/${VMP_VMOD} is not found" 1>&2
       usage_exit

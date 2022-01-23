@@ -1,5 +1,7 @@
 FROM quay.io/centos/centos:stream9
 
+ARG VMP_DOCKER_EXTRUN_centos_stream9
+
 #waiting for jemalloc-devel!
 #https://bugzilla.redhat.com/show_bug.cgi?id=2034311
 
@@ -14,3 +16,5 @@ RUN dnf -y group install "Development Tools" && \
     dnf -y install unzip wget git
 
 RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel
+
+RUN eval "${VMP_DOCKER_EXTRUN_centos_stream9}"

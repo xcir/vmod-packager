@@ -11,4 +11,4 @@ if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_config.sh ]; then
 else
     cp ${VMP_ROOT_DIR}/script/default/default_config.sh  ${VMP_WORK_DIR}/src/__vmod-package_config.sh
 fi
-${VMP_ROOT_DIR}/debian/pkg.sh
+${VMP_ROOT_DIR}/tplt/debian/pkg.sh

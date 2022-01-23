@@ -23,9 +23,15 @@ EOF
 
 ##
 docker_build() {
+  # gen EXTRUN
+  if [ -e ./config/docker_extrun_env.sh ]; then
+    source ./config/docker_extrun_env.sh
+  fi
+  EXTRUN=$(eval echo "\${VMP_DOCKER_EXTRUN_${VMP_DIST}}")
 
   docker build --rm \
     -t ${VMP_DOCKER_BASE_IMG} \
+    --build-arg VMP_DOCKER_EXTRUN_${VMP_DIST}="${EXTRUN}" \
     -f docker/init/${VMP_DIST} \
     .
 

@@ -1,7 +1,10 @@
 FROM archlinux:base-devel
+ARG VMP_DOCKER_EXTRUN_arch
 
 RUN \
 	pacman -Suvvy --noconfirm autoconf-archive gcc libnsl pcre2 python-docutils python-sphinx git && \
 	useradd builder && \
 	echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
 	echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+
+RUN eval "${VMP_DOCKER_EXTRUN_arch}"

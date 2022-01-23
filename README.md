@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | 2022/01/22 |
-| Version:                  | 0.3 |
+| Date:                     | TBD |
+| Version:                  | trunk (See TAG for the release.) |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 
@@ -223,6 +223,23 @@ ENV is `not` available.
 ```
 
 A sample is available at sample-src/
+
+# Docker custom (config/docker_extrun_env.sh)
+
+If the VMOD build requires additional packages, you can specify the packages in the custom build, but they will be installed every time.
+
+If you build frequently or need to install a lot of packages, or if you want to create some kind of environment, you may want to create a docker image first because it takes time and is inconvenient.
+In this case, you can use `config/docker_extrun_env.sh` to change the docker image.
+
+```bash
+#/bin/sh
+export VMP_DOCKER_EXTRUN_focal="
+    apt-get install --no-install-recommends -yq libmhash2
+    "
+```
+
+Put the command you want to `RUN eval "command"` into `VMP_DOCKER_EXTRUN_[dist]`.
+
 
 # Varnish package build (-k option)
 

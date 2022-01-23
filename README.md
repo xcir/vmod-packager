@@ -292,9 +292,7 @@ The following is what you specify in src/[vmod name]_env.sh
 |path|explanation|
 |-|:-|
 |${VMP_ROOT_DIR}/src    | Varnish source code with built |
-|${VMP_ROOT_DIR}/debian | DEB template  |
-|${VMP_ROOT_DIR}/rpm    | RPM template  |
-|${VMP_ROOT_DIR}/arch   | ARCH template |
+|${VMP_ROOT_DIR}/tplt   | template (deb/rpm/arch) |
 |${VMP_ROOT_DIR}/pkgs/(debs\|rpms\|arch) | Output |
 |${VMP_ROOT_DIR}/script | Script |
 |${VMP_ROOT_DIR}/vmod/src   | vmod source path |
@@ -331,7 +329,7 @@ The following is for deb, but it is roughly the same for rpm.(script path is a l
     +${VMP_ROOT_DIR}/script/build.sh
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_env.sh
       +${VMP_ROOT_DIR}/script/deb/deb-prefilter.sh
-      +${VMP_ROOT_DIR}/debian/pkg.sh
+      +${VMP_ROOT_DIR}/tplt/debian/pkg.sh
       +${VMP_ROOT_DIR}/vmod/src/${VMP_VMOD_NAME}_init.sh
       +${VMP_ROOT_DIR}/script/deb/deb-postfilter.sh
         +(in debuild)/work/src/__vmod-package_config.sh

@@ -19,4 +19,4 @@ else
     cp ${VMP_ROOT_DIR}/script/default/default_config.sh  ${VMP_WORK_DIR}/__vmod-package_config.sh
 fi
 
-${VMP_ROOT_DIR}/arch/pkg.sh
+${VMP_ROOT_DIR}/tplt/arch/pkg.sh

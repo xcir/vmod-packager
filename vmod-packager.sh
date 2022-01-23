@@ -64,9 +64,7 @@ vmod_build() {
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
-    -v ${SCRIPT_DIR}/arch:/tmp/varnish/arch:ro \
-    -v ${SCRIPT_DIR}/debian:/tmp/varnish/debian:ro \
-    -v ${SCRIPT_DIR}/rpm:/tmp/varnish/rpm:ro \
+    -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
     -v ${SCRIPT_DIR}/tmp:/tmp/varnish/tmp \
     -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod:ro \

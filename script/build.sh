@@ -37,26 +37,24 @@ fi
 
 # vmod pkg build
 if [ -n "${VMP_VMOD_NAME}" ]; then
+    if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
+        echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
+        source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
+        if [ -n "${VMP_REQUIRE_DEB}" ]; then
+            export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
+        fi
+        if [ -n "${VMP_REQUIRE_RPM}" ]; then
+            export VMP_REQUIRE_RPM=", ${VMP_REQUIRE_RPM}"
+        fi
+        if [ -n "${VMP_REQUIRE_ARCH}" ]; then
+            export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
+        fi
+    fi
     if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
         # custom build
-            ${SCRIPT_DIR}/tool/vmod-custombuild.sh
-
+        ${SCRIPT_DIR}/tool/vmod-custombuild.sh
     else
         # normal build
-        if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
-            echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
-            source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
-            if [ -n "${VMP_REQUIRE_DEB}" ]; then
-                export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
-            fi
-            if [ -n "${VMP_REQUIRE_RPM}" ]; then
-                export VMP_REQUIRE_RPM=", ${VMP_REQUIRE_RPM}"
-            fi
-            if [ -n "${VMP_REQUIRE_ARCH}" ]; then
-                export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
-            fi
-        fi
-
         ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
         if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
             echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"

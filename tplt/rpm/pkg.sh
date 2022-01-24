@@ -4,7 +4,7 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    REQUIRE=$(printf "varnish" "${VMP_REQUIRE_RPM}")
+    REQUIRE=$(printf "varnish %s" "${VMP_REQUIRE_RPM}")
 elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
     REQUIRE=$(printf "varnish = %s%s" "${VMP_VARNISH_VER}" "${VMP_REQUIRE_RPM}")
 else

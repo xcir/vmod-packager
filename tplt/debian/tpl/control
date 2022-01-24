@@ -8,6 +8,6 @@ Homepage: https://github.com/xcir/vmod-packager
 
 Package: %PFX%%VMOD%
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, varnish (>= %VARNISH_VER%), varnish (<< %VARNISH_VER_NXT%)%REQUIRE%
+Depends: %DEPENDS%
 Replaces: %PFX%%VMOD% (<< %VRT%)
 Description: packed by vmod-packager

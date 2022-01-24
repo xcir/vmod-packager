@@ -44,7 +44,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-mkdir ${VMP_ROOT_DIR}/pkgs/rpms/varnish 2>/dev/null
+mkdir -p ${VMP_ROOT_DIR}/pkgs/rpms/varnish
 
 find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
 find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/

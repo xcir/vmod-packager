@@ -33,7 +33,10 @@ fi
 
 TMP_TIME=`date +"%a %b %d %Y"`
 
-sed ${SCRIPT_DIR}/tplt.spec \
+if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
+    SFX=".custombuild"
+fi
+sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%VRT%/${VMP_VARNISH_VRT}/g" \
     -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
     -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \

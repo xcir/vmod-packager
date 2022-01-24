@@ -4,9 +4,11 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    SFX=.trunk
+    REQUIRE=$(printf "varnish" "${VMP_REQUIRE_RPM}")
 elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
-    SFX=.fixed
+    REQUIRE=$(printf "varnish = %s%s" "${VMP_VARNISH_VER}" "${VMP_REQUIRE_RPM}")
+else
+    REQUIRE=$(printf "varnish >= %s, varnish < %s%s" "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_RPM}")
 fi
 
 if [ "${VMP_RPM_ONLY_INC_VMOD}" = "1" ]; then
@@ -31,12 +33,12 @@ fi
 
 TMP_TIME=`date +"%a %b %d %Y"`
 
-sed ${SCRIPT_DIR}/tplt.spec${SFX} \
+sed ${SCRIPT_DIR}/tplt.spec \
     -e "s/%VRT%/${VMP_VARNISH_VRT}/g" \
     -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
     -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
     -e "s/%VER%/${VMP_VMOD_VER}/g" \
-    -e "s/%REQUIRE%/${VMP_REQUIRE_RPM}/g" \
+    -e "s/%REQUIRE%/${REQUIRE}/g" \
     -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
     -e "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
     -e "s/%TEST%/${TMP_TEST}/g" \
@@ -45,6 +47,4 @@ sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%UNPACKAGED_TRACK%/${TMP_UNPAC}/g" \
     -e "s/%TIME%/${TMP_TIME}/g" \
     > ${VMP_WORK_DIR}/__vmod-package.spec
-
-
 

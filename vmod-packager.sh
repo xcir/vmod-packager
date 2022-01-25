@@ -4,7 +4,7 @@ set -e
 ##
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -16,6 +16,7 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -t skip Test
     -k varnish pacKage build
     -b vmod full custom Build
+    -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 EOF
@@ -124,7 +125,7 @@ if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null
 fi
 
 #parse option
-while getopts :v:r:e:d:p:c:stfkbh OPT
+while getopts :v:r:e:d:p:c:u:stfkbh OPT
 do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
@@ -132,6 +133,7 @@ do
         e)  VMP_VMOD_VER=$OPTARG;;
         d)  VMP_DIST=`basename $OPTARG`;;
         p)  VMP_VMOD_PFX=$OPTARG;;
+        u)  VMP_OVR_VCO_URL=$OPTARG;;
         c)  VMP_HASH=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
         t)  VMP_SKIP_TEST=1;;
@@ -203,7 +205,9 @@ else
   VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_MAJOR}.${VMP_VARNISH_VER_MINOR_NXT}.0
 
   VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
-
+  if [ -n "${VMP_OVR_VCO_URL}" ]; then
+    VMP_VARNISH_URL=${VMP_OVR_VCO_URL}
+  fi
 fi
 
 #gen source hash(VMP-HASH)

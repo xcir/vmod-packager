@@ -132,7 +132,7 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -144,6 +144,7 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
     -t skip Test
     -k varnish pacKage build
     -b vmod full custom Build
+    -u Varnish source URL
     -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 ```
@@ -161,6 +162,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
 | -b                        | Vmod full custom build    | disabled | -b |
+| -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
 # Support Distribution
 

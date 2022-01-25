@@ -15,7 +15,7 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -s run baSh
     -t skip Test
     -k varnish pacKage build
-    -b vmod custom Build
+    -b vmod full custom Build
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 EOF

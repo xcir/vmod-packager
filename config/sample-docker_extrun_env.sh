@@ -12,6 +12,7 @@ RUST_RPM="
     "
 
 RUST_ARCH="
+    pacman -Sy --noconfirm clang &&
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rust.sh &&
     /bin/sh /tmp/rust.sh -y && rm /tmp/rust.sh
     "

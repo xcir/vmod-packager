@@ -1,0 +1,28 @@
+# Maintainer: Guillaume Quintard <guillaume.quintard@gmail.com>
+
+pfx=%PFX%
+name=%VMOD%
+pkgname=$pfx$name
+pkgver=%VRT%.%VER%
+pkgrel=1
+pkgdesc=%PFX%%VMOD%
+depends=(%REQUIRE%)
+makedepends=()
+arch=('x86_64')
+source=("src.tgz")
+license=('BSD')
+
+build() {
+    cd $name
+}
+
+check() {
+    cd $name
+    #make check -k VERBOSE=1
+}
+
+package() {
+    cd $name
+    mkdir -p $pkgdir/usr/lib/varnish/vmods/
+    cp /usr/lib/varnish/vmods/*.so $pkgdir/usr/lib/varnish/vmods/
+}

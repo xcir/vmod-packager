@@ -6,7 +6,7 @@ pkgname=$pfx$name
 pkgver=%VRT%.%VER%
 pkgrel=1
 pkgdesc=%PFX%%VMOD%
-depends=('varnish=%VARNISH_VER%' %REQUIRE%)
+depends=(%REQUIRE%)
 makedepends=()
 arch=('x86_64')
 source=("src.tgz")

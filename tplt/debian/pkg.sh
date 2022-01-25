@@ -12,6 +12,14 @@ else
 fi
 TMP_TIME=`date +"%a, %d %b %Y %H:%M:%S %z"`
 
+if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
+    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish%s' "${VMP_REQUIRE_DEB}")
+elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
+    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (= %s)%s' "${VMP_VARNISH_VER}" "${VMP_REQUIRE_DEB}")
+else
+    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (>= %s), varnish (<< %s)%s' "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_DEB}")
+fi
+
 for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
     sed $i \
         -e "s/%CN%/${CN}/g" \
@@ -19,7 +27,7 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
         -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
         -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
         -e "s/%VER%/${VMP_VMOD_VER}/g" \
-        -e "s/%REQUIRE%/${VMP_REQUIRE_DEB}/g" \
+        -e "s/%DEPENDS%/${DEPENDS}/g" \
         -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
         -e "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
         -e "s/%TEST%/${TMP_TEST}/g" \
@@ -27,12 +35,8 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
         > ${VMP_WORK_DIR}/src/debian/`basename ${i}`
 done
 
-if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    cp ${VMP_ROOT_DIR}/work/src/debian/control.trunk ${VMP_WORK_DIR}/src/debian/control
-elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
-    cp ${VMP_ROOT_DIR}/work/src/debian/control.fixed ${VMP_WORK_DIR}/src/debian/control
-fi
 #CN   = CodeName
 #VRT  = Varnish VRT Version
 #VMOD = VMOD Name
 #VER  = VMOD Version
+

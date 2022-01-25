@@ -4,7 +4,7 @@ set -e
 ##
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -15,6 +15,8 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -s run baSh
     -t skip Test
     -k varnish pacKage build
+    -b vmod full custom Build
+    -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 EOF
@@ -63,6 +65,7 @@ vmod_build() {
     -e VMP_HASH=${VMP_HASH} \
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
+    -e VMP_VMOD_CUSTOM_BUILD=${VMP_VMOD_CUSTOM_BUILD} \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
     -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
@@ -122,7 +125,7 @@ if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null
 fi
 
 #parse option
-while getopts :v:r:e:d:p:c:stfkh OPT
+while getopts :v:r:e:d:p:c:u:stfkbh OPT
 do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
@@ -130,11 +133,13 @@ do
         e)  VMP_VMOD_VER=$OPTARG;;
         d)  VMP_DIST=`basename $OPTARG`;;
         p)  VMP_VMOD_PFX=$OPTARG;;
+        u)  VMP_OVR_VCO_URL=$OPTARG;;
         c)  VMP_HASH=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
         t)  VMP_SKIP_TEST=1;;
         f)  VMP_FIXED_MODE=1;;
         k)  VMP_VARNISH_PKG_MODE=1;;
+        b)  VMP_VMOD_CUSTOM_BUILD=1;;
         h)  usage_exit;;
         \?) usage_exit;;
     esac
@@ -146,6 +151,7 @@ if [[ -z "${VMP_FIXED_MODE}" ]];        then VMP_FIXED_MODE=0; fi
 if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
 if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
 if [[ -z "${VMP_VMOD_VER}" ]];          then VMP_VMOD_VER=0.1; fi
+if [[ -z "${VMP_VMOD_CUSTOM_BUILD}" ]]; then VMP_VMOD_CUSTOM_BUILD=0; fi
 
 if [ "${VMP_EXEC_MODE}" = "build" ]; then
   VMP_DOCKER_EXEC=/tmp/varnish/script/build.sh
@@ -199,7 +205,9 @@ else
   VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_MAJOR}.${VMP_VARNISH_VER_MINOR_NXT}.0
 
   VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
-
+  if [ -n "${VMP_OVR_VCO_URL}" ]; then
+    VMP_VARNISH_URL=${VMP_OVR_VCO_URL}
+  fi
 fi
 
 #gen source hash(VMP-HASH)
@@ -235,6 +243,10 @@ else
   while [ -n "$1" ]
   do
     VMP_VMOD=`basename $1`
+    if [[ "${VMP_VMOD}" == *_* ]]; then
+      printf "Packages containing '_' cannot be built, please change it to '%s'.\n" $(echo "${VMP_VMOD}" | sed -e "s/_/-/g")
+      usage_exit
+    fi
     if [ ! -e "${SCRIPT_DIR}/src/${VMP_VMOD}" ]; then
       echo "./src/${VMP_VMOD} is not found" 1>&2
       usage_exit

@@ -132,18 +132,20 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-h] VmodName
--v Varnish version (ex:7.0.0 or trunk)
--r build VaRnish from local source
--e vmod vErsion (ex:0.1)
--d Distribution
--p vmod name Prefix
--c Commit hash
--f Fixed varnish version
--s run baSh
--t skip Test
--k varnish pacKage build
--h Help
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
+    -v Varnish version (ex:7.0.0 or trunk)
+    -r build VaRnish from local source
+    -e vmod vErsion (ex:0.1)
+    -d Distribution
+    -p vmod name Prefix
+    -c Commit hash
+    -f Fixed varnish version
+    -s run baSh
+    -t skip Test
+    -k varnish pacKage build
+    -b vmod full custom Build
+    -u Varnish source URL
+    -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 ```
 
@@ -159,6 +161,8 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
+| -b                        | Vmod full custom build    | disabled | -b |
+| -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
 # Support Distribution
 
@@ -169,6 +173,8 @@ See ./docker/init/ path.
 Many VMODs use `autogen.sh` `bootstrap` and `configure`.
 In this case, you can build without any special configuration.
 If you need additional packages or other steps to build, you can use the following script to customize it.
+
+If you are using a VMOD that is not built with "make", please refer to "VMOD full custom build".
 
 ## src/[vmod name]_env.sh
 
@@ -224,6 +230,39 @@ ENV is `not` available.
 
 A sample is available at sample-src/
 
+# VMOD full custom build
+
+If you need a build method other than make (e.g. cargo), you can use the "-b" option and "[vmod-name]_build.sh" to package only the generated binaries.
+
+The following custom scripts are available for full custom builds.
+
+## src/[vmod name]_env.sh
+
+## src/[vmod name]_build.sh
+
+```
+#!/bin/bash
+# https://github.com/gquintard/vmod_reqwest
+set -e
+
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
+source ~/.cargo/env
+if [ "${VMP_PKGTYPE}" = "deb" ]; then
+    apt-get -yq install libssl-dev
+elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
+    dnf -y install openssl-devel
+#elif [ "${VMP_PKGTYPE}" = "arch" ]; then
+fi
+
+cd ${VMP_WORK_DIR}/src
+cargo build --release
+cp ${VMP_WORK_DIR}/src/target/release/*.so ${VMP_WORK_DIR}/vmp_build/usr/lib/varnish/vmods/
+
+```
+
+Please place the generated binary in "${VMP_WORK_DIR}/vmp_build/usr/lib/varnish/vmods/".
+
 # Docker custom (config/docker_extrun_env.sh)
 
 If the VMOD build requires additional packages, you can specify the packages in the custom build, but they will be installed every time.
@@ -232,10 +271,28 @@ If you build frequently or need to install a lot of packages, or if you want to 
 In this case, you can use `config/docker_extrun_env.sh` to change the docker image.
 
 ```bash
-#/bin/sh
-export VMP_DOCKER_EXTRUN_focal="
-    apt-get install --no-install-recommends -yq libmhash2
+#!/bin/sh
+RUST_DEB="
+    apt-get install --no-install-recommends -yq clang && 
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rust.sh &&
+    /bin/sh /tmp/rust.sh -y && rm /tmp/rust.sh
     "
+
+RUST_RPM="
+    dnf -y install llvm-toolset && 
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rust.sh &&
+    /bin/sh /tmp/rust.sh -y && rm /tmp/rust.sh
+    "
+
+RUST_ARCH="
+    pacman -Sy --noconfirm clang &&
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rust.sh &&
+    /bin/sh /tmp/rust.sh -y && rm /tmp/rust.sh
+    "
+
+export VMP_DOCKER_EXTRUN_focal="${RUST_DEB}"
+export VMP_DOCKER_EXTRUN_centos8="${RUST_RPM}"
+export VMP_DOCKER_EXTRUN_arch="${RUST_ARCH}"
 ```
 
 Put the command you want to `RUN eval "command"` into `VMP_DOCKER_EXTRUN_[dist]`.

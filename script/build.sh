@@ -50,15 +50,18 @@ if [ -n "${VMP_VMOD_NAME}" ]; then
             export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
         fi
     fi
-
-
-
-    ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
-    if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
-        echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
-        ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+    if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
+        # custom build
+        ${SCRIPT_DIR}/tool/vmod-custombuild.sh
+    else
+        # normal build
+        ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
+        if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
+            echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
+            ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+        fi
+        ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
     fi
-    ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
 fi
 
 # varnish pkg build

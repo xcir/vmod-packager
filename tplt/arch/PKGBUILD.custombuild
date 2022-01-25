@@ -18,11 +18,10 @@ build() {
 
 check() {
     cd $name
-    #make check -k VERBOSE=1
 }
 
 package() {
     cd $name
     mkdir -p $pkgdir/usr/lib/varnish/vmods/
-    cp /usr/lib/varnish/vmods/*.so $pkgdir/usr/lib/varnish/vmods/
+    cp $startdir/vmp_build/usr/lib/varnish/vmods/*.so $pkgdir/usr/lib/varnish/vmods/
 }

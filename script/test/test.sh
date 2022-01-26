@@ -106,7 +106,7 @@ echo "need copy from config/sample-docker_extrun_env.sh to config/docker_extrun_
 
 # reqwst/full custom build
 ./vmod-packager.sh -t -d focal   -b src/test-vmod-reqwest;   test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1
-./vmod-packager.sh -t -d centos8 -b src/test-vmod-reqwest;   test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1
+./vmod-packager.sh -t -d centos8 -b src/test-vmod-reqwest;   test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
 ./vmod-packager.sh -t -d arch    -b src/test-vmod-reqwest;   test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1
 
 echo "pass basic test"

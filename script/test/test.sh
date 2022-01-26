@@ -9,7 +9,7 @@ cd ${VRD}
 # clean
 sudo rm -rf src/test-varnish-modules60* src/test-varnish-modules70* src/test-libvmod-digest70*
 sudo rm -rf pkgs/*/test-varnish-modules60 pkgs/*/test-varnish-modules70
-sudo rm -rf pkgs/*/test-libvmod-digest70 pkgs/*/test-libvmod-digest70
+sudo rm -rf pkgs/*/test-libvmod-digest60 pkgs/*/test-libvmod-digest70
 sudo rm -rf pkgs/*/test-vmod-reqwest
 
 mkdir -p src/test-varnish-modules60

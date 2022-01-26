@@ -1,6 +1,8 @@
 #!/bin/bash
 echo "VMP>>>$0 : vmod custom"
 
+set -e
+
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 ${VMP_ROOT_DIR}/tplt/debian/pkg.sh

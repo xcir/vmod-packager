@@ -37,9 +37,14 @@ fi
 
 # vmod pkg build
 if [ -n "${VMP_VMOD_NAME}" ]; then
-    if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
-        echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh : ${VMP_VMOD_NAME}"
-        source ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
+    if   [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
+        VMP_ENV_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
+    elif [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_env.sh ]; then
+        VMP_ENV_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_env.sh
+    fi
+    if [ -n "${VMP_ENV_SH}" ]; then
+        echo "VMP>>>${VMP_ENV_SH} : ${VMP_VMOD_NAME}"
+        source ${VMP_ENV_SH}
         if [ -n "${VMP_REQUIRE_DEB}" ]; then
             export VMP_REQUIRE_DEB=", ${VMP_REQUIRE_DEB}"
         fi
@@ -50,16 +55,23 @@ if [ -n "${VMP_VMOD_NAME}" ]; then
             export VMP_REQUIRE_ARCH=" ${VMP_REQUIRE_ARCH}"
         fi
     fi
+
     if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
         # custom build
         ${SCRIPT_DIR}/tool/vmod-custombuild.sh
     else
         # normal build
         ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
-        if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
-            echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh : ${VMP_VMOD_NAME}"
-            ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+        if   [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
+            VMP_INIT_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh
+        elif [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_init.sh ]; then
+            VMP_INIT_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_init.sh
         fi
+        if [ -n "${VMP_INIT_SH}" ]; then
+            echo "VMP>>>${VMP_INIT_SH} : ${VMP_VMOD_NAME}"
+            ${VMP_INIT_SH}
+        fi
+
         ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-postfilter.sh
     fi
 fi

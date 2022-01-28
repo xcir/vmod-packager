@@ -11,8 +11,13 @@ ${VMP_ROOT_DIR}/tplt/arch/pkg.sh
 cp -rp ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME} ${VMP_WORK_DIR}/src
 
 
-echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh : ${VMP_VMOD_NAME}"
-${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh
+if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh ]; then
+    echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh : ${VMP_VMOD_NAME}"
+    ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh
+else
+    echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_build.sh : ${VMP_VMOD_NAME}"
+    ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_build.sh
+fi
 
 set -x
 (

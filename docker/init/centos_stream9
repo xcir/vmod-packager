@@ -2,9 +2,6 @@ FROM quay.io/centos/centos:stream9
 
 ARG VMP_DOCKER_EXTRUN_centos_stream9
 
-#waiting for jemalloc-devel!
-#https://bugzilla.redhat.com/show_bug.cgi?id=2034311
-
 RUN dnf -y update && \
     dnf -y install 'dnf-command(config-manager)' && \
     dnf config-manager --set-enabled crb && \
@@ -13,7 +10,7 @@ RUN dnf -y update && \
     https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
 
 RUN dnf -y group install "Development Tools" && \
-    dnf -y install unzip wget git
+    dnf -y install unzip wget git which
 
 RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel
 

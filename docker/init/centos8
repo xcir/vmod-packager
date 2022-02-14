@@ -2,6 +2,8 @@ FROM centos:8
 
 ARG VMP_DOCKER_EXTRUN_centos8
 
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+
 RUN dnf -y update && \
     dnf -y install epel-release dnf-plugin-config-manager && \
     dnf -y config-manager --set-enabled powertools && \

@@ -72,8 +72,7 @@ cd ${VRD}
 
 #centos-stream
 ./vmod-packager.sh -t -d centos_stream8 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
-#https://bugzilla.redhat.com/show_bug.cgi?id=2034311
-#./vmod-packager.sh -t -d centos_stream9 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
+./vmod-packager.sh -t -d centos_stream9 -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
 
 # arch
 ./vmod-packager.sh -t -d arch -v 7.0.0 test-varnish-modules70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1
@@ -89,10 +88,11 @@ cd ${VRD}
 ./vmod-packager.sh -t -d arch -v 7.0.0 src/test-libvmod-digest70;       test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1
 
 # libvdp-pesi with varnish
-./vmod-packager.sh -t -d focal -k -v 7.0.0 src/test-libvdp-pesi70;      test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 3
-./vmod-packager.sh -t -d buster -k -v 7.0.0 src/test-libvdp-pesi70;     test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 4
-./vmod-packager.sh -t -d centos8 -k -v 7.0.0 src/test-libvdp-pesi70;    test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 5
-./vmod-packager.sh -t -d arch -k -v 7.0.0 src/test-libvdp-pesi70;       test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
+./vmod-packager.sh -t -d focal -k -v 7.0.0 src/test-libvdp-pesi70;          test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 3
+./vmod-packager.sh -t -d buster -k -v 7.0.0 src/test-libvdp-pesi70;         test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 4
+./vmod-packager.sh -t -d centos8 -k -v 7.0.0 src/test-libvdp-pesi70;        test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 5
+./vmod-packager.sh -t -d arch -k -v 7.0.0 src/test-libvdp-pesi70;           test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
+./vmod-packager.sh -t -d centos_stream9 -k -v 7.0.0 src/test-libvdp-pesi70; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 5
 
 # varnish-modules with varnish local src
 ./vmod-packager.sh -t -d focal -k -r varnish-cache src/test-varnish-modules70;      test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 3

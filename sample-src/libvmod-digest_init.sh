@@ -3,6 +3,7 @@
 #https://github.com/varnish/libvmod-digest
 
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
+    apt-get update
     apt-get -yq install libmhash-dev
 elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install libmhash-devel

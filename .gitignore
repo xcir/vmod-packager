@@ -4,3 +4,4 @@ pkgs/arch/*
 tmp/*
 src/*
 varnish/*
+todo.md

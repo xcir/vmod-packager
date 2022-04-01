@@ -6,6 +6,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 source ~/.cargo/env
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
+    apt-get update
     apt-get -yq install libssl-dev
 elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install openssl-devel

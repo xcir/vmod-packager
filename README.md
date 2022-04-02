@@ -151,7 +151,7 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 
 | option | explanation | default | example |
 |-|:-|:-|:-|
-| -v [Varnish version]      | Target varnish version    | 7.0.0 | -v 7.0.0 |
+| -v [Varnish version]      | Target varnish version    | 7.1.0 | -v 7.1.0 |
 | -r [varnish source]       | The name of the Varnish source in varnish/    | varnish-cache | -r varnish-cache |
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
 | -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |

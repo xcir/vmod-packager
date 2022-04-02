@@ -145,7 +145,7 @@ do
     esac
 done
 
-if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.0.0; fi
+if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.1.0; fi
 if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=focal; fi
 if [[ -z "${VMP_FIXED_MODE}" ]];        then VMP_FIXED_MODE=0; fi
 if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi

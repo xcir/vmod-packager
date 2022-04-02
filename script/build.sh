@@ -56,11 +56,13 @@ if [ -n "${VMP_VMOD_NAME}" ]; then
         fi
     fi
 
-    if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
+    if  [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh ]; then
         # custom build
+        export VMP_VMOD_CUSTOM_BUILD=1
         ${SCRIPT_DIR}/tool/vmod-custombuild.sh
     else
         # normal build
+        export VMP_VMOD_CUSTOM_BUILD=0
         ${VMP_ROOT_DIR}/script/${VMP_PKGTYPE}/${VMP_PKGTYPE}-prefilter.sh
         if   [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh ]; then
             VMP_INIT_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_init.sh

@@ -132,7 +132,7 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -143,7 +143,6 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
     -s run baSh
     -t skip Test
     -k varnish pacKage build
-    -b vmod full custom Build
     -u Varnish source URL
     -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
@@ -161,7 +160,6 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
-| -b                        | Vmod full custom build    | disabled | -b |
 | -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
 # Support Distribution
@@ -170,13 +168,40 @@ See ./docker/init/ path.
 
 # VMOD custom build
 
-Many VMODs use `autogen.sh` `bootstrap` and `configure`.
-In this case, you can build without any special configuration.
-If you need additional packages or other steps to build, you can use the following script to customize it.
+Many VMODs can be built with `autogen.sh`, `configure`, and `make`, but there are cases where customization is necessary because of required packages or the Varnish source tree.
+Therefore, vmod-packager provides two customizations.
 
-If you are using a VMOD that is not built with "make", please refer to "VMOD full custom build".
+## Custom build
 
-## src/[vmod name]_env.sh
+Use this for simple customization such as adding packages.
+
+## Full Custom build
+
+If you need a build method other than make (e.g. cargo), you can use "[vmod-name]_build.sh" to package only the generated binaries.
+
+The following custom scripts are available for full custom builds.
+
+In some cases, a full custom build requires a custom build environment as well.
+See "Docker custom" below.
+
+## Custom script
+
+| Script | Custom build | Full custom build |
+|-|:-|:-|
+| src/[vmod name]_env.sh      | Y    | Y |
+| src/[vmod name]_init.sh     | Y    | N |
+| src/[vmod name]_config.sh   | Y    | N |
+| src/[vmod name]_build.sh    | N    | Y |
+
+There are currently 4 types of custom scripts, which are used as needed (you don't have to provide all of them).
+If `[vmod name]_build.sh` exists, it is full custom build.
+
+A sample is available at `sample-src/`
+
+The basic location of scripts is `src/`, but they can also be placed in `src/[vmod name]/vmp_config/`.
+If both scripts are present, `src/` takes precedence.
+
+### src/[vmod name]_env.sh
 
 This is used to configure VMP_REQUIRE_(DEB|RPM|ARCH) to specify additional dependent packages.
 
@@ -193,7 +218,7 @@ export VMP_RPM_DISABLE_UNPACKAGED_TRACK=1
 
 ```
 
-## src/[vmod name]_init.sh
+### src/[vmod name]_init.sh
 
 Set this option if the build requires additional packages or additional steps.
 
@@ -202,6 +227,7 @@ ENV are available.
 ```bash
 #!/bin/sh
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
+    apt-get update
     apt-get -yq install libmhash-dev
 elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install libmhash-devel
@@ -216,7 +242,7 @@ fi
 cp -rp ${VMP_ROOT_DIR}/src/m4 ${VMP_WORK_DIR}/src/m4
 ```
 
-## src/[vmod name]_config.sh
+### src/[vmod name]_config.sh
 
 This is used when you need options for configure.
 
@@ -228,17 +254,7 @@ ENV is `not` available.
 ./configure VARNISHSRC=/tmp/varnish/src
 ```
 
-A sample is available at sample-src/
-
-# VMOD full custom build
-
-If you need a build method other than make (e.g. cargo), you can use the "-b" option and "[vmod-name]_build.sh" to package only the generated binaries.
-
-The following custom scripts are available for full custom builds.
-
-## src/[vmod name]_env.sh
-
-## src/[vmod name]_build.sh
+### src/[vmod name]_build.sh
 
 ```
 #!/bin/bash
@@ -249,6 +265,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 source ~/.cargo/env
 if [ "${VMP_PKGTYPE}" = "deb" ]; then
+    apt-get update
     apt-get -yq install libssl-dev
 elif [ "${VMP_PKGTYPE}" = "rpm" ]; then
     dnf -y install openssl-devel

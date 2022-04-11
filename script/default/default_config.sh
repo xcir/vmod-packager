@@ -1,7 +1,9 @@
 #!/bin/sh
-if [ -e ./autogen.sh ]; then
-    ./autogen.sh
-else
-    ./bootstrap
+if [ ! -x ./configure ]; then
+    if [ -e ./autogen.sh ]; then
+        ./autogen.sh
+    else
+        ./bootstrap
+    fi
 fi
 ./configure $@

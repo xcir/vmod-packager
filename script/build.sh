@@ -9,9 +9,9 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 if [ -n "${VMP_VARNISH_SRC}" ]; then
     cp -rp ${VMP_VARNISH_ORG_DIR}/${VMP_VARNISH_SRC} ${VMP_ROOT_DIR}/src
     cd ${VMP_ROOT_DIR}/src
-    ./autogen.sh && \
-    ./configure --prefix=/usr && \
-    make -sj`nproc` && \
+    ./autogen.sh
+    ./configure --prefix=/usr
+    make -sj`nproc`
     make -j`nproc` install
 fi
 

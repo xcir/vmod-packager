@@ -24,11 +24,11 @@ if [ ${VMP_VARNISH_VRT} -lt 10 ]; then
     exit 1
 fi
 
-if which dpkg &>/dev/null; then
+if which dpkg >/dev/null 2>&1; then
     export VMP_PKGTYPE=deb
-elif which rpm &> /dev/null; then
+elif which rpm >/dev/null 2>&1; then
     export VMP_PKGTYPE=rpm
-elif which pacman &> /dev/null; then
+elif which pacman >/dev/null 2>&1; then
     export VMP_PKGTYPE=arch
 else
     echo "Error: couldn't identify distribution type (no dpkg, rpm or pacman)"

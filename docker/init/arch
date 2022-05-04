@@ -2,7 +2,7 @@ FROM archlinux:base-devel
 ARG VMP_DOCKER_EXTRUN_arch
 
 RUN \
-	pacman -Suvvy --noconfirm autoconf-archive gcc libnsl pcre2 python-docutils python-sphinx git && \
+	pacman -Suvvy --noconfirm autoconf-archive gcc libnsl pcre2 python-docutils python-sphinx git autoconf-archive && \
 	useradd builder && \
 	echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
 	echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf

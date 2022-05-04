@@ -12,6 +12,6 @@ RUN dnf -y update && \
 RUN dnf -y group install "Development Tools" && \
     dnf -y install unzip wget git which
 
-RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel
+RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel autoconf-archive
 
 RUN eval "${VMP_DOCKER_EXTRUN_centos_stream9}"

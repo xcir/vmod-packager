@@ -46,7 +46,6 @@ curl -sL https://gitlab.com/uplex/varnish/libvdp-pesi/-/archive/7.0/libvdp-pesi-
 cp ${VRD}/sample-src/libvmod-digest_init.sh ${VRD}/src/test-libvmod-digest70_init.sh
 cp ${VRD}/sample-src/libvmod-digest_env.sh  ${VRD}/src/test-libvmod-digest70_env.sh
 cp ${VRD}/sample-src/libvdp-pesi_config.sh  ${VRD}/src/test-libvdp-pesi70_config.sh
-cp ${VRD}/sample-src/libvdp-pesi_init.sh    ${VRD}/src/test-libvdp-pesi70_init.sh
 cp ${VRD}/sample-src/vmod-reqwest_build.sh  ${VRD}/src/test-vmod-reqwest_build.sh
 cp ${VRD}/sample-src/vmod-reqwest_env.sh    ${VRD}/src/test-vmod-reqwest_env.sh
 

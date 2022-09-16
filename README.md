@@ -280,6 +280,25 @@ cp ${VMP_WORK_DIR}/src/target/release/*.so ${VMP_WORK_DIR}/vmp_build/usr/lib/var
 
 Please place the generated binary in "${VMP_WORK_DIR}/vmp_build/usr/lib/varnish/vmods/".
 
+## vmp_config
+
+The primary target is the VMOD author.
+"src/[vmod_name]/vmp_config" can be used as a location for custom scripts.
+
+An additional file "[vmod name]_default.sh" is also available.
+Default values such as VMOD version can be specified.
+Currently available are
+
+- VMP_VMOD_VER(-e) Vmod package version
+- VMP_FIXED_MODE(-f) Fix the dependent Varnish version 
+
+```
+#!/bin/bash
+
+export VMP_VMOD_VER=72.5
+#export VMP_FIXED_MODE=0
+```
+
 # Docker custom (config/docker_extrun_env.sh)
 
 If the VMOD build requires additional packages, you can specify the packages in the custom build, but they will be installed every time.

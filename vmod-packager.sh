@@ -250,10 +250,24 @@ else
       source ${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh
     fi
     if [ "${VMP_FIXED_MODE_A}" = "DEFAULT" ]; then
-      VMP_FIXED_MODE=$VMP_FIXED_MODE_DEFAULT
+      if [ "${VMPCFG_FIXED_MODE}" ]; then
+        VMP_FIXED_MODE=$VMPCFG_FIXED_MODE
+        unset VMPCFG_FIXED_MODE
+      else
+        VMP_FIXED_MODE=$VMP_FIXED_MODE_DEFAULT
+      fi
+    else
+      VMP_FIXED_MODE=$VMP_FIXED_MODE_A
     fi
     if [ "${VMP_VMOD_VER_A}" = "DEFAULT" ]; then
-      VMP_VMOD_VER=$VMP_VMOD_VER_DEFAULT
+      if [ "${VMPCFG_VMOD_VER}" ]; then
+        VMP_VMOD_VER=$VMPCFG_VMOD_VER
+        unset VMPCFG_VMOD_VER
+      else
+        VMP_VMOD_VER=$VMP_VMOD_VER_DEFAULT
+      fi
+    else
+      VMP_VMOD_VER=$VMP_VMOD_VER_A
     fi
 
     if [[ "${VMP_VMOD}" == *_* ]]; then

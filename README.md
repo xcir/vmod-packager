@@ -9,7 +9,7 @@ The created package is intended to be used in your own environment.
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
 | Date:                     | 2022/09/17 |
-| Version:                  | 0.5 |
+| Version:                  | 0.6 |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 
@@ -289,8 +289,8 @@ An additional file "[vmod name]_default.sh" is also available.
 Default values such as VMOD version can be specified.
 Currently available are
 
-- VMP_VMOD_VER(-e) Vmod package version
-- VMP_FIXED_MODE(-f) Fix the dependent Varnish version 
+- VMPCFG_VMOD_VER(-e) Vmod package version
+- VMPCFG_FIXED_MODE(-f) Fix the dependent Varnish version 
 
 ```
 #!/bin/bash

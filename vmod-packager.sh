@@ -129,26 +129,30 @@ do
     case $OPT in
         v)  VMP_VARNISH_VER=$OPTARG;;
         r)  VMP_VARNISH_SRC=`basename $OPTARG`;;
-        e)  VMP_VMOD_VER=$OPTARG;;
+        e)  VMP_VMOD_VER_A=$OPTARG;;
         d)  VMP_DIST=`basename $OPTARG`;;
         p)  VMP_VMOD_PFX=$OPTARG;;
         u)  VMP_OVR_VCO_URL=$OPTARG;;
         c)  VMP_HASH=$OPTARG;;
         s)  VMP_EXEC_MODE=sh;;
         t)  VMP_SKIP_TEST=1;;
-        f)  VMP_FIXED_MODE=1;;
+        f)  VMP_FIXED_MODE_A=1;;
         k)  VMP_VARNISH_PKG_MODE=1;;
         h)  usage_exit;;
         \?) usage_exit;;
     esac
 done
 
+#Overridable Default Value
+VMP_FIXED_MODE_DEFAULT=0
+VMP_VMOD_VER_DEFAULT=0.1
+
 if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.2.0; fi
 if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=focal; fi
-if [[ -z "${VMP_FIXED_MODE}" ]];        then VMP_FIXED_MODE=0; fi
 if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
 if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
-if [[ -z "${VMP_VMOD_VER}" ]];          then VMP_VMOD_VER=0.1; fi
+if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
+if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
 
 if [ "${VMP_EXEC_MODE}" = "build" ]; then
   VMP_DOCKER_EXEC=/tmp/varnish/script/build.sh
@@ -240,6 +244,18 @@ else
   while [ -n "$1" ]
   do
     VMP_VMOD=`basename $1`
+    #read vmp_config/[VMP_VMOD]_default.sh
+    if [ -e "${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh" ]; then
+      echo "VMP>>>/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh : Set default value(vmp_config)"
+      source ${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh
+    fi
+    if [ "${VMP_FIXED_MODE_A}" = "DEFAULT" ]; then
+      VMP_FIXED_MODE=$VMP_FIXED_MODE_DEFAULT
+    fi
+    if [ "${VMP_VMOD_VER_A}" = "DEFAULT" ]; then
+      VMP_VMOD_VER=$VMP_VMOD_VER_DEFAULT
+    fi
+
     if [[ "${VMP_VMOD}" == *_* ]]; then
       printf "Packages containing '_' cannot be built, please change it to '%s'.\n" $(echo "${VMP_VMOD}" | sed -e "s/_/-/g")
       usage_exit

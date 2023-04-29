@@ -2,7 +2,7 @@
 
 #https://code.uplex.de/uplex-varnish/slash/tree/master
 
-export VMP_REQUIRE_DEB="liburing, libxxhash"
+export VMP_REQUIRE_DEB="liburing2, libxxhash0"
 export VMP_REQUIRE_RPM="liburing, xxhash-libs"
 export VMP_REQUIRE_ARCH="liburing xxhash"
 

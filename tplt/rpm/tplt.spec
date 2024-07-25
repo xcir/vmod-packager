@@ -12,7 +12,7 @@ Source:	    vmod.tar.gz
 Requires: %REQUIRE%
 
 %description
-Packed by vmod-packager
+%PFX%%VMOD% - %DESC%
 
 %prep
 rm -rf %{buildroot}

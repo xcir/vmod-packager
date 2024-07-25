@@ -65,6 +65,7 @@ vmod_build() {
     -e VMP_HASH=${VMP_HASH} \
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
+    -e VMP_DESC="${VMP_DESC}" \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
     -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
@@ -118,8 +119,8 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 cd $SCRIPT_DIR
 
 #check commands
-if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null); then
-  echo "$0 requires docker, curl, jq commands" 1>&2
+if ! (which docker > /dev/null && which curl > /dev/null && which jq > /dev/null && which git > /dev/null); then
+  echo "$0 requires docker, curl, jq, git commands" 1>&2
   exit 1
 fi
 
@@ -248,6 +249,12 @@ else
     if [ -e "${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh" ]; then
       echo "VMP>>>/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh : Set default value(vmp_config)"
       source ${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh
+    fi
+    if [ -e "${SCRIPT_DIR}/src/${VMP_VMOD}/.git" ]; then
+      VMP_DESC=`git -C ${SCRIPT_DIR}/src/${VMP_VMOD} log -1 --pretty=format:"%H"`
+      if [ "`git -C ${SCRIPT_DIR}/src/${VMP_VMOD} status -s|wc -l`" -ne 0 ]; then
+        VMP_DESC="${VMP_DESC} - modified"
+      fi
     fi
     if [ "${VMP_FIXED_MODE_A}" = "DEFAULT" ]; then
       if [ "${VMPCFG_FIXED_MODE}" ]; then

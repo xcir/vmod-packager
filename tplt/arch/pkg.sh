@@ -21,6 +21,7 @@ sed ${SCRIPT_DIR}/PKGBUILD${SFX} \
     -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
     -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
     -e "s/%VER%/${VMP_VMOD_VER}/g" \
+    -e "s/%DESC%/${VMP_DESC}/g" \
     -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
     -e "s/%REQUIRE%/${REQUIRE}/g" \
     > ${VMP_WORK_DIR}/PKGBUILD

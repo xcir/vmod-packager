@@ -27,6 +27,7 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
         -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
         -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
         -e "s/%VER%/${VMP_VMOD_VER}/g" \
+        -e "s/%DESC%/${VMP_DESC}/g" \
         -e "s/%DEPENDS%/${DEPENDS}/g" \
         -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
         -e "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \

@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | 2022/09/17 |
-| Version:                  | 0.6 |
+| Date:                     | -- |
+| Version:                  | trunk |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 
@@ -18,6 +18,7 @@ The created package is intended to be used in your own environment.
 - docker
 - curl
 - jq
+- git
 
 # Quick tutorial
 

@@ -10,4 +10,4 @@ Package: %PFX%%VMOD%
 Architecture: any
 Depends: %DEPENDS%
 Replaces: %PFX%%VMOD% (<< %VRT%)
-Description: packed by vmod-packager
+Description: %PFX%%VMOD% - %DESC%

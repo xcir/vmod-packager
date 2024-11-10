@@ -49,6 +49,7 @@ docker_build() {
 
 ##
 vmod_build() {
+  set +e
 
   docker run --rm \
     -e VMP_VARNISH_VER=${VMP_VARNISH_VER} \
@@ -79,6 +80,8 @@ vmod_build() {
   else
       DRSTATUS=SUCCESS
   fi
+
+  set -e
 
   #Get VRT used for the build.
   if [ "${VMP_EXEC_MODE}" = "build" ]; then

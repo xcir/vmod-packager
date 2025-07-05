@@ -2,5 +2,5 @@
 
 #https://gitlab.com/uplex/varnish/libvdp-pesi
 
-./autogen.sh
+./bootstrap
 ./configure VARNISHSRC=/tmp/varnish/src $@

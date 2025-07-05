@@ -7,4 +7,6 @@ RUN \
 	echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers && \
 	echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
 
+RUN git config --global --add safe.directory /tmp/varnish/work/src
+
 RUN eval "${VMP_DOCKER_EXTRUN_arch}"

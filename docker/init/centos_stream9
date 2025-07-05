@@ -14,4 +14,6 @@ RUN dnf -y group install "Development Tools" && \
 
 RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre-devel pcre2-devel autoconf-archive
 
+RUN git config --global --add safe.directory /tmp/varnish/work/src
+
 RUN eval "${VMP_DOCKER_EXTRUN_centos_stream9}"

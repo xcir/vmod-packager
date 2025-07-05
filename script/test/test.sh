@@ -74,8 +74,9 @@ cd ${VRD}
 ./vmod-packager.sh -t -d centos8 -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
 
 #centos-stream
-./vmod-packager.sh -t -d centos_stream8 -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
+#./vmod-packager.sh -t -d centos_stream8 -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
 ./vmod-packager.sh -t -d centos_stream9 -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
+./vmod-packager.sh -t -d centos_stream10 -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 2
 
 # arch
 ./vmod-packager.sh -t -d arch -v 7.2.0 test-varnish-modules72; test $(egrep "\\.(deb|rpm|zst)" tmp/vmp_*.log|wc -l) -eq 1

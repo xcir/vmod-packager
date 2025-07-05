@@ -1,0 +1,19 @@
+FROM quay.io/centos/centos:stream10
+
+ARG VMP_DOCKER_EXTRUN_centos_stream10
+
+RUN dnf -y update && \
+    dnf -y install 'dnf-command(config-manager)' && \
+    dnf config-manager --set-enabled crb && \
+    dnf -y install \
+    https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
+    https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+
+RUN dnf -y group install "Development Tools" && \
+    dnf -y install unzip wget git which
+
+RUN dnf -y install python3-sphinx libedit-devel jemalloc-devel python3-docutils ncurses-devel pcre2-devel pcre2-devel autoconf-archive
+
+RUN git config --global --add safe.directory /tmp/varnish/work/src
+
+RUN eval "${VMP_DOCKER_EXTRUN_centos_stream10}"

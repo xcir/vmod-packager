@@ -231,7 +231,7 @@ if [ "${VMP_VARNISH_VER}" = "trunk" ] && [ "${VMP_VARNISH_FROMSRC}" -eq 0 ]; the
   else
     VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
   fi
-  VMP_VARNISH_SRC="tmp/varnish-cache-trunk-${VMP_HASH}"
+  VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
   rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
   cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
 

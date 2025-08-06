@@ -215,8 +215,28 @@ else
   fi
 fi
 
+#git clone varnish-cache
+if [ "${VMP_VARNISH_VER}" = "trunk" ] && [ "${VMP_VARNISH_FROMSRC}" -eq 0 ]; then
+  VMP_VARNISH_VER_NXT=trunk
+  VMP_VARNISH_FROMSRC=1
+
+  if [ ! -e "./varnish/varnish-cache" ]; then
+    git clone --recursive https://github.com/varnishcache/varnish-cache.git ./varnish/varnish-cache
+  else
+    git -C ./varnish/varnish-cache checkout master
+    git -C ./varnish/varnish-cache pull --recurse-submodules
+  fi
+  if [[ -n "${VMP_HASH}" ]]; then
+    git -C ./varnish/varnish-cache checkout ${VMP_HASH}
+  else
+    VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
+  fi
+  VMP_VARNISH_SRC="tmp/varnish-cache-trunk-${VMP_HASH}"
+  rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+  cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+
 #gen source hash(VMP-HASH)
-if [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
+elif [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
   cd $SCRIPT_DIR/varnish/${VMP_VARNISH_SRC}
   VMP_HASH=($(find . -type f  -not -iwholename '*.git/*'|xargs sha1sum |sort|sha1sum ))
   VMP_HASH="${VMP_HASH}"

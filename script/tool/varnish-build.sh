@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "VMP>>>$0 : varnish"
 
 if [ ! -d "${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache" ]; then
@@ -9,6 +10,7 @@ fi
 # https://github.com/varnishcache/varnish-cache/wiki/Release-procedure
 # `make dist` required to build doc
 cd ${VMP_ROOT_DIR}/src
+
 if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
     mkdir -p ${VMP_ROOT_DIR}/src/doc/html
 fi

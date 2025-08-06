@@ -9,6 +9,9 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 if [ -n "${VMP_VARNISH_SRC}" ]; then
     cp -rp ${VMP_VARNISH_ORG_DIR}/${VMP_VARNISH_SRC} ${VMP_ROOT_DIR}/src
     cd ${VMP_ROOT_DIR}/src
+    if [ -d "${VMP_ROOT_DIR}/src/.git" ]; then
+        git config --global --add safe.directory ${VMP_ROOT_DIR}/src
+    fi
     ./autogen.sh
     ./configure --prefix=/usr
     make -sj`nproc`

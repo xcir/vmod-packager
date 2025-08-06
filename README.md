@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | 2025/08/06 |
-| Version:                  | 0.8 |
+| Date:                     | -- |
+| Version:                  | trunk |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 

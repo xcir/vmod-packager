@@ -8,8 +8,8 @@ The created package is intended to be used in your own environment.
 | | |
 |--|:--|
 | Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | 2024/07/29 |
-| Version:                  | 0.7 |
+| Date:                     | 2025/08/06 |
+| Version:                  | 0.8 |
 | Support Varnish Version:  | 6.0 ~|
 | Manual section:           | 7 |
 
@@ -151,11 +151,11 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 
 | option | explanation | default | example |
 |-|:-|:-|:-|
-| -v [Varnish version]      | Target varnish version    | 7.5.0 | -v 7.5.0 |
+| -v [Varnish version]      | Target varnish version    | 7.7.1 | -v 7.7.1 |
 | -r [varnish source]       | The name of the Varnish source in varnish/    | varnish-cache | -r varnish-cache |
 | -e [Vmod version]         | Vmod package version      | 0.1 | -e 0.19 |
 | -p [Vmod name prefix]     | Vmod name prefix          |  | -p test- |
-| -d [Distribution name]    | Target distribution       | jammy | -d jammy |
+| -d [Distribution name]    | Target distribution       | noble | -d noble |
 | -c [Commit hash]          | Target hash(github)       |  | -c d497ec0998f3670af1942cb60a9f4316fc2f3cba |
 | -f                        | Fix the dependent Varnish version | disabled | -f |
 | -s                        | Enter the container       | disabled | -s |

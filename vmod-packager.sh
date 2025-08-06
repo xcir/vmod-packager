@@ -151,8 +151,8 @@ done
 VMP_FIXED_MODE_DEFAULT=0
 VMP_VMOD_VER_DEFAULT=0.1
 
-if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.5.0; fi
-if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=jammy; fi
+if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.7.1; fi
+if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=noble; fi
 if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
 if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
 if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi

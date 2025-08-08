@@ -117,25 +117,7 @@ vmod_build() {
 
 ###################################
 build_param() {
-  #parse option
-  while getopts :v:r:e:d:p:c:u:stfkh OPT
-  do
-      case $OPT in
-          v)  VMP_VARNISH_VER=$OPTARG;;
-          r)  VMP_VARNISH_SRC=`basename $OPTARG`;;
-          e)  VMP_VMOD_VER_A=$OPTARG;;
-          d)  VMP_DIST=`basename $OPTARG`;;
-          p)  VMP_VMOD_PFX=$OPTARG;;
-          u)  VMP_OVR_VCO_URL=$OPTARG;;
-          c)  VMP_HASH=$OPTARG;;
-          s)  VMP_EXEC_MODE=sh;;
-          t)  VMP_SKIP_TEST=1;;
-          f)  VMP_FIXED_MODE_A=1;;
-          k)  VMP_VARNISH_PKG_MODE=1;;
-          h)  usage_exit;;
-          \?) usage_exit;;
-      esac
-  done
+
 
   SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
@@ -158,9 +140,8 @@ build_param() {
   if [[ -z "${VMP_VARNISH_PKG_MODE}" ]]; then
     VMP_VARNISH_PKG_MODE=0;
   elif [ ! -e "./varnish/pkg-varnish-cache" ]; then
-      echo "./varnish/pkg-varnish-cache is not found" 1>&2
-      echo "Varnish requires pkg-varnish-cache( https://github.com/varnishcache/pkg-varnish-cache ) to build" 1>&2
-      usage_exit
+    # clone pkg-varnish-cache
+    git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
   fi
   VMP_VARNISH_PKG_MODE_A=${VMP_VARNISH_PKG_MODE}
   VMP_VARNISH_FROMSRC=0
@@ -173,7 +154,25 @@ main() {
     echo "$0 requires docker, curl, jq, git commands" 1>&2
     exit 1
   fi
-
+  #parse option
+  while getopts :v:r:e:d:p:c:u:stfkh OPT
+  do
+      case $OPT in
+          v)  VMP_VARNISH_VER=$OPTARG;;
+          r)  VMP_VARNISH_SRC=`basename $OPTARG`;;
+          e)  VMP_VMOD_VER_A=$OPTARG;;
+          d)  VMP_DIST=`basename $OPTARG`;;
+          p)  VMP_VMOD_PFX=$OPTARG;;
+          u)  VMP_OVR_VCO_URL=$OPTARG;;
+          c)  VMP_HASH=$OPTARG;;
+          s)  VMP_EXEC_MODE=sh;;
+          t)  VMP_SKIP_TEST=1;;
+          f)  VMP_FIXED_MODE_A=1;;
+          k)  VMP_VARNISH_PKG_MODE=1;;
+          h)  usage_exit;;
+          \?) usage_exit;;
+      esac
+  done
   build_param
 
   cd $SCRIPT_DIR
@@ -260,6 +259,7 @@ main() {
 
   #build vmod/varnish pkg
   shift $((OPTIND - 1))
+
   cd $SCRIPT_DIR
   if [[ -z "$1" ]]; then
     if [ ${VMP_VARNISH_PKG_MODE} -eq 0 ]; then

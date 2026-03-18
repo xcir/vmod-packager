@@ -4,7 +4,7 @@ set -e
 ###################################
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-n] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -16,6 +16,7 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -t skip Test
     -k varnish pacKage build
     -b vmod full custom Build
+    -n for viNyl cache
     -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
@@ -128,6 +129,7 @@ build_param() {
   if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.7.1; fi
   if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=noble; fi
   if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
+  if [[ -z "${VMP_VINYL_DIST_MODE}" ]];  then VMP_VINYL_DIST_MODE=varnish; fi
   if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
   if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
   if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
@@ -155,7 +157,7 @@ main() {
     exit 1
   fi
   #parse option
-  while getopts :v:r:e:d:p:c:u:stfkh OPT
+  while getopts :v:r:e:d:p:c:u:stfkhn OPT
   do
       case $OPT in
           v)  VMP_VARNISH_VER=$OPTARG;;
@@ -169,6 +171,7 @@ main() {
           t)  VMP_SKIP_TEST=1;;
           f)  VMP_FIXED_MODE_A=1;;
           k)  VMP_VARNISH_PKG_MODE=1;;
+          n)  VMP_VINYL_DIST_MODE=vinyl;;
           h)  usage_exit;;
           \?) usage_exit;;
       esac
@@ -215,7 +218,16 @@ main() {
     VMP_VARNISH_VER_MINOR_NXT=$((${VMP_VARNISH_VER_MINOR} + 1))
     VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_MAJOR}.${VMP_VARNISH_VER_MINOR_NXT}.0
 
-    VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
+    if [ "${VMP_VARNISH_VER_MAJOR}" -ge 9 ]; then
+      if [ "${VMP_VINYL_DIST_MODE}" = "vinyl" ]; then
+        VMP_VARNISH_URL=https://vinyl-cache.org/downloads/vinyl-cache-${VMP_VARNISH_VER}.tgz
+      else
+        VMP_VARNISH_URL=https://github.com/varnish/varnish/releases/download/varnish-${VMP_VARNISH_VER}/varnish-${VMP_VARNISH_VER}.tar.gz
+      fi
+    else
+      VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
+    fi
+    
     if [ -n "${VMP_OVR_VCO_URL}" ]; then
       VMP_VARNISH_URL=${VMP_OVR_VCO_URL}
     fi
@@ -250,7 +262,7 @@ main() {
 
   #specify the docker image to use
   VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
-  VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
+  VMP_DOCKER_IMG=vmod-packager/${VMP_VINYL_DIST_MODE}/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
 
   #clear build log
   rm -f ${SCRIPT_DIR}/tmp/vmp_vmod.log

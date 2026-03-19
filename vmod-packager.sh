@@ -58,6 +58,7 @@ vmod_build() {
     -e VMP_ROOT_DIR=/tmp/varnish \
     -e VMP_VMOD_ORG_SRC_DIR=/tmp/varnish/org/vmod \
     -e VMP_VARNISH_ORG_DIR=/tmp/varnish/org/varnish \
+    -e VMP_PKG_VARNISH_DIR=/tmp/varnish/org/varnish/pkg-${VMP_VINYL_DIST_MODE}-cache \
     -e VMP_WORK_DIR=/tmp/varnish/work \
     -e VMP_VMOD_NAME=${VMP_VMOD} \
     -e VMP_VMOD_VER=${VMP_VMOD_VER} \
@@ -141,9 +142,15 @@ build_param() {
   fi
   if [[ -z "${VMP_VARNISH_PKG_MODE}" ]]; then
     VMP_VARNISH_PKG_MODE=0;
-  elif [ ! -e "./varnish/pkg-varnish-cache" ]; then
-    # clone pkg-varnish-cache
-    git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
+  else
+    if [ ! -e "./varnish/pkg-varnish-cache" ]; then
+      # clone pkg-varnish-cache
+      git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
+    fi
+    if [ ! -e "./varnish/pkg-vinyl-cache" ]; then
+      # clone pkg-vinyl-cache
+      git clone --recursive https://code.vinyl-cache.org/vinyl-cache/pkg-vinyl-cache.git ./varnish/pkg-vinyl-cache
+    fi
   fi
   VMP_VARNISH_PKG_MODE_A=${VMP_VARNISH_PKG_MODE}
   VMP_VARNISH_FROMSRC=0

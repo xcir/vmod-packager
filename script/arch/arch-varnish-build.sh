@@ -6,7 +6,7 @@ echo "VMP>>>$0 : varnish"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 rm -rf ${VMP_ROOT_DIR}/pkg
-cp -rpL ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/arch ${VMP_ROOT_DIR}/pkg/
+cp -rpL ${VMP_PKG_VARNISH_DIR}/arch ${VMP_ROOT_DIR}/pkg/
 cp ${VMP_ROOT_DIR}/src/varnish-*.tar.gz ${VMP_ROOT_DIR}/pkg/src.tgz
 
 RELEASE=-1

@@ -6,8 +6,8 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 rm -rf ${VMP_ROOT_DIR}/src/debian
 
-cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/debian ${VMP_ROOT_DIR}/src/
-ln -s ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/src/systemd
+cp -rp ${VMP_PKG_VARNISH_DIR}/debian ${VMP_ROOT_DIR}/src/
+ln -s ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/src/systemd
 
 # resolve all the symlinks
 sed -i '' ${VMP_ROOT_DIR}/src/debian/varnish*

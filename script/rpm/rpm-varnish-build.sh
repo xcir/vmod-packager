@@ -3,9 +3,9 @@ echo "VMP>>>$0 : varnish"
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/redhat/* ${VMP_ROOT_DIR}/src/
+cp -rp ${VMP_PKG_VARNISH_DIR}/redhat/* ${VMP_ROOT_DIR}/src/
 
-ln -s ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/systemd
+ln -s ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/systemd
 
 # resolve all the symlinks
 sed -i '' `find ${VMP_ROOT_DIR}/src/ -maxdepth 1 -type l`

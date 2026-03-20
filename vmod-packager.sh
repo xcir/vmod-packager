@@ -106,6 +106,7 @@ vmod_build() {
   if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Varnish pkg build"; fi
   if [ ${VMP_FIXED_MODE} -eq 1 ]; then                              printf "%20s\n" "Fixed mode"; fi
   if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Skip test"; fi
+  if [ ${VMP_VINYL_REPLACE} -eq 1 ]; then                           printf "%20s\n" "Replace Varnish to Vinyl in VMOD"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Status" "${DRSTATUS}"; fi
                                                                     echo "##################################################"
   if [ -e "${SCRIPT_DIR}/tmp/vmp_vmod.log" ];then

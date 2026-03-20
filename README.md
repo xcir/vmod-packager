@@ -130,6 +130,59 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 
 ```
 
+# For Vinyl Cache
+
+```
+# Building Vinyl Cache and vmods packages
+$ ./vmod-packager.sh -v 9.0.0 -d noble -k --vinyl src/libvmod-xcounter-vinyl/
+...
+##################################################
+        docker image: vmod-packager/vinyl/noble:9.0.0-1
+                Dist: noble
+     Varnish Version: 9.0.0
+           Build for: vinyl
+         Varnish VRT: 230
+           VMOD name: libvmod-xcounter-vinyl
+        VMOD Version: 230.0.1
+   Varnish pkg build
+              Status: SUCCESS
+##################################################
+VMOD output:
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl-vinyl-dbgsym_230.0.1~noble-1_amd64.ddeb
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl-vinyl_230.0.1~noble-1_amd64.deb
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.build
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.buildinfo
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.changes
+Varnish output:
+pkgs/debs/vinyl/vinyl-cache-dev_9.0.0-1vmp~noble_amd64.deb
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.build
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.buildinfo
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.changes
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.deb
+
+
+# Building vmods for Varnish cache for use with Vinyl cache
+$ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl-replace src/libvmod-xcounter/
+...
+##################################################
+        docker image: vmod-packager/vinyl/noble:9.0.0-1
+                Dist: noble
+     Varnish Version: 9.0.0
+           Build for: vinyl
+         Varnish VRT: 230
+           VMOD name: libvmod-xcounter
+        VMOD Version: 230.72.5
+Replace Varnish to Vinyl in VMOD
+              Status: SUCCESS
+##################################################
+VMOD output:
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter-vinyl-dbgsym_230.72.5~noble-1_amd64.ddeb
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter-vinyl_230.72.5~noble-1_amd64.deb
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.build
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.buildinfo
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.changes
+
+```
 
 # Options
 

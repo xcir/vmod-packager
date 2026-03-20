@@ -162,6 +162,7 @@ pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.deb
 
 
 # Building vmods for Varnish cache for use with Vinyl cache
+# see https://vinyl-cache.org/docs/9.0/whats-new/upgrading-9.0.html#upgrade-notes-for-vmod-developers
 $ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl-replace src/libvmod-xcounter/
 ...
 ##################################################

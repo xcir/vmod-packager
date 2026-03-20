@@ -226,8 +226,13 @@ main() {
   elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
     #from trunk
     VMP_VARNISH_VER_NXT=trunk
-    VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
-    VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
+    if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
+      VMP_HASH=`curl -s https://code.vinyl-cache.org/api/v1/repos/vinyl-cache/vinyl-cache/branches/main | jq -r '.commit.id'`
+      VMP_VARNISH_URL=https://code.vinyl-cache.org/api/v1/repos/vinyl-cache/vinyl-cache/archive/${VMP_HASH}.tar.gz
+    else
+      VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
+      VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
+    fi
 
   else
     #from v-c.o version.tgz
@@ -262,19 +267,36 @@ main() {
     VMP_VARNISH_FROMSRC=1
 
     if [ ! -e "./varnish/varnish-cache" ]; then
-      git clone --recursive https://github.com/varnishcache/varnish-cache.git ./varnish/varnish-cache
+      git clone --recursive https://github.com/varnish/varnish.git ./varnish/varnish-cache
     else
-      git -C ./varnish/varnish-cache checkout master
+      git -C ./varnish/varnish-cache checkout main
       git -C ./varnish/varnish-cache pull --recurse-submodules
     fi
-    if [[ -n "${VMP_HASH}" ]]; then
-      git -C ./varnish/varnish-cache checkout ${VMP_HASH}
+    if [ ! -e "./varnish/vinyl-cache" ]; then
+      git clone --recursive https://code.vinyl-cache.org/vinyl-cache/vinyl-cache.git ./varnish/vinyl-cache
     else
-      VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
+      git -C ./varnish/vinyl-cache checkout main
+      git -C ./varnish/vinyl-cache pull --recurse-submodules
     fi
-    VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
-    rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
-    cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
+      if [[ -n "${VMP_HASH}" ]]; then
+        git -C ./varnish/vinyl-cache checkout ${VMP_HASH}
+      else
+        VMP_HASH=`git -C ./varnish/vinyl-cache log -1 --pretty=format:"%H"`
+      fi
+      VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
+      rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+      cp -rp ${SCRIPT_DIR}/varnish/vinyl-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    else
+      if [[ -n "${VMP_HASH}" ]]; then
+        git -C ./varnish/varnish-cache checkout ${VMP_HASH}
+      else
+        VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
+      fi
+      VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
+      rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+      cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    fi
 
   #gen source hash(VMP-HASH)
   elif [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then

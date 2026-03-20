@@ -7,11 +7,12 @@ The created package is intended to be used in your own environment.
 
 | | |
 |--|:--|
-| Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | -- |
-| Version:                  | trunk |
-| Support Varnish Version:  | 6.0 ~|
-| Manual section:           | 7 |
+| Author:                         | Shohei Tanaka(@xcir) |
+| Date:                           | -- |
+| Version:                        | trunk |
+| Support Varnish Cache Version:  | 6.0 ~|
+| Support Vinyl Cache Version:    | 9.0 ~|
+| Manual section:                 | 7 |
 
 # Require
 
@@ -133,7 +134,7 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-u varnish source Url] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl-replace] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -144,9 +145,11 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
     -s run baSh
     -t skip Test
     -k varnish pacKage build
+    --vinyl for vinyl cache
+    --vinyl-replace for vinyl cache (replace varnish to vinyl in vmod source)
     -u Varnish source URL
     -h Help
-Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
+Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
 ```
 
 | option | explanation | default | example |
@@ -161,6 +164,8 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
+| --vinyl                   | Build for vinyl           | disabled | --vinyl |
+| --vinyl-replace           | Replace varnish to vinyl in vmod source            | disabled | --vinyl-replace |
 | -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
 # Support Distribution

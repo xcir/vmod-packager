@@ -5,7 +5,10 @@ ARG VMP_DOCKER_EXTRUN_noble
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install --no-install-recommends -yq lsb-release unzip curl apt-utils wget build-essential git devscripts debhelper automake autotools-dev libtool pkg-config autoconf-archive && \
-    apt-get install --no-install-recommends -yq libpcre2-dev libpcre3-dev libjemalloc-dev python3-docutils python3-sphinx libncurses-dev libedit-dev
+    apt-get install --no-install-recommends -yq libpcre2-dev libpcre3-dev libjemalloc-dev python3-docutils python3-sphinx libncurses-dev libedit-dev && \
+    apt-get install --no-install-recommends -yq libssl-dev python3-pip
+
+RUN pip3 install --break-system-packages furo
 
 RUN git config --global --add safe.directory /tmp/varnish/work/src
 

@@ -7,11 +7,12 @@ The created package is intended to be used in your own environment.
 
 | | |
 |--|:--|
-| Author:                   | Shohei Tanaka(@xcir) |
-| Date:                     | -- |
-| Version:                  | trunk |
-| Support Varnish Version:  | 6.0 ~|
-| Manual section:           | 7 |
+| Author:                         | Shohei Tanaka(@xcir) |
+| Date:                           | -- |
+| Version:                        | trunk |
+| Support Varnish Cache Version:  | 6.0 ~|
+| Support Vinyl Cache Version:    | 9.0 ~|
+| Manual section:                 | 7 |
 
 # Require
 
@@ -129,11 +130,64 @@ pkgs/debs/varnish/varnish_7.0.1-1vmp~focal_amd64.deb
 
 ```
 
+# For Vinyl Cache
+
+```
+# Building Vinyl Cache and vmods packages
+$ ./vmod-packager.sh -v 9.0.0 -d noble -k --vinyl src/libvmod-xcounter-vinyl/
+...
+##################################################
+        docker image: vmod-packager/vinyl/noble:9.0.0-1
+                Dist: noble
+     Varnish Version: 9.0.0
+           Build for: vinyl
+         Varnish VRT: 230
+           VMOD name: libvmod-xcounter-vinyl
+        VMOD Version: 230.0.1
+   Varnish pkg build
+              Status: SUCCESS
+##################################################
+VMOD output:
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl-vinyl-dbgsym_230.0.1~noble-1_amd64.ddeb
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl-vinyl_230.0.1~noble-1_amd64.deb
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.build
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.buildinfo
+pkgs/debs/libvmod-xcounter-vinyl-vinyl/libvmod-xcounter-vinyl_230.0.1~noble-1_amd64.changes
+Varnish output:
+pkgs/debs/vinyl/vinyl-cache-dev_9.0.0-1vmp~noble_amd64.deb
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.build
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.buildinfo
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.changes
+pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.deb
+
+
+# Building vmods for Varnish cache for use with Vinyl cache
+$ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl-replace src/libvmod-xcounter/
+...
+##################################################
+        docker image: vmod-packager/vinyl/noble:9.0.0-1
+                Dist: noble
+     Varnish Version: 9.0.0
+           Build for: vinyl
+         Varnish VRT: 230
+           VMOD name: libvmod-xcounter
+        VMOD Version: 230.72.5
+Replace Varnish to Vinyl in VMOD
+              Status: SUCCESS
+##################################################
+VMOD output:
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter-vinyl-dbgsym_230.72.5~noble-1_amd64.ddeb
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter-vinyl_230.72.5~noble-1_amd64.deb
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.build
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.buildinfo
+pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter_230.72.5~noble-1_amd64.changes
+
+```
 
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-u varnish source Url] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl-replace] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -144,9 +198,11 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
     -s run baSh
     -t skip Test
     -k varnish pacKage build
+    --vinyl for vinyl cache
+    --vinyl-replace for vinyl cache (replace varnish to vinyl in vmod source)
     -u Varnish source URL
     -h Help
-Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
+Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
 ```
 
 | option | explanation | default | example |
@@ -161,6 +217,8 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d focal libvmod-xcounter
 | -s                        | Enter the container       | disabled | -s |
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
+| --vinyl                   | Build for vinyl           | disabled | --vinyl |
+| --vinyl-replace           | Replace varnish to vinyl in vmod source            | disabled | --vinyl-replace |
 | -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
 # Support Distribution

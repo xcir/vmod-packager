@@ -20,11 +20,11 @@ Packed by vmod-packager
 %build
 
 %install
-mkdir -p %{buildroot}/usr/lib/varnish/vmods/
-install -m 0755 usr/lib/varnish/vmods/*.so %{buildroot}/usr/lib/varnish/vmods/
+mkdir -p %{buildroot}/usr/lib/%SOFTNAME%/vmods/
+install -m 0755 usr/lib/%SOFTNAME%/vmods/*.so %{buildroot}/usr/lib/%SOFTNAME%/vmods/
 
 %files
-/usr/lib/varnish/vmods/*.so
+/usr/lib/%SOFTNAME%/vmods/*.so
 
 %changelog
 * %TIME% %PFX%%VMOD% <example@localhost> - %VRT%.%VER%

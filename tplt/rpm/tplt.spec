@@ -32,7 +32,7 @@ find %{buildroot}/%{_libdir}/ -name '*.a' -exec rm -f {} ';'
 %TEST%
 
 %files
-%{_libdir}/varnish/vmods/*.so
+%{_libdir}/%SOFTNAME%/vmods/*.so
 %FILES_DATADIR%
 %FILES_MAN%
 

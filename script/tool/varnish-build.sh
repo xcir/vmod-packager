@@ -2,8 +2,8 @@
 set -e
 echo "VMP>>>$0 : varnish"
 
-if [ ! -d "${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache" ]; then
-    echo "None ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache"
+if [ ! -d "${VMP_PKG_VARNISH_DIR}" ]; then
+    echo "None ${VMP_PKG_VARNISH_DIR}"
     exit 1
 fi
 
@@ -18,7 +18,7 @@ make dist
 make clean
 
 rm -rf ${VMP_ROOT_DIR}/systemd
-cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/
+cp -rp ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/
 
 
 

@@ -36,6 +36,11 @@ TMP_TIME=`date +"%a %b %d %Y"`
 if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
     SFX=".custombuild"
 fi
+if [ ${VMP_SOFT_DIST_NAME} = "vinyl" ]; then
+    SOFTNAME="vinyl-cache"
+else
+    SOFTNAME="varnish"
+fi
 sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%VRT%/${VMP_VARNISH_VRT}/g" \
     -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
@@ -43,6 +48,7 @@ sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%VER%/${VMP_VMOD_VER}/g" \
     -e "s/%DESC%/${VMP_DESC}/g" \
     -e "s/%REQUIRE%/${REQUIRE}/g" \
+    -e "s/%SOFTNAME%/${SOFTNAME}/g" \
     -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
     -e "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
     -e "s/%TEST%/${TMP_TEST}/g" \

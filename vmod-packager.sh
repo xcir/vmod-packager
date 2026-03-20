@@ -1,10 +1,11 @@
 #!/bin/bash
 set -e
 
+
 ###################################
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [-b] [-u varnish source Url] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl-replace] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -15,7 +16,8 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -s run baSh
     -t skip Test
     -k varnish pacKage build
-    -b vmod full custom Build
+    --vinyl for vinyl cache
+    --vinyl-replace for vinyl cache (replace varnish to vinyl in vmod source)
     -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
@@ -57,16 +59,19 @@ vmod_build() {
     -e VMP_ROOT_DIR=/tmp/varnish \
     -e VMP_VMOD_ORG_SRC_DIR=/tmp/varnish/org/vmod \
     -e VMP_VARNISH_ORG_DIR=/tmp/varnish/org/varnish \
+    -e VMP_PKG_VARNISH_DIR=/tmp/varnish/org/varnish/pkg-${VMP_SOFT_DIST_NAME}-cache \
     -e VMP_WORK_DIR=/tmp/varnish/work \
     -e VMP_VMOD_NAME=${VMP_VMOD} \
     -e VMP_VMOD_VER=${VMP_VMOD_VER} \
     -e VMP_VMOD_PFX=${VMP_VMOD_PFX} \
+    -e VMP_SOFT_DIST_NAME=${VMP_SOFT_DIST_NAME} \
     -e VMP_FIXED_MODE=${VMP_FIXED_MODE} \
     -e VMP_SKIP_TEST=${VMP_SKIP_TEST} \
     -e VMP_HASH=${VMP_HASH} \
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
     -e VMP_DESC="${VMP_DESC}" \
+    -e VMP_VINYL_REPLACE=${VMP_VINYL_REPLACE} \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
     -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
@@ -93,6 +98,7 @@ vmod_build() {
                                                                     printf "%20s: %s\n" "docker image" "${VMP_DOCKER_IMG}"
                                                                     printf "%20s: %s\n" "Dist" "${VMP_DIST}"
                                                                     printf "%20s: %s\n" "Varnish Version" "${VMP_VARNISH_VER}"
+                                                                    printf "%20s: %s\n" "Build for" "${VMP_SOFT_DIST_NAME}"
   if [ "${VMP_VARNISH_VER}" = "trunk" ]; then                       printf "%20s: %s\n" "Varnish hash" "${VMP_HASH}"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Varnish VRT" "${VMP_VARNISH_VRT}"; fi
   if [ -n "${VMP_VMOD}" ]; then                                     printf "%20s: %s\n" "VMOD name" "${VMP_VMOD_PFX}${VMP_VMOD}"; fi
@@ -100,6 +106,7 @@ vmod_build() {
   if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Varnish pkg build"; fi
   if [ ${VMP_FIXED_MODE} -eq 1 ]; then                              printf "%20s\n" "Fixed mode"; fi
   if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Skip test"; fi
+  if [ ${VMP_VINYL_REPLACE} -eq 1 ]; then                           printf "%20s\n" "Replace Varnish to Vinyl in VMOD"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Status" "${DRSTATUS}"; fi
                                                                     echo "##################################################"
   if [ -e "${SCRIPT_DIR}/tmp/vmp_vmod.log" ];then
@@ -128,9 +135,15 @@ build_param() {
   if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.7.1; fi
   if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=noble; fi
   if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
+  if [[ -z "${VMP_SOFT_DIST_NAME}" ]];    then VMP_SOFT_DIST_NAME=varnish; fi
   if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
   if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
   if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
+  if [[ -z "${VMP_VINYL_REPLACE}" ]];     then VMP_VINYL_REPLACE=0; fi
+
+  if [ ${VMP_VINYL_REPLACE} -eq 1 ]; then
+    VMP_SOFT_DIST_NAME=vinyl
+  fi
 
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_DOCKER_EXEC=/tmp/varnish/script/build.sh
@@ -139,9 +152,15 @@ build_param() {
   fi
   if [[ -z "${VMP_VARNISH_PKG_MODE}" ]]; then
     VMP_VARNISH_PKG_MODE=0;
-  elif [ ! -e "./varnish/pkg-varnish-cache" ]; then
-    # clone pkg-varnish-cache
-    git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
+  else
+    if [ ! -e "./varnish/pkg-varnish-cache" ]; then
+      # clone pkg-varnish-cache
+      git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
+    fi
+    if [ ! -e "./varnish/pkg-vinyl-cache" ]; then
+      # clone pkg-vinyl-cache
+      git clone --recursive https://code.vinyl-cache.org/vinyl-cache/pkg-vinyl-cache.git ./varnish/pkg-vinyl-cache
+    fi
   fi
   VMP_VARNISH_PKG_MODE_A=${VMP_VARNISH_PKG_MODE}
   VMP_VARNISH_FROMSRC=0
@@ -155,22 +174,30 @@ main() {
     exit 1
   fi
   #parse option
-  while getopts :v:r:e:d:p:c:u:stfkh OPT
-  do
-      case $OPT in
-          v)  VMP_VARNISH_VER=$OPTARG;;
-          r)  VMP_VARNISH_SRC=`basename $OPTARG`;;
-          e)  VMP_VMOD_VER_A=$OPTARG;;
-          d)  VMP_DIST=`basename $OPTARG`;;
-          p)  VMP_VMOD_PFX=$OPTARG;;
-          u)  VMP_OVR_VCO_URL=$OPTARG;;
-          c)  VMP_HASH=$OPTARG;;
-          s)  VMP_EXEC_MODE=sh;;
-          t)  VMP_SKIP_TEST=1;;
-          f)  VMP_FIXED_MODE_A=1;;
-          k)  VMP_VARNISH_PKG_MODE=1;;
-          h)  usage_exit;;
-          \?) usage_exit;;
+  OPTS=$(getopt -o v:r:e:d:p:c:u:stfkh --long vinyl --long vinyl-replace -n "$0" -- "$@")
+  if [ $? != 0 ]; then
+    usage_exit
+  fi
+  eval set -- "$OPTS"
+  
+  while true; do
+      case "$1" in
+          -v)  VMP_VARNISH_VER="$2"; shift 2;;
+          -r)  VMP_VARNISH_SRC=`basename "$2"`; shift 2;;
+          -e)  VMP_VMOD_VER_A="$2"; shift 2;;
+          -d)  VMP_DIST=`basename "$2"`; shift 2;;
+          -p)  VMP_VMOD_PFX="$2"; shift 2;;
+          -u)  VMP_OVR_VCO_URL="$2"; shift 2;;
+          -c)  VMP_HASH="$2"; shift 2;;
+          -s)  VMP_EXEC_MODE=sh; shift;;
+          -t)  VMP_SKIP_TEST=1; shift;;
+          -f)  VMP_FIXED_MODE_A=1; shift;;
+          -k)  VMP_VARNISH_PKG_MODE=1; shift;;
+          --vinyl)  VMP_SOFT_DIST_NAME=vinyl; shift;;
+          --vinyl-replace)  VMP_VINYL_REPLACE=1; shift;;
+          -h)  usage_exit;;
+          --) shift; break;;
+          *)  usage_exit;;
       esac
   done
   build_param
@@ -200,8 +227,13 @@ main() {
   elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
     #from trunk
     VMP_VARNISH_VER_NXT=trunk
-    VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
-    VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
+    if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
+      VMP_HASH=`curl -s https://code.vinyl-cache.org/api/v1/repos/vinyl-cache/vinyl-cache/branches/main | jq -r '.commit.id'`
+      VMP_VARNISH_URL=https://code.vinyl-cache.org/api/v1/repos/vinyl-cache/vinyl-cache/archive/${VMP_HASH}.tar.gz
+    else
+      VMP_HASH=`curl -s https://api.github.com/repos/varnishcache/varnish-cache/branches/master | jq -r '.commit.sha'`
+      VMP_VARNISH_URL=https://github.com/varnishcache/varnish-cache/archive/${VMP_HASH}.tar.gz
+    fi
 
   else
     #from v-c.o version.tgz
@@ -215,7 +247,16 @@ main() {
     VMP_VARNISH_VER_MINOR_NXT=$((${VMP_VARNISH_VER_MINOR} + 1))
     VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_MAJOR}.${VMP_VARNISH_VER_MINOR_NXT}.0
 
-    VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
+    if [ "${VMP_VARNISH_VER_MAJOR}" -ge 9 ]; then
+      if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
+        VMP_VARNISH_URL=https://vinyl-cache.org/downloads/vinyl-cache-${VMP_VARNISH_VER}.tgz
+      else
+        VMP_VARNISH_URL=https://github.com/varnish/varnish/releases/download/varnish-${VMP_VARNISH_VER}/varnish-${VMP_VARNISH_VER}.tar.gz
+      fi
+    else
+      VMP_VARNISH_URL=https://varnish-cache.org/_downloads/varnish-${VMP_VARNISH_VER}.tgz
+    fi
+    
     if [ -n "${VMP_OVR_VCO_URL}" ]; then
       VMP_VARNISH_URL=${VMP_OVR_VCO_URL}
     fi
@@ -227,19 +268,36 @@ main() {
     VMP_VARNISH_FROMSRC=1
 
     if [ ! -e "./varnish/varnish-cache" ]; then
-      git clone --recursive https://github.com/varnishcache/varnish-cache.git ./varnish/varnish-cache
+      git clone --recursive https://github.com/varnish/varnish.git ./varnish/varnish-cache
     else
-      git -C ./varnish/varnish-cache checkout master
+      git -C ./varnish/varnish-cache checkout main
       git -C ./varnish/varnish-cache pull --recurse-submodules
     fi
-    if [[ -n "${VMP_HASH}" ]]; then
-      git -C ./varnish/varnish-cache checkout ${VMP_HASH}
+    if [ ! -e "./varnish/vinyl-cache" ]; then
+      git clone --recursive https://code.vinyl-cache.org/vinyl-cache/vinyl-cache.git ./varnish/vinyl-cache
     else
-      VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
+      git -C ./varnish/vinyl-cache checkout main
+      git -C ./varnish/vinyl-cache pull --recurse-submodules
     fi
-    VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
-    rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
-    cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
+      if [[ -n "${VMP_HASH}" ]]; then
+        git -C ./varnish/vinyl-cache checkout ${VMP_HASH}
+      else
+        VMP_HASH=`git -C ./varnish/vinyl-cache log -1 --pretty=format:"%H"`
+      fi
+      VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
+      rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+      cp -rp ${SCRIPT_DIR}/varnish/vinyl-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    else
+      if [[ -n "${VMP_HASH}" ]]; then
+        git -C ./varnish/varnish-cache checkout ${VMP_HASH}
+      else
+        VMP_HASH=`git -C ./varnish/varnish-cache log -1 --pretty=format:"%H"`
+      fi
+      VMP_VARNISH_SRC="tmp/varnish-cache-trunk"
+      rm -rf ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+      cp -rp ${SCRIPT_DIR}/varnish/varnish-cache ${SCRIPT_DIR}/varnish/${VMP_VARNISH_SRC}
+    fi
 
   #gen source hash(VMP-HASH)
   elif [ ${VMP_VARNISH_FROMSRC} -eq 1 ]; then
@@ -250,7 +308,7 @@ main() {
 
   #specify the docker image to use
   VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
-  VMP_DOCKER_IMG=vmod-packager/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
+  VMP_DOCKER_IMG=vmod-packager/${VMP_SOFT_DIST_NAME}/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
 
   #clear build log
   rm -f ${SCRIPT_DIR}/tmp/vmp_vmod.log

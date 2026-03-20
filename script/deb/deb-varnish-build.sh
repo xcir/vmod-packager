@@ -6,8 +6,8 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 rm -rf ${VMP_ROOT_DIR}/src/debian
 
-cp -rp ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/debian ${VMP_ROOT_DIR}/src/
-ln -s ${VMP_VARNISH_ORG_DIR}/pkg-varnish-cache/systemd ${VMP_ROOT_DIR}/src/systemd
+cp -rp ${VMP_PKG_VARNISH_DIR}/debian ${VMP_ROOT_DIR}/src/
+ln -s ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/src/systemd
 
 # resolve all the symlinks
 sed -i '' ${VMP_ROOT_DIR}/src/debian/varnish*
@@ -36,7 +36,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-mkdir ${VMP_ROOT_DIR}/pkgs/debs/varnish 2>/dev/null
+mkdir -p ${VMP_ROOT_DIR}/pkgs/debs/${VMP_SOFT_DIST_NAME}
 
-cp ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* ${VMP_ROOT_DIR}/pkgs/debs/varnish/
-ls ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* | awk -F/ '{print "pkgs/debs/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+cp ${VMP_ROOT_DIR}/${VMP_SOFT_DIST_NAME}*${FULL_VERSION}* ${VMP_ROOT_DIR}/pkgs/debs/${VMP_SOFT_DIST_NAME}/
+ls ${VMP_ROOT_DIR}/${VMP_SOFT_DIST_NAME}*${FULL_VERSION}* | awk -F/ '{print "pkgs/debs/'"${VMP_SOFT_DIST_NAME}"'/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log

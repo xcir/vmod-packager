@@ -12,12 +12,22 @@ else
 fi
 TMP_TIME=`date +"%a, %d %b %Y %H:%M:%S %z"`
 
-if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish%s' "${VMP_REQUIRE_DEB}")
-elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
-    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (= %s)%s' "${VMP_VARNISH_VER}" "${VMP_REQUIRE_DEB}")
+if [ ${VMP_SOFT_DIST_NAME} = "varnish" ]; then
+    if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish%s' "${VMP_REQUIRE_DEB}")
+    elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (= %s)%s' "${VMP_VARNISH_VER}" "${VMP_REQUIRE_DEB}")
+    else
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (>= %s), varnish (<< %s)%s' "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_DEB}")
+    fi
 else
-    DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, varnish (>= %s), varnish (<< %s)%s' "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_DEB}")
+    if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, vinyl-cache%s' "${VMP_REQUIRE_DEB}")
+    elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, vinyl-cache (= %s)%s' "${VMP_VARNISH_VER}" "${VMP_REQUIRE_DEB}")
+    else
+        DEPENDS=$(printf '${shlibs:Depends}, ${misc:Depends}, vinyl-cache (>= %s), vinyl-cache (<< %s)%s' "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_DEB}")
+    fi
 fi
 
 for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
@@ -26,6 +36,7 @@ for i in `find ${SCRIPT_DIR}/tpl/ -type f`; do
         -e "s/%VRT%/${VMP_VARNISH_VRT}/g" \
         -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
         -e "s/%VMOD%/${VMP_VMOD_NAME}/g" \
+        -e "s/%SOFTNAME%/${VMP_SOFT_DIST_NAME}/g" \
         -e "s/%VER%/${VMP_VMOD_VER}/g" \
         -e "s/%DESC%/${VMP_DESC}/g" \
         -e "s/%DEPENDS%/${DEPENDS}/g" \
@@ -40,4 +51,4 @@ done
 #VRT  = Varnish VRT Version
 #VMOD = VMOD Name
 #VER  = VMOD Version
-
+#SOFTNAME = Vinyl/Varnish Distribution Name

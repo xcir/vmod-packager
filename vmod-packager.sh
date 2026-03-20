@@ -3,8 +3,8 @@ set -e
 
 #todo
 # - debian
-#   - custombuild関連
-#
+# - arch
+# - rpm
 
 ###################################
 usage_exit() {

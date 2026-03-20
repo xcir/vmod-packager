@@ -29,7 +29,11 @@ elif [ "${VMP_VARNISH_VER}" = "trunk" ]; then
 else
     VERSION=${VMP_VARNISH_VER}
 fi
-
+if [ ${VMP_SOFT_DIST_NAME} = "vinyl" ]; then
+    SOFTNAME="vinyl-cache"
+else
+    SOFTNAME="varnish"
+fi
 rpmbuild \
     --define "_topdir ${VMP_WORK_DIR}" \
     --define "_smp_mflags -j10" \
@@ -37,17 +41,22 @@ rpmbuild \
     --define "releasetag 1${DEBVERSION}" \
     --define "srcname src" \
     --define "nocheck 1" \
-    -ba ${VMP_ROOT_DIR}/src/varnish.spec
+    -ba ${VMP_ROOT_DIR}/src/${SOFTNAME}.spec
 
 if [ $? -ne 0 ]; then
     echo "error" 1>&2
     exit 1
 fi
 
-mkdir -p ${VMP_ROOT_DIR}/pkgs/rpms/varnish
+if [ ${VMP_SOFT_DIST_NAME} = "vinyl" ]; then
+    SOFTNAME="vinyl-cache"
+else
+    SOFTNAME="varnish"
+fi
+mkdir -p ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_SOFT_DIST_NAME}
 
-find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
-find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/varnish/
+find ${VMP_WORK_DIR} -type f -name ${SOFTNAME}-${VERSION}*.rpm          | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_SOFT_DIST_NAME}/
+find ${VMP_WORK_DIR} -type f -name ${SOFTNAME}-devel-${VERSION}*.rpm    | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_SOFT_DIST_NAME}/
 
-find ${VMP_WORK_DIR} -type f -name varnish-${VERSION}*.rpm          | awk -F/ '{print "pkgs/rpms/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
-find ${VMP_WORK_DIR} -type f -name varnish-devel-${VERSION}*.rpm    | awk -F/ '{print "pkgs/rpms/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+find ${VMP_WORK_DIR} -type f -name ${SOFTNAME}-${VERSION}*.rpm          | awk -F/ '{print "pkgs/rpms/'"${VMP_SOFT_DIST_NAME}"'/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+find ${VMP_WORK_DIR} -type f -name ${SOFTNAME}-devel-${VERSION}*.rpm    | awk -F/ '{print "pkgs/rpms/'"${VMP_SOFT_DIST_NAME}"'/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log

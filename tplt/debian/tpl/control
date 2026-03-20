@@ -6,7 +6,7 @@ Build-Depends: debhelper (>=9)
 Standards-Version: 3.9.6
 Homepage: https://github.com/xcir/vmod-packager
 
-Package: %PFX%%VMOD%
+Package: %PFX%%VMOD%-%SOFTNAME%
 Architecture: any
 Depends: %DEPENDS%
 Replaces: %PFX%%VMOD% (<< %VRT%)

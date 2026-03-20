@@ -8,8 +8,10 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 ${VMP_ROOT_DIR}/tplt/debian/pkg.sh
 cp -rp ${VMP_WORK_DIR}/src/debian ${VMP_WORK_DIR}/vmp_build/debian
 cp ${VMP_WORK_DIR}/vmp_build/debian/rules.custombuild ${VMP_WORK_DIR}/vmp_build/debian/rules
-cp ${VMP_WORK_DIR}/vmp_build/debian/install.custombuild ${VMP_WORK_DIR}/vmp_build/debian/install
-
+#cp ${VMP_WORK_DIR}/vmp_build/debian/install.custombuild ${VMP_WORK_DIR}/vmp_build/debian/install
+sed ${VMP_WORK_DIR}/vmp_build/debian/install.custombuild \
+        -e "s/%SOFTNAME%/${VMP_SOFT_DIST_NAME}/g" \
+> ${VMP_WORK_DIR}/vmp_build/debian/install
 
 if [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh ]; then
     echo "VMP>>>${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_build.sh : ${VMP_VMOD_NAME}"

@@ -1,1 +1,1 @@
-usr/lib/varnish/vmods
+usr/lib/%SOFTNAME%/vmods

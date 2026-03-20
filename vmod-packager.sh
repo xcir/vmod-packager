@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+#todo
+# - debian
+#   - custombuild関連
+#
+
 ###################################
 usage_exit() {
   cat << EOF 1>&2
@@ -58,11 +63,12 @@ vmod_build() {
     -e VMP_ROOT_DIR=/tmp/varnish \
     -e VMP_VMOD_ORG_SRC_DIR=/tmp/varnish/org/vmod \
     -e VMP_VARNISH_ORG_DIR=/tmp/varnish/org/varnish \
-    -e VMP_PKG_VARNISH_DIR=/tmp/varnish/org/varnish/pkg-${VMP_VINYL_DIST_MODE}-cache \
+    -e VMP_PKG_VARNISH_DIR=/tmp/varnish/org/varnish/pkg-${VMP_SOFT_DIST_NAME}-cache \
     -e VMP_WORK_DIR=/tmp/varnish/work \
     -e VMP_VMOD_NAME=${VMP_VMOD} \
     -e VMP_VMOD_VER=${VMP_VMOD_VER} \
     -e VMP_VMOD_PFX=${VMP_VMOD_PFX} \
+    -e VMP_SOFT_DIST_NAME=${VMP_SOFT_DIST_NAME} \
     -e VMP_FIXED_MODE=${VMP_FIXED_MODE} \
     -e VMP_SKIP_TEST=${VMP_SKIP_TEST} \
     -e VMP_HASH=${VMP_HASH} \
@@ -130,7 +136,7 @@ build_param() {
   if [[ -z "${VMP_VARNISH_VER}" ]];       then VMP_VARNISH_VER=7.7.1; fi
   if [[ -z "${VMP_DIST}" ]];              then VMP_DIST=noble; fi
   if [[ -z "${VMP_SKIP_TEST}" ]];         then VMP_SKIP_TEST=0; fi
-  if [[ -z "${VMP_VINYL_DIST_MODE}" ]];  then VMP_VINYL_DIST_MODE=varnish; fi
+  if [[ -z "${VMP_SOFT_DIST_NAME}" ]];    then VMP_SOFT_DIST_NAME=varnish; fi
   if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
   if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
   if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
@@ -178,7 +184,7 @@ main() {
           t)  VMP_SKIP_TEST=1;;
           f)  VMP_FIXED_MODE_A=1;;
           k)  VMP_VARNISH_PKG_MODE=1;;
-          n)  VMP_VINYL_DIST_MODE=vinyl;;
+          n)  VMP_SOFT_DIST_NAME=vinyl;;
           h)  usage_exit;;
           \?) usage_exit;;
       esac
@@ -226,7 +232,7 @@ main() {
     VMP_VARNISH_VER_NXT=${VMP_VARNISH_VER_MAJOR}.${VMP_VARNISH_VER_MINOR_NXT}.0
 
     if [ "${VMP_VARNISH_VER_MAJOR}" -ge 9 ]; then
-      if [ "${VMP_VINYL_DIST_MODE}" = "vinyl" ]; then
+      if [ "${VMP_SOFT_DIST_NAME}" = "vinyl" ]; then
         VMP_VARNISH_URL=https://vinyl-cache.org/downloads/vinyl-cache-${VMP_VARNISH_VER}.tgz
       else
         VMP_VARNISH_URL=https://github.com/varnish/varnish/releases/download/varnish-${VMP_VARNISH_VER}/varnish-${VMP_VARNISH_VER}.tar.gz
@@ -269,7 +275,7 @@ main() {
 
   #specify the docker image to use
   VMP_DOCKER_BASE_IMG=vmod-packager/base:${VMP_DIST}
-  VMP_DOCKER_IMG=vmod-packager/${VMP_VINYL_DIST_MODE}/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
+  VMP_DOCKER_IMG=vmod-packager/${VMP_SOFT_DIST_NAME}/${VMP_DIST}:${VMP_VARNISH_VER}-${VMP_HASH}
 
   #clear build log
   rm -f ${SCRIPT_DIR}/tmp/vmp_vmod.log

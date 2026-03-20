@@ -36,7 +36,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-mkdir ${VMP_ROOT_DIR}/pkgs/debs/varnish 2>/dev/null
+mkdir ${VMP_ROOT_DIR}/pkgs/debs/${VMP_SOFT_DIST_NAME} 2>/dev/null
 
-cp ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* ${VMP_ROOT_DIR}/pkgs/debs/varnish/
-ls ${VMP_ROOT_DIR}/varnish*${FULL_VERSION}* | awk -F/ '{print "pkgs/debs/varnish/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_varnish.log
+cp ${VMP_ROOT_DIR}/${VMP_SOFT_DIST_NAME}*${FULL_VERSION}* ${VMP_ROOT_DIR}/pkgs/debs/${VMP_SOFT_DIST_NAME}/
+ls ${VMP_ROOT_DIR}/${VMP_SOFT_DIST_NAME}*${FULL_VERSION}* | awk -F/ '{print "pkgs/debs/'"${VMP_SOFT_DIST_NAME}"'/" $NF}' >> ${VMP_ROOT_DIR}/tmp/vmp_${VMP_SOFT_DIST_NAME}.log

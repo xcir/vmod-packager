@@ -1,1 +1,1 @@
-usr/lib/%SOFTNAME%/vmods
+%VMODDIR_REL%

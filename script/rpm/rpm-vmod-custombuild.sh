@@ -25,7 +25,7 @@ rpmbuild \
     --define "_topdir ${VMP_WORK_DIR}" \
     -ba __vmod-package.spec
 
-mkdir -p ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME} 
-find ${VMP_WORK_DIR} -type f -name *.rpm | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}/
+mkdir -p ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}
+find ${VMP_WORK_DIR} -type f -name *.rpm | xargs -i cp -p {} ${VMP_ROOT_DIR}/pkgs/rpms/${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}/
 
-find ${VMP_WORK_DIR} -type f -name *.rpm | awk -F/ "{print \"pkgs/rpms/${VMP_VMOD_NAME}/\" \$NF}" >> ${VMP_ROOT_DIR}/tmp/vmp_vmod.log
+find ${VMP_WORK_DIR} -type f -name *.rpm | awk -F/ "{print \"pkgs/rpms/${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}/\" \$NF}" >> ${VMP_ROOT_DIR}/tmp/vmp_vmod.log

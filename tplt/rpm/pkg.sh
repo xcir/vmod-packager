@@ -4,11 +4,11 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 if [ "${VMP_VARNISH_VER}" = "trunk" ]; then
-    REQUIRE=$(printf "varnish %s" "${VMP_REQUIRE_RPM}")
+    REQUIRE=$(printf "%s%s" "${VMP_CACHE_PKG_NAME}" "${VMP_REQUIRE_RPM}")
 elif [ ${VMP_FIXED_MODE} -eq 1 ]; then
-    REQUIRE=$(printf "varnish = %s%s" "${VMP_VARNISH_VER}" "${VMP_REQUIRE_RPM}")
+    REQUIRE=$(printf "%s = %s%s" "${VMP_CACHE_PKG_NAME}" "${VMP_VARNISH_VER}" "${VMP_REQUIRE_RPM}")
 else
-    REQUIRE=$(printf "varnish >= %s, varnish < %s%s" "${VMP_VARNISH_VER}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_RPM}")
+    REQUIRE=$(printf "%s >= %s, %s < %s%s" "${VMP_CACHE_PKG_NAME}" "${VMP_VARNISH_VER}" "${VMP_CACHE_PKG_NAME}" "${VMP_VARNISH_VER_NXT}" "${VMP_REQUIRE_RPM}")
 fi
 
 if [ "${VMP_RPM_ONLY_INC_VMOD}" = "1" ]; then
@@ -36,11 +36,6 @@ TMP_TIME=`date +"%a %b %d %Y"`
 if [ ${VMP_VMOD_CUSTOM_BUILD} -eq 1 ]; then
     SFX=".custombuild"
 fi
-if [ ${VMP_SOFT_DIST_NAME} = "vinyl" ]; then
-    SOFTNAME="vinyl-cache"
-else
-    SOFTNAME="varnish"
-fi
 sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%VRT%/${VMP_VARNISH_VRT}/g" \
     -e "s/%PFX%/${VMP_VMOD_PFX}/g" \
@@ -48,7 +43,9 @@ sed ${SCRIPT_DIR}/tplt.spec${SFX} \
     -e "s/%VER%/${VMP_VMOD_VER}/g" \
     -e "s/%DESC%/${VMP_DESC}/g" \
     -e "s/%REQUIRE%/${REQUIRE}/g" \
-    -e "s/%SOFTNAME%/${SOFTNAME}/g" \
+    -e "s/%PKGNAME%/${VMP_VMOD_PKG_NAME}/g" \
+    -e "s|%VMODDIR%|${VMP_VMOD_DIR}|g" \
+    -e "s|%VMODDIR_REL%|${VMP_VMOD_DIR#/}|g" \
     -e "s/%VARNISH_VER%/${VMP_VARNISH_VER}/g" \
     -e "s/%VARNISH_VER_NXT%/${VMP_VARNISH_VER_NXT}/g" \
     -e "s/%TEST%/${TMP_TEST}/g" \

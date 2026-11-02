@@ -1,4 +1,4 @@
-%PFX%%VMOD% (%VRT%.%VER%~%CN%-1) %CN%; urgency=medium
+%PKGNAME% (%VRT%.%VER%~%CN%-1) %CN%; urgency=medium
 
   * Packaged by vmod-packager
 

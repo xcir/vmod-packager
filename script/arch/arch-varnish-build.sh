@@ -7,7 +7,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 rm -rf ${VMP_ROOT_DIR}/pkg
 cp -rpL ${VMP_PKG_VARNISH_DIR}/arch ${VMP_ROOT_DIR}/pkg/
-cp ${VMP_ROOT_DIR}/src/${VMP_SOFT_DIST_NAME}-*.tar.gz ${VMP_ROOT_DIR}/pkg/src.tgz
+cp ${VMP_ROOT_DIR}/src/${VMP_CACHE_PKG_NAME}-*.tar.gz ${VMP_ROOT_DIR}/pkg/src.tgz
 
 RELEASE=-1
 
@@ -19,15 +19,9 @@ else
     VERSION=${VMP_VARNISH_VER}
 fi
 
-if [ ${VMP_SOFT_DIST_NAME} = "vinyl" ]; then
-    SOFTNAME="vinyl-cache"
-else
-    SOFTNAME="varnish"
-fi
-
 sed -i \
     -e "s|@VERSION@|${VERSION}|" \
-    -e "s|cd \"${SOFTNAME}-$pkgver\"|cd ${SOFTNAME}-*|" \
+    -e "s|cd \"${VMP_CACHE_PKG_NAME}-\$pkgver\"|cd ${VMP_CACHE_PKG_NAME}-*|" \
     -e 's|^source=.*|source=(src.tgz|' \
     "${VMP_ROOT_DIR}/pkg/PKGBUILD"
 cd ${VMP_ROOT_DIR}/pkg

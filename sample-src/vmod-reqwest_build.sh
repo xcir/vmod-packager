@@ -15,5 +15,5 @@ fi
 
 cd ${VMP_WORK_DIR}/src
 cargo build --release
-cp ${VMP_WORK_DIR}/src/target/release/*.so ${VMP_WORK_DIR}/vmp_build/usr/lib/varnish/vmods/
+cp "${VMP_WORK_DIR}/src/target/release/"*.so "${VMP_WORK_DIR}/vmp_build${VMP_VMOD_DIR}/"
 

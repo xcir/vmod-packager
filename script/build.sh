@@ -4,6 +4,7 @@ set -e
 echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
+. "${SCRIPT_DIR}/default/cache_config.sh"
 
 # build varnish, if from local path
 if [ -n "${VMP_VARNISH_SRC}" ]; then
@@ -13,7 +14,7 @@ if [ -n "${VMP_VARNISH_SRC}" ]; then
         git config --global --add safe.directory ${VMP_ROOT_DIR}/src
     fi
     ./autogen.sh
-    ./configure --prefix=/usr
+    sh "${SCRIPT_DIR}/default/varnish_config.sh"
     make -sj`nproc`
     make -j`nproc` install
 fi
@@ -40,6 +41,7 @@ fi
 
 # vmod pkg build
 if [ -n "${VMP_VMOD_NAME}" ]; then
+    vmp_configure_vmod
     if   [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh ]; then
         VMP_ENV_SH=${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}_env.sh
     elif [ -e ${VMP_VMOD_ORG_SRC_DIR}/${VMP_VMOD_NAME}/vmp_config/${VMP_VMOD_NAME}_env.sh ]; then

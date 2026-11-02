@@ -15,7 +15,17 @@ if [ ! -d "${VMP_ROOT_DIR}/src/doc/html" ]; then
     mkdir -p ${VMP_ROOT_DIR}/src/doc/html
 fi
 make dist
-make clean
+
+# Build native packages from the distribution archive. Cleaning the build tree
+# can remove distributed inputs which a release archive cannot regenerate
+# (for example Vinyl 9.1's bundled VTest version.h).
+export VMP_CACHE_DIST="${VMP_ROOT_DIR}/cache-source.tar.gz"
+cp "${VMP_CACHE_PKG_NAME}"-*.tar.gz "${VMP_CACHE_DIST}"
+mkdir -p "${VMP_ROOT_DIR}/cache-source"
+tar zxf "${VMP_CACHE_DIST}" -C "${VMP_ROOT_DIR}/cache-source" --strip-components 1
+cd "${VMP_ROOT_DIR}"
+rm -rf "${VMP_ROOT_DIR}/src"
+mv "${VMP_ROOT_DIR}/cache-source" "${VMP_ROOT_DIR}/src"
 
 rm -rf ${VMP_ROOT_DIR}/systemd
 cp -rp ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/

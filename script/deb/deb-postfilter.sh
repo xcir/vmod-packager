@@ -5,7 +5,7 @@ echo "VMP>>>$0 : ${VMP_VMOD_NAME}"
 cd ${VMP_WORK_DIR}/src
 mkdir -p ${VMP_ROOT_DIR}/pkgs/debs/${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}
 
-debuild -us -uc -b
+debuild --preserve-envvar=VMP_SOFT_DIST_NAME --preserve-envvar=VMP_VTEST_EXT -us -uc -b
 
 if [ $? -ne 0 ]; then
     ls ../${VMP_VMOD_PFX}${VMP_VMOD_NAME}* | awk -F/ "{print \"pkgs/debs/${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}/\" \$NF}" >> ${VMP_ROOT_DIR}/tmp/vmp_vmod.log

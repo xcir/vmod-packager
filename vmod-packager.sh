@@ -5,19 +5,19 @@ set -e
 ###################################
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl-replace] [-u varnish source Url] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vcacheize] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
     -d Distribution
     -p vmod name Prefix
     -c Commit hash
-    -f Fixed varnish version
+    -f Pin dependent Varnish upstream version
     -s run baSh
     -t skip Test
     -k varnish pacKage build
     --vinyl for vinyl cache
-    --vinyl-replace for vinyl cache (replace varnish to vinyl in vmod source)
+    --vcacheize adapt VMOD source using vcacheize, or the Vinyl 9.0 replacement
     -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
@@ -51,6 +51,17 @@ docker_build() {
 
 ###################################
 vmod_build() {
+  # Resolve dependency pinning for this build: default < VMOD config < CLI.
+  local VMP_FIXED_MODE=${VMP_FIXED_MODE_DEFAULT}
+  if [ -n "${VMP_VMOD}" ]; then
+    if [ -n "${VMPCFG_FIXED_MODE}" ]; then
+      VMP_FIXED_MODE=${VMPCFG_FIXED_MODE}
+    fi
+    if [ "${VMP_FIXED_MODE_A}" != "DEFAULT" ]; then
+      VMP_FIXED_MODE=${VMP_FIXED_MODE_A}
+    fi
+  fi
+
   set +e
 
   docker run --rm \
@@ -71,14 +82,14 @@ vmod_build() {
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
     -e VMP_DESC="${VMP_DESC}" \
-    -e VMP_VINYL_REPLACE=${VMP_VINYL_REPLACE} \
+    -e VMP_VCACHEIZE=${VMP_VCACHEIZE} \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
     -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
     -v ${SCRIPT_DIR}/tmp:/tmp/varnish/tmp \
     -v ${SCRIPT_DIR}/src:/tmp/varnish/org/vmod:ro \
     -v ${SCRIPT_DIR}/varnish:/tmp/varnish/org/varnish:ro \
-    --name ${VMP_VARNISH_VER}-${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
+    --name ${VMP_SOFT_DIST_NAME}-${VMP_DIST}-${VMP_VARNISH_VER}-${VMP_VMOD}-${VMP_VMOD_VER} -it ${VMP_DOCKER_IMG} ${VMP_DOCKER_EXEC}
 
   if [ $? -ne 0 ]; then
       DRSTATUS=FAIL
@@ -101,12 +112,12 @@ vmod_build() {
                                                                     printf "%20s: %s\n" "Build for" "${VMP_SOFT_DIST_NAME}"
   if [ "${VMP_VARNISH_VER}" = "trunk" ]; then                       printf "%20s: %s\n" "Varnish hash" "${VMP_HASH}"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Varnish VRT" "${VMP_VARNISH_VRT}"; fi
-  if [ -n "${VMP_VMOD}" ]; then                                     printf "%20s: %s\n" "VMOD name" "${VMP_VMOD_PFX}${VMP_VMOD}"; fi
+  if [ -n "${VMP_VMOD}" ]; then                                     printf "%20s: %s\n" "VMOD name" "${VMP_VMOD_PFX}${VMP_VMOD}-${VMP_SOFT_DIST_NAME}"; fi
   if [ "${VMP_EXEC_MODE}" = "build" -a -n "${VMP_VMOD}" ]; then     printf "%20s: %s\n" "VMOD Version" "${VMP_VARNISH_VRT}.${VMP_VMOD_VER}"; fi
   if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Varnish pkg build"; fi
-  if [ ${VMP_FIXED_MODE} -eq 1 ]; then                              printf "%20s\n" "Fixed mode"; fi
+  if [ -n "${VMP_VMOD}" ] && [ "${VMP_FIXED_MODE}" -eq 1 ]; then     printf "%20s\n" "Fixed mode"; fi
   if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Skip test"; fi
-  if [ ${VMP_VINYL_REPLACE} -eq 1 ]; then                           printf "%20s\n" "Replace Varnish to Vinyl in VMOD"; fi
+  if [ "${VMP_VCACHEIZE}" -eq 1 -a -n "${VMP_VMOD}" ]; then       printf "%20s\n" "Adapt VMOD source (--vcacheize)"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Status" "${DRSTATUS}"; fi
                                                                     echo "##################################################"
   if [ -e "${SCRIPT_DIR}/tmp/vmp_vmod.log" ];then
@@ -139,11 +150,9 @@ build_param() {
   if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
   if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
   if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
-  if [[ -z "${VMP_VINYL_REPLACE}" ]];     then VMP_VINYL_REPLACE=0; fi
+  if [[ -z "${VMP_VCACHEIZE}" ]];         then VMP_VCACHEIZE=0; fi
 
-  if [ ${VMP_VINYL_REPLACE} -eq 1 ]; then
-    VMP_SOFT_DIST_NAME=vinyl
-  fi
+  source "${SCRIPT_DIR}/script/default/cache_config.sh"
 
   if [ "${VMP_EXEC_MODE}" = "build" ]; then
     VMP_DOCKER_EXEC=/tmp/varnish/script/build.sh
@@ -153,11 +162,11 @@ build_param() {
   if [[ -z "${VMP_VARNISH_PKG_MODE}" ]]; then
     VMP_VARNISH_PKG_MODE=0;
   else
-    if [ ! -e "./varnish/pkg-varnish-cache" ]; then
+    if [ ! -e "./varnish/pkg-varnish-cache" ] && [ "$VMP_SOFT_DIST_NAME" = 'varnish' ]; then
       # clone pkg-varnish-cache
       git clone --recursive https://github.com/varnishcache/pkg-varnish-cache ./varnish/pkg-varnish-cache
     fi
-    if [ ! -e "./varnish/pkg-vinyl-cache" ]; then
+    if [ ! -e "./varnish/pkg-vinyl-cache" ] && [ "$VMP_SOFT_DIST_NAME" = 'vinyl' ]; then
       # clone pkg-vinyl-cache
       git clone --recursive https://code.vinyl-cache.org/vinyl-cache/pkg-vinyl-cache.git ./varnish/pkg-vinyl-cache
     fi
@@ -174,7 +183,7 @@ main() {
     exit 1
   fi
   #parse option
-  OPTS=$(getopt -o v:r:e:d:p:c:u:stfkh --long vinyl --long vinyl-replace -n "$0" -- "$@")
+  OPTS=$(getopt -o v:r:e:d:p:c:u:stfkh --long vinyl --long vcacheize -n "$0" -- "$@")
   if [ $? != 0 ]; then
     usage_exit
   fi
@@ -194,7 +203,7 @@ main() {
           -f)  VMP_FIXED_MODE_A=1; shift;;
           -k)  VMP_VARNISH_PKG_MODE=1; shift;;
           --vinyl)  VMP_SOFT_DIST_NAME=vinyl; shift;;
-          --vinyl-replace)  VMP_VINYL_REPLACE=1; shift;;
+          --vcacheize)  VMP_VCACHEIZE=1; shift;;
           -h)  usage_exit;;
           --) shift; break;;
           *)  usage_exit;;
@@ -333,6 +342,7 @@ main() {
     while [ -n "$1" ]
     do
       VMP_VMOD=`basename $1`
+      unset VMPCFG_FIXED_MODE
       #read vmp_config/[VMP_VMOD]_default.sh
       if [ -e "${SCRIPT_DIR}/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh" ]; then
         echo "VMP>>>/src/${VMP_VMOD}/vmp_config/${VMP_VMOD}_default.sh : Set default value(vmp_config)"
@@ -343,16 +353,6 @@ main() {
         if [ "`git -C ${SCRIPT_DIR}/src/${VMP_VMOD} status -s|wc -l`" -ne 0 ]; then
           VMP_DESC="${VMP_DESC} - modified"
         fi
-      fi
-      if [ "${VMP_FIXED_MODE_A}" = "DEFAULT" ]; then
-        if [ "${VMPCFG_FIXED_MODE}" ]; then
-          VMP_FIXED_MODE=$VMPCFG_FIXED_MODE
-          unset VMPCFG_FIXED_MODE
-        else
-          VMP_FIXED_MODE=$VMP_FIXED_MODE_DEFAULT
-        fi
-      else
-        VMP_FIXED_MODE=$VMP_FIXED_MODE_A
       fi
       if [ "${VMP_VMOD_VER_A}" = "DEFAULT" ]; then
         if [ "${VMPCFG_VMOD_VER}" ]; then

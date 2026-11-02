@@ -2,7 +2,7 @@
 
 pfx=%PFX%
 name=%VMOD%
-pkgname=$pfx$name
+pkgname=%PKGNAME%
 pkgver=%VRT%.%VER%
 pkgrel=1
 pkgdesc="%PFX%%VMOD% - %DESC%"

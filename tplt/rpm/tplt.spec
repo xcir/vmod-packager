@@ -2,7 +2,7 @@
 %UNPACKAGED_TRACK%
 
 Summary:	%PFX%%VMOD%
-Name:		%PFX%%VMOD%
+Name:		%PKGNAME%
 Version:	%VRT%.%VER%
 Release:	1%{?dist}
 License:	See original VMOD source license file.
@@ -25,14 +25,14 @@ rm -rf %{buildroot}
 
 %install
 %make_install
-find %{buildroot}/%{_libdir}/ -name '*.la' -exec rm -f {} ';'
-find %{buildroot}/%{_libdir}/ -name '*.a' -exec rm -f {} ';'
+find %{buildroot}%VMODDIR%/ -name '*.la' -exec rm -f {} ';'
+find %{buildroot}%VMODDIR%/ -name '*.a' -exec rm -f {} ';'
 
 %check
 %TEST%
 
 %files
-%{_libdir}/%SOFTNAME%/vmods/*.so
+%VMODDIR%/*.so
 %FILES_DATADIR%
 %FILES_MAN%
 

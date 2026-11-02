@@ -10,7 +10,7 @@ cp -rp ${VMP_PKG_VARNISH_DIR}/debian ${VMP_ROOT_DIR}/src/
 ln -s ${VMP_PKG_VARNISH_DIR}/systemd ${VMP_ROOT_DIR}/src/systemd
 
 # resolve all the symlinks
-sed -i '' ${VMP_ROOT_DIR}/src/debian/varnish*
+find "${VMP_ROOT_DIR}/src/debian" -maxdepth 1 -type l -exec sed -i '' {} +
 
 RELEASE=-1
 DEBVERSION="vmp"
@@ -30,7 +30,8 @@ sed -i -e "s|@VERSION@|${FULL_VERSION}|"  "${VMP_ROOT_DIR}/src/debian/changelog"
 
 cd ${VMP_ROOT_DIR}/src
 
-debuild -us -uc -b
+# src was freshly extracted from make dist; retain distributed build inputs.
+debuild -nc -us -uc -b
 if [ $? -ne 0 ]; then
     echo "error" 1>&2
     exit 1

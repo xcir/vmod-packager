@@ -163,7 +163,7 @@ pkgs/debs/vinyl/vinyl-cache_9.0.0-1vmp~noble_amd64.deb
 
 # Building vmods for Varnish cache for use with Vinyl cache 9.0
 # see https://vinyl-cache.org/docs/9.0/whats-new/upgrading-9.0.html#upgrade-notes-for-vmod-developers
-$ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl90-replace src/libvmod-xcounter/
+$ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl --vcacheize src/libvmod-xcounter/
 ...
 ##################################################
         docker image: vmod-packager/vinyl/noble:9.0.0-1
@@ -173,7 +173,7 @@ $ ./vmod-packager.sh -v 9.0.0 -d noble --vinyl90-replace src/libvmod-xcounter/
          Varnish VRT: 230
            VMOD name: libvmod-xcounter-vinyl
         VMOD Version: 230.72.5
-Replace Varnish to Vinyl 9.0 in VMOD
+Adapt VMOD source (--vcacheize)
               Status: SUCCESS
 ##################################################
 VMOD output:
@@ -185,10 +185,34 @@ pkgs/debs/libvmod-xcounter-vinyl/libvmod-xcounter-vinyl_230.72.5~noble-1_amd64.c
 
 ```
 
+# For Vinyl Cache and Varnish 9.1
+
+VMODs using the common `VCACHE` build macros can be built for either project:
+
+```sh
+./vmod-packager.sh -v 9.1.0 -d resolute -k --vinyl src/libvmod-example/
+./vmod-packager.sh -v 9.1.0 -d resolute -k src/libvmod-example/
+```
+
+The default configure script selects the target with `--with-vcache=vinyl` or
+`--with-vcache=varnish` when the target exposes the 9.1 `vtestext` pkg-config
+variable. Custom configure and build hooks should also select the intended
+flavor. Packages keep their `-vinyl` or `-varnish` suffix, dependencies, and
+installation directories; build a separate package for each target.
+
+To adapt an existing VMOD while building it, add `--vcacheize`:
+
+```sh
+./vmod-packager.sh -v 9.1.0 -d resolute -k --vinyl --vcacheize src/libvmod-example/
+./vmod-packager.sh -v 9.1.0 -d resolute -k --vcacheize src/libvmod-example/
+```
+
+See the upstream [VMOD migration guide](https://vinyl-cache.org/docs/9.1/reference/vmod.html#supporting-multiple-vinyl-cache-based-projects).
+
 # Options
 
 ```
-Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl90-replace] [-u varnish source Url] [-h] VmodName
+Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vcacheize] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -200,7 +224,7 @@ Usage: ./vmod-packager.sh [-v Varnish version] [-r vaRnish source] [-e vmod vErs
     -t skip Test
     -k varnish pacKage build
     --vinyl for vinyl cache
-    --vinyl90-replace for vinyl cache 9.0 (replace varnish to vinyl in vmod source)
+    --vcacheize adapt VMOD source using vcacheize, or the Vinyl 9.0 replacement
     -u Varnish source URL
     -h Help
 Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
@@ -219,12 +243,19 @@ Example: ./vmod-packager.sh -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
 | -t                        | Skip test                 | disabled | -t |
 | -k                        | Varnish package build     | disabled | -k |
 | --vinyl                   | Build for vinyl           | disabled | --vinyl |
-| --vinyl90-replace         | Build for Vinyl Cache 9.0 after replacing varnish with vinyl in the VMOD source | disabled | --vinyl90-replace |
+| --vcacheize               | Adapt the VMOD source with upstream vcacheize, falling back to the Vinyl 9.0 replacement | disabled | --vcacheize |
 | -u [varnish source Url]   | Directly specify the URL when the official source URL has been changed (only works when downloading code from the official source)   |  | -u |
 
-`--vinyl90-replace` replaces the former `--vinyl-replace` option. It keeps the
-9.0 source conversion and also selects Vinyl Cache as the build target. Use
-`--vinyl` when the VMOD already supports Vinyl Cache and needs no conversion.
+`--vcacheize` runs the upstream `vcacheize` script from the selected cache
+source tree (or from `PATH`). If no script is available, Vinyl builds use the
+9.0 varnish-to-vinyl replacement; Varnish builds keep the source as supplied.
+Select Vinyl explicitly with `--vinyl`.
+
+Conversion runs on the build copy, including for custom builds. Upstream
+`vcacheize` requires a Git working tree and performs a best-effort migration;
+VMOD-specific changes, such as hardcoded pkg-config module names or tool calls
+in tests, may still be needed. Neither conversion method patches cache core C
+sources. Omit `--vcacheize` for VMODs that already support the target.
 
 # Support Distribution
 
@@ -442,7 +473,9 @@ xcir@build01:~/git/vmod-packager$ ./vmod-packager.sh -k -d focal -c 454733b82a32
 | VMP_PKG_CONFIG_NAME | Cache pkg-config module | varnishapi or vinylapi |
 | VMP_VMOD_DIR       | Absolute VMOD install directory from pkg-config | /usr/lib/varnish/vmods |
 | VMP_VMOD_PKG_NAME  | VMOD package name including prefix and cache flavor | test-libvmod-example-vinyl |
-| VMP_VINYL90_REPLACE | Enable the Vinyl Cache 9.0 source conversion | 0 |
+| VMP_VCACHEIZE      | Enable upstream vcacheize or the Vinyl 9.0 fallback | 0 |
+| VMP_VTEST_EXT      | VTest extension path from the target pkg-config module; empty before 9.1 | /usr/lib/libvtest_ext_vinyl.so |
+| VMP_CACHE_DIST     | Distribution archive used when building native cache packages | /tmp/varnish/cache-source.tar.gz |
 | VMP_VARNISH_VRT    | VRT version of Varnish(140=14.0) | 140 |
 | VMP_VARNISH_VER    | Varnish Version | 7.0.0 |
 | VMP_VARNISH_VER_NXT| Version of Varnish with incrementing miner | 7.1.0 |

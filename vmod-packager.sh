@@ -5,7 +5,7 @@ set -e
 ###################################
 usage_exit() {
   cat << EOF 1>&2
-Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vinyl90-replace] [-u varnish source Url] [-h] VmodName
+Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distribution] [-p vmod name Prefix] [-c Commit hash] [-f] [-s] [-t] [-k] [--vinyl] [--vcacheize] [-u varnish source Url] [-h] VmodName
     -v Varnish version (ex:7.0.0 or trunk)
     -r build VaRnish from local source
     -e vmod vErsion (ex:0.1)
@@ -17,7 +17,7 @@ Usage: $0 [-v Varnish version] [-r vaRnish source] [-e vmod vErsion] [-d Distrib
     -t skip Test
     -k varnish pacKage build
     --vinyl for vinyl cache
-    --vinyl90-replace for vinyl cache 9.0 (replace varnish to vinyl in vmod source)
+    --vcacheize adapt VMOD source using vcacheize, or the Vinyl 9.0 replacement
     -u Varnish source URL
     -h Help
 Example: $0 -v 7.0.0 -e 1.0 -d jammy libvmod-xcounter
@@ -82,7 +82,7 @@ vmod_build() {
     -e VMP_VARNISH_PKG_MODE=${VMP_VARNISH_PKG_MODE_A} \
     -e VMP_VARNISH_SRC=${VMP_VARNISH_SRC} \
     -e VMP_DESC="${VMP_DESC}" \
-    -e VMP_VINYL90_REPLACE=${VMP_VINYL90_REPLACE} \
+    -e VMP_VCACHEIZE=${VMP_VCACHEIZE} \
     -v ${SCRIPT_DIR}/script:/tmp/varnish/script:ro \
     -v ${SCRIPT_DIR}/tplt:/tmp/varnish/tplt:ro \
     -v ${SCRIPT_DIR}/pkgs:/tmp/varnish/pkgs \
@@ -117,7 +117,7 @@ vmod_build() {
   if [ ${VMP_VARNISH_PKG_MODE} -eq 1 ]; then                        printf "%20s\n" "Varnish pkg build"; fi
   if [ -n "${VMP_VMOD}" ] && [ "${VMP_FIXED_MODE}" -eq 1 ]; then     printf "%20s\n" "Fixed mode"; fi
   if [ ${VMP_SKIP_TEST} -eq 1 ]; then                               printf "%20s\n" "Skip test"; fi
-  if [ ${VMP_VINYL90_REPLACE} -eq 1 ]; then                         printf "%20s\n" "Replace Varnish to Vinyl 9.0 in VMOD"; fi
+  if [ "${VMP_VCACHEIZE}" -eq 1 -a -n "${VMP_VMOD}" ]; then       printf "%20s\n" "Adapt VMOD source (--vcacheize)"; fi
   if [ "${VMP_EXEC_MODE}" = "build" ]; then                         printf "%20s: %s\n" "Status" "${DRSTATUS}"; fi
                                                                     echo "##################################################"
   if [ -e "${SCRIPT_DIR}/tmp/vmp_vmod.log" ];then
@@ -150,11 +150,7 @@ build_param() {
   if [[ -z "${VMP_EXEC_MODE}" ]];         then VMP_EXEC_MODE=build; fi
   if [[ -z "${VMP_FIXED_MODE_A}" ]];      then VMP_FIXED_MODE_A=DEFAULT; fi
   if [[ -z "${VMP_VMOD_VER_A}" ]];        then VMP_VMOD_VER_A=DEFAULT; fi
-  if [[ -z "${VMP_VINYL90_REPLACE}" ]];   then VMP_VINYL90_REPLACE=0; fi
-
-  if [ ${VMP_VINYL90_REPLACE} -eq 1 ]; then
-    VMP_SOFT_DIST_NAME=vinyl
-  fi
+  if [[ -z "${VMP_VCACHEIZE}" ]];         then VMP_VCACHEIZE=0; fi
 
   source "${SCRIPT_DIR}/script/default/cache_config.sh"
 
@@ -187,7 +183,7 @@ main() {
     exit 1
   fi
   #parse option
-  OPTS=$(getopt -o v:r:e:d:p:c:u:stfkh --long vinyl --long vinyl90-replace -n "$0" -- "$@")
+  OPTS=$(getopt -o v:r:e:d:p:c:u:stfkh --long vinyl --long vcacheize -n "$0" -- "$@")
   if [ $? != 0 ]; then
     usage_exit
   fi
@@ -207,7 +203,7 @@ main() {
           -f)  VMP_FIXED_MODE_A=1; shift;;
           -k)  VMP_VARNISH_PKG_MODE=1; shift;;
           --vinyl)  VMP_SOFT_DIST_NAME=vinyl; shift;;
-          --vinyl90-replace)  VMP_VINYL90_REPLACE=1; shift;;
+          --vcacheize)  VMP_VCACHEIZE=1; shift;;
           -h)  usage_exit;;
           --) shift; break;;
           *)  usage_exit;;

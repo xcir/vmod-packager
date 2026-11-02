@@ -1,9 +1,19 @@
 #!/bin/sh
+set -e
+
+vmp_configure() {
+    if [ -n "${VMP_VTEST_EXT}" ]; then
+        "$@" --with-vcache="${VMP_SOFT_DIST_NAME}"
+    else
+        "$@"
+    fi
+}
+
 if [ ! -x ./configure ]; then
     if [ -e ./autogen.sh ]; then
-        ./autogen.sh
+        vmp_configure ./autogen.sh "$@"
     else
-        ./bootstrap
+        vmp_configure ./bootstrap "$@"
     fi
 fi
-./configure $@
+vmp_configure ./configure "$@"

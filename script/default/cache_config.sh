@@ -29,5 +29,6 @@ vmp_configure_vmod() {
             ;;
     esac
     VMP_VMOD_PKG_NAME="${VMP_VMOD_PFX}${VMP_VMOD_NAME}-${VMP_SOFT_DIST_NAME}"
-    export VMP_VMOD_DIR VMP_VMOD_PKG_NAME
+    VMP_VTEST_EXT=$(pkg-config --variable=vtestext "${VMP_PKG_CONFIG_NAME}")
+    export VMP_VMOD_DIR VMP_VMOD_PKG_NAME VMP_VTEST_EXT
 }
